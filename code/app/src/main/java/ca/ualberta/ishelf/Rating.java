@@ -4,6 +4,10 @@ public class Rating {
 
 
     private int rating;
+
+
+
+    private String comment;
     Rating(){};
 
     Rating(int rating){
@@ -16,6 +20,14 @@ public class Rating {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
 }
