@@ -3,6 +3,8 @@ package ca.ualberta.ishelf;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.util.UUID;
+
 public class Database {
 
     @Test
@@ -12,21 +14,26 @@ public class Database {
         u1.setUsername("testUsername");
         fb.addUser(u1);
         User fbUser= new User();
-        User fbUser = fb.getUser(u1.getUsername());
-        Assert.assertEquals(u1, fbUser);
+        fbUser = fb.getUser(u1.getUsername());
+        Assert.assertEquals("testUsername", fbUser.getUsername());
         fb.deleteUser(u1.getUsername());
     }
 
     @Test
     public void testEditUser() {
-        Database fb = new Database(fburl);
+        Database fb = new Database();
+        // Add user
         User u1 = new User();
-        // TODO implement this properly
+        u1.setUsername("testUsername");
         fb.addUser(u1);
+        // Change user and edit
         User u2 = new User();
-        String id = "123";
-        //TODO is this how edit works?
-        u2 = fb.editUser(id);
+        u2.setUsername("testUsername");
+        u2.setEmail("testContactInfo");
+        fb.editUser(u2);
+        u1 = fb.getUser("testUsername");
+        fb.deleteUser(u1);
+        Assert.assertEquals("testContactInfo", u1.getEmail());
     }
 
     @Test
@@ -44,27 +51,27 @@ public class Database {
         Book b2 = newBook();
         b2 = fb.getBook(bookID);
         fb.deleteBook(b1.getId());
-        Assert.assertEquals(b1, b2);
+        UUID id = b1.getId;
+        Assert.assertEquals(id, b2.getId());
     }
 
     @Test
     public void testEditBook() {
         Database fb = new Database();
-        // Add user
-        User u1 = new User();
+        // Add book
+        Book b1 = new Book();
+        fb.addBook(b1);
+        // Change book and edit
+        Book b2 = new Book();
+        u2.setName("TestName");
         u1.setUsername("testUsername");
         fb.addUser(u1);
-        // Change user and edit
-        User u2 = new User();
-        u2.setUsername("testUsername");
-        Book b1 = new Book();
-        u2.addBook(b1);
-        fb.editUser(u2);
-
-
-        u2 = fb.editUser(u1);
-        u2 = fb.editUser(u1.getUsername());
-        fb.getUser(id);
+        // Change book and edit
+        u1.setName("AnotherTestName");
+        fb.editBook(u1);
+        u1 = fb.getBook(u1.getId());
+        Assert.assertEquals("anotherTestName", u1.getId());
+        fb.deleteUser(u1.getId());
     }
 
     @Test
@@ -74,15 +81,6 @@ public class Database {
         fb.addBook(b1);
         fb.deleteBook(b1.getID());
         //TODO what should we do if there is no matching book?
-        Assert.assertEquals(fb.getBook(b1.getID(), null));
+        Assert.assertEquals(null, fb.getBook(b1.getID()));
     }
-}
-
-// firebase tracks notifications, books, users,
-// add, get by id, update
-// TODO what is the name of our class, i don't think it can be FBInterface
-// TODO what do the edit commands actually do?
-// TODO what are the arguments for Delete commands, id? or object?
-// TODO how is a firebase instance initialized, does it take a URL?
-
 }
