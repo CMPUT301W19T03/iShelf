@@ -46,7 +46,7 @@ public class NotificationTest {
         @Test
         public void testSetUserName(){
             Notification notification = new Notification(new Date(), "testNotification", "testUserName");
-            notification.setText("newUserName");
+            notification.setUserName("newUserName");
             assertEquals("newUserName", notification.getUserName());
         }
 
