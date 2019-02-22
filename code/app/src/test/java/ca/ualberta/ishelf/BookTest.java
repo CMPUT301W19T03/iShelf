@@ -51,8 +51,8 @@ public class BookTest {
     public void testRatings(){
         Book book = new Book();
         Rating rating = new Rating();
-        rating.addRating(5);
-        rating.addComment("Rating Comment");
+        rating.setRating(5);
+        rating.setComment("Rating Comment");
         book.addRating(rating);
         ArrayList<Rating> ratingArrayList = book.getRatings();
         Assert.assertEquals(rating, ratingArrayList.get(ratingArrayList.size()));
