@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1075824538974",
+    "firebase_url": "https://ishelf-bb4e7.firebaseio.com",
+    "project_id": "ishelf-bb4e7",
+    "storage_bucket": "ishelf-bb4e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1075824538974:android:ccf29da86356d91f",
+        "android_client_info": {
+          "package_name": "ca.ualberta.ishelf"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1075824538974-cr3rdj3ca8st7ialdci1ikg0puoh2v28.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.ualberta.ishelf",
+            "certificate_hash": "a2f585a5ebd52aba665965271e502b71912c7a57"
+          }
+        },
+        {
+          "client_id": "1075824538974-sk0elkp53ff9vtlnm4rtm5nd1bpkliv0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD0yW_s-jQ0LO4cfvXox0EzgaLrPy98MpY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1075824538974-sk0elkp53ff9vtlnm4rtm5nd1bpkliv0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
