@@ -78,14 +78,14 @@ public class User {
 
     /*should users be able to add books or delete/edit ratings or is that all firebase*/
     //these methods should be public
-    public void deleteBook(Book book){
+    private void deleteBook(Book book){
         for (int i = 0; i < ownedBooks.size(); i++){
             if (ownedBooks.get(i) == book){
                 ownedBooks.remove(i);
             }
         }
     }
-    public void addRating(Rating rating){
+    private void addRating(Rating rating){
         if (state == "borrower"){
             borrowerRatings.add(rating);
         }else {
