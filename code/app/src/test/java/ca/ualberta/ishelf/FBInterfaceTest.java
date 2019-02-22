@@ -1,7 +1,7 @@
 package ca.ualberta.ishelf;
+
 import org.junit.Test;
-import ca.ualberta.ishelf.FBInterface;
-import static org.junit.Assert.assertEquals;
+
 public class FBInterfaceTest {
     String fburl;
 
