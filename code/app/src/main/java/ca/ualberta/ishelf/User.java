@@ -106,9 +106,9 @@ public class User {
     }
     public void deleteBook(UUID book){
         if (state == "borrower"){
-            for (int i = 0; i < ownedBooks.size(); i++){
-                if (ownedBooks.get(i) == book){
-                    ownedBooks.remove(i);
+            for (int i = 0; i < borrowedBooks.size(); i++){
+                if (borrowedBooks.get(i) == book){
+                    borrowedBooks.remove(i);
                 }
             }
         }else {
