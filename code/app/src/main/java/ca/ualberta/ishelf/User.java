@@ -43,7 +43,9 @@ public class User {
     }
 
     public void setState(String state) {
-        this.state = state;
+        if (state == "borrower" || state == "owner") {
+            this.state = state;
+        }
     }
 
     public ArrayList<UUID> getBorrowedBooks() {
