@@ -6,7 +6,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
-import R.java;
 
 /**
  * MainActivity
@@ -16,6 +15,7 @@ import R.java;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Here is my first comment
     private TextView mTextMessage;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
