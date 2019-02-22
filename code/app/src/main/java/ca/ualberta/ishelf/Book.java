@@ -17,9 +17,11 @@ public class Book {
     private String description;
     private Long ISBN;
     private int status = 1; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
-    private ArrayList<Rating> ratings; // Error due to no Rating class yet
+    private ArrayList<Rating> bookrating = new ArrayList<Rating>(); // Error due to no Rating class yet
     private UUID id; // changed from int to UUID
     private Image photo;
+
+
 
     // Getters and Setters
     public String getName() {
@@ -56,7 +58,7 @@ public class Book {
     }
 
     public ArrayList<Rating> getRatings() {
-        return ratings;
+        return bookrating;
     }
 
     public UUID getId() {
@@ -77,6 +79,7 @@ public class Book {
      */
     public void setBorrowed(){
         // TODO: implement logic
+        this.setStatus(0);
     }
 
     /**
@@ -84,6 +87,7 @@ public class Book {
      */
     public void setAvailable(){
         // TODO: implement logic
+        this.setStatus(1);
     }
 
     /**
@@ -105,6 +109,7 @@ public class Book {
      */
     public void addRating(Rating rating){
         // TODO: implement logic
+        bookrating.add(rating);
     }
 
 }
