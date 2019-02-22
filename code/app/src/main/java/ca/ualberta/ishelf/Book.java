@@ -87,7 +87,13 @@ public class Book {
      * checkBorrowed() returns true if available, false otherwise
      */
     public boolean checkBorrowed(){
+        if(this.getStatus()== 0){
+            return true;
+        }
+        return false;
+
         // TODO: implement logic
+
     }
 
 
