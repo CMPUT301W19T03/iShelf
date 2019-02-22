@@ -21,7 +21,7 @@ public class RatingTest {
         Rating rate = new Rating();
         rate.setRating(15);
 
-        int rate1=15;
+        int rate1=-1;
 
         Assert.assertEquals(rate1,rate.getRating());
 

@@ -8,18 +8,22 @@ public class Rating {
 
 
     private String comment;
-    Rating(){};
+    Rating(){}
 
-    Rating(int rating){
-        this.rating=rating;
-    }
+
 
     public int getRating() {
         return rating;
     }
 
     public void setRating(int rating) {
-        this.rating = rating;
+        if(rating>=0 && rating <=5) {
+            this.rating = rating;
+        }
+        else{
+            this.rating =-1;
+        }
+
     }
 
     public String getComment() {
