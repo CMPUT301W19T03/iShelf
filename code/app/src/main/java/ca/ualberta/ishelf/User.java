@@ -27,7 +27,7 @@ public class User {
         return rating;
     }
 
-    public Rating setRating(Rating rating) {
+    public void setRating(Rating rating) {
         this.rating = rating;
     }
 

@@ -1,11 +1,14 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
+
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.ArrayList;
 import java.util.UUID;
 
-public class Database {
-
+public class DatabaseTest {
     @Test
     public void testAddUser() {
         Database fb = new Database();
@@ -31,7 +34,7 @@ public class Database {
         u2.setEmail("testContactInfo");
         fb.editUser(u2);
         u1 = fb.getUser("testUsername");
-        fb.deleteUser(u1);
+        fb.deleteUser(u1.getUsername());
         Assert.assertEquals("testContactInfo", u1.getEmail());
     }
 
@@ -46,11 +49,11 @@ public class Database {
         Book b1 = new Book();
         b1.setName("testName");
         fb.addBook(b1);
-        String bookID = b1.getID();
-        Book b2 = newBook();
+        UUID bookID = b1.getId();
+        Book b2 = new Book();
         b2 = fb.getBook(bookID);
         fb.deleteBook(b1.getId());
-        UUID id = b1.getId;
+        UUID id = b1.getId();
         Assert.assertEquals(id, b2.getId());
     }
 
@@ -62,36 +65,36 @@ public class Database {
         fb.addBook(b1);
         // Change book and edit
         Book b2 = new Book();
-        u2.setName("TestName");
-        u1.setUsername("testUsername");
-        fb.addUser(u1);
+        b2.setName("TestName");
+        b1.setDescription("testDescription");
+        fb.addBook(b1);
         // Change book and edit
-        u1.setName("AnotherTestName");
-        fb.editBook(u1);
-        u1 = fb.getBook(u1.getId());
-        Assert.assertEquals("anotherTestName", u1.getId());
-        fb.deleteUser(u1.getId());
+        b1.setName("AnotherDescription");
+        fb.editBook(b1.getId());
+        b1 = fb.getBook(b1.getId());
+        Assert.assertEquals("AnotherDescription", b1.getDescription());
+        fb.deleteBook(b1.getId());
     }
 
     @Test
     public void testDeleteBook() {
-        FBInterface fb = new FBInterface(fburl);
+        Database fb = new Database();
         Book b1 = new Book();
         fb.addBook(b1);
-        fb.deleteBook(b1.getID());
+        fb.deleteBook(b1.getId());
         //TODO what should we do if there is no matching book?
-        Assert.assertEquals(null, fb.getBook(b1.getID()));
+        Assert.assertEquals(null, fb.getBook(b1.getId()));
     }
 
     @Test
     public void getUser() {
-        Firebase fb = new Firebase();
+        Database fb = new Database();
 
         // add a user
         String username = "testUsername";
         User testUser = new User();
         testUser.setUsername(username);
-        testUser.setRating(4);
+        testUser.setEmail("test@test.ca");
         fb.addUser(testUser);
 
         User fbUser = fb.getUser(username);
@@ -102,16 +105,16 @@ public class Database {
 
     @Test
     public void getBook() {
-        Firebase fb = new Firebase();
+        Database fb = new Database();
 
         // add a book
         Book testBook = new Book();
         testBook.setName("testBook");
-        testBook.setISBN("1234567890");
-        String bookID = testBook.getID();
+        testBook.setISBN(1234567890l);
+        UUID bookID = testBook.getId();
         fb.addBook(testBook);
 
-        User fbBook = fb.getBook(bookID);
+        Book fbBook = fb.getBook(bookID);
         Assert.assertEquals(testBook, fbBook);
 
         fb.deleteBook(bookID);
@@ -119,20 +122,20 @@ public class Database {
 
     @Test
     public void getBooks() {
-        Firebase fb = new Firebase();
+        Database fb = new Database();
 
         // add the first book
         Book testBook1 = new Book();
         testBook1.setName("testBook1");
-        testBook1.setISBN("1234567890");
-        String bookID1 = testBook1.getID();
+        testBook1.setISBN(1234567890l);
+        UUID bookID1 = testBook1.getId();
         fb.addBook(testBook1);
 
         // add a second book
         Book testBook2 = new Book();
         testBook2.setName("testBook2");
-        testBook2.setISBN("5432109876");
-        String bookID2 = testBook2.getID();
+        testBook2.setISBN(5432109876l);
+        UUID bookID2 = testBook2.getId();
         fb.addBook(testBook2);
 
         // set expected result
@@ -149,22 +152,22 @@ public class Database {
 
     @Test
     public void getAvailableBooks() {
-        Firebase fb = new Firebase();
+        Database fb = new Database();
 
         // add borrowed book
         Book testBook1 = new Book();
         testBook1.setName("testBook1");
-        testBook1.setISBN("1234567890");
+        testBook1.setISBN(1234567890l);
         testBook1.setBorrowed();
-        String bookID1 = testBook1.getID();
+        UUID bookID1 = testBook1.getId();
         fb.addBook(testBook1);
 
         // add available book
         Book testBook2 = new Book();
         testBook2.setName("testBook2");
-        testBook2.setISBN("5432109876");
+        testBook2.setISBN(5432109876l);
         testBook2.setAvailable();
-        String bookID2 = testBook2.getID();
+        UUID bookID2 = testBook2.getId();
         fb.addBook(testBook2);
 
         // set expected result
@@ -181,7 +184,7 @@ public class Database {
     @Test
     public void getUserBooks() {
 
-        Firebase fb = new Firebase();
+        Database fb = new Database();
 
         // test usernames for book owners
         String username1 = "testUsername1";
@@ -190,17 +193,20 @@ public class Database {
         // add borrowed book
         Book testBook1 = new Book();
         testBook1.setName("testBook1");
-        testBook1.setISBN("1234567890");
+        testBook1.setISBN(1234567890l);
         testBook1.setOwner(username1);
-        String bookID1 = testBook1.getID();
+        UUID bookID1 = testBook1.getId();
         fb.addBook(testBook1);
 
         // add available book
-        Book testBook2 = new Book(bookID2);
+        //TODO why is this bookID "2"
+        //Book testBook2 = new Book(bookID1);
+        Book testBook2 = new Book();
+        testBook2.setId(bookID1);
         testBook2.setName("testBook2");
-        testBook2.setISBN("5432109876");
+        testBook2.setISBN(5432109876l);
         testBook1.setOwner(username2);
-        String bookID2 = testBook2.getID();
+        UUID bookID2 = testBook2.getId();
         fb.addBook(testBook2);
 
         // set expected result
