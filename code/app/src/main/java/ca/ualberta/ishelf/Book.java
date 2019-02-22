@@ -1,6 +1,8 @@
 package ca.ualberta.ishelf;
 
 
+import android.media.Image;
+
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -12,10 +14,11 @@ import java.util.UUID;
 public class Book {
     private String name;
     private String description;
-    private Integer ISBN;
+    private Long ISBN;
     private int status = 1; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
     private ArrayList<Rating> ratings; // Error due to no Rating class yet
     private UUID id; // changed from int to UUID
+    private Image photo;
 
     // Getters and Setters
     public String getName() {
@@ -35,11 +38,11 @@ public class Book {
     }
 
     // Should this return an int or String representation?
-    public Integer getISBN() {
+    public Long getISBN() {
         return ISBN;
     }
 
-    public void setISBN(int ISBN) {
+    public void setISBN(Long ISBN) {
         this.ISBN = ISBN;
     }
 
