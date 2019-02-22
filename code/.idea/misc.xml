@@ -5,15 +5,7 @@
     <option name="myDefaultNotNull" value="android.support.annotation.NonNull" />
     <option name="myNullables">
       <value>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-        <list size="7">
-=======
         <list size="10">
->>>>>>> Stashed changes
-=======
-        <list size="10">
->>>>>>> 539357b24baadb2dfe5b7b6c1f73a482a3c00457
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.Nullable" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nullable" />
           <item index="2" class="java.lang.String" itemvalue="javax.annotation.CheckForNull" />
@@ -21,50 +13,21 @@
           <item index="4" class="java.lang.String" itemvalue="android.support.annotation.Nullable" />
           <item index="5" class="java.lang.String" itemvalue="androidx.annotation.Nullable" />
           <item index="6" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNullable" />
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
           <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.Nullable" />
           <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableDecl" />
           <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableType" />
->>>>>>> Stashed changes
-=======
-          <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.Nullable" />
-          <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableDecl" />
-          <item index="9" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NullableType" />
->>>>>>> 539357b24baadb2dfe5b7b6c1f73a482a3c00457
         </list>
       </value>
     </option>
     <option name="myNotNulls">
       <value>
-<<<<<<< HEAD
-<<<<<<< Updated upstream
         <list size="6">
-=======
-        <list size="9">
->>>>>>> Stashed changes
-=======
-        <list size="9">
->>>>>>> 539357b24baadb2dfe5b7b6c1f73a482a3c00457
           <item index="0" class="java.lang.String" itemvalue="org.jetbrains.annotations.NotNull" />
           <item index="1" class="java.lang.String" itemvalue="javax.annotation.Nonnull" />
           <item index="2" class="java.lang.String" itemvalue="edu.umd.cs.findbugs.annotations.NonNull" />
           <item index="3" class="java.lang.String" itemvalue="android.support.annotation.NonNull" />
           <item index="4" class="java.lang.String" itemvalue="androidx.annotation.NonNull" />
           <item index="5" class="java.lang.String" itemvalue="androidx.annotation.RecentlyNonNull" />
-<<<<<<< HEAD
-<<<<<<< Updated upstream
-=======
-          <item index="6" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.NonNull" />
-          <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullDecl" />
-          <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullType" />
->>>>>>> Stashed changes
-=======
-          <item index="6" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.qual.NonNull" />
-          <item index="7" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullDecl" />
-          <item index="8" class="java.lang.String" itemvalue="org.checkerframework.checker.nullness.compatqual.NonNullType" />
->>>>>>> 539357b24baadb2dfe5b7b6c1f73a482a3c00457
         </list>
       </value>
     </option>
