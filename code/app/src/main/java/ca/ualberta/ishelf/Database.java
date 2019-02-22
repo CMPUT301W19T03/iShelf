@@ -11,25 +11,24 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.client.Firebase;
 import java.util.ArrayList;
 
-public class FBInterface {
-    String url;
-    Firebase ref;
+public class Database {
+    private final String link = "";
+    private Firebase ref;
 
-    FBInterface(String url) {
-        this.url = url;
+    Database(String url) {
         Firebase.setAndroidContext(this);
-        //TODO build firebase for project
-        ref = new Firebase("insert database url here");
+        ref = new Firebase(link);
     }
 
     public void addUser(User user) {
     }
 
-    public User editUser(String username) {
+    public User editUser(User user) {
         return null;
     }
 
-    //public void deleteUser(String username) {}
+    public void deleteUser(String username) {}
+
     public void addBook(Book book) {
     }
 
@@ -40,7 +39,7 @@ public class FBInterface {
         return null;
     }
 
-    public Book getBook(String bookdID) {
+    public Book getBook(String bookID) {
         return null;
     }
 

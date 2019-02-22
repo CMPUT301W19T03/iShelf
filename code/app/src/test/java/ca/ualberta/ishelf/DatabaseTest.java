@@ -3,23 +3,23 @@ package ca.ualberta.ishelf;
 import org.junit.Assert;
 import org.junit.Test;
 
-public class FBInterfaceTest {
-    String fburl;
+public class Database {
 
     @Test
     public void testAddUser() {
-        FBInterface fb = new FBInterface(fburl);
+        Database fb = new Database();
         User u1 = new User();
         u1.setUsername("testUsername");
         fb.addUser(u1);
         User fbUser= new User();
         User fbUser = fb.getUser(u1.getUsername());
         Assert.assertEquals(u1, fbUser);
+        fb.deleteUser(u1.getUsername());
     }
 
     @Test
     public void testEditUser() {
-        FBInterface fb = new FBInterface(fburl);
+        Database fb = new Database(fburl);
         User u1 = new User();
         // TODO implement this properly
         fb.addUser(u1);
@@ -29,34 +29,41 @@ public class FBInterfaceTest {
         u2 = fb.editUser(id);
     }
 
-/*
-@Test
-public void testDeleteUser() {
+    @Test
+    public void testDeleteUser() {
 
-}
-*/
+    }
 
     @Test
     public void testAddBook() {
-        FBInterface fb = new FBInterface(fburl);
+        Database fb = new Database();
         Book b1 = new Book();
         b1.setName("testName");
         fb.addBook(b1);
         String bookID = b1.getID();
         Book b2 = newBook();
         b2 = fb.getBook(bookID);
+        fb.deleteBook(b1.getId());
         Assert.assertEquals(b1, b2);
     }
 
     @Test
     public void testEditBook() {
-        FBInterface fb = new FBInterface(fburl);
+        Database fb = new Database();
+        // Add user
         User u1 = new User();
-        // TODO implement this properly
-        fb.addUser(u1)
+        u1.setUsername("testUsername");
+        fb.addUser(u1);
+        // Change user and edit
         User u2 = new User();
-        u2 = fb.editUser(id);
-        String id = "123";
+        u2.setUsername("testUsername");
+        Book b1 = new Book();
+        u2.addBook(b1);
+        fb.editUser(u2);
+
+
+        u2 = fb.editUser(u1);
+        u2 = fb.editUser(u1.getUsername());
         fb.getUser(id);
     }
 
