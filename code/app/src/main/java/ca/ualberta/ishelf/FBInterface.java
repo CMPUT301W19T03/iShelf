@@ -40,7 +40,7 @@ public class FBInterface {
         return null;
     }
 
-    public Book getBook(int bookdID) {
+    public Book getBook(String bookdID) {
         return null;
     }
 
