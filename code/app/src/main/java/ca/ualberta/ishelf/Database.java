@@ -1,14 +1,18 @@
 package ca.ualberta.ishelf;
 
+import android.app.Application;
+import android.content.Context;
+
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+//import com.google.firebase.database.DatabaseReference;
+//import com.google.firebase.database.FirebaseDatabase;
 import com.firebase.client.Firebase;
 import java.util.ArrayList;
+import java.util.UUID;
 
-public class Database {
+public class Database extends Application {
     private final String link = "";
     private Firebase ref;
 
@@ -21,7 +25,6 @@ public class Database {
     }
 
     public void editUser(User user) {
-        return null;
     }
 
     public void deleteUser(String username) {
@@ -30,7 +33,9 @@ public class Database {
     public void addBook(Book book) {
     }
 
-    public void deleteBook(int id) {
+    public void deleteBook(UUID id) {
+    }
+    public void editBook(UUID id) {
     }
 
     public User getUser(String username) {

@@ -12,6 +12,7 @@ import java.util.UUID;
  *
  */
 public class Book {
+    private String owner;
     private String name;
     private String description;
     private Long ISBN;
@@ -65,6 +66,8 @@ public class Book {
     public void setId(UUID id) {
         this.id = id;
     }
+
+    public void setOwner(String name) {this.owner = name;}
 
 
     // Public Methods
