@@ -1,13 +1,10 @@
 package ca.ualberta.ishelf;
 
-//TODO get these imports working
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-//import com.google.gson.Gson;
-//import com.google.gson.reflect.TypeToken;
 import com.firebase.client.Firebase;
 import java.util.ArrayList;
 
@@ -15,7 +12,7 @@ public class Database {
     private final String link = "";
     private Firebase ref;
 
-    Database(String url) {
+    Database() {
         Firebase.setAndroidContext(this);
         ref = new Firebase(link);
     }
@@ -23,11 +20,12 @@ public class Database {
     public void addUser(User user) {
     }
 
-    public User editUser(User user) {
+    public void editUser(User user) {
         return null;
     }
 
-    public void deleteUser(String username) {}
+    public void deleteUser(String username) {
+    }
 
     public void addBook(Book book) {
     }
@@ -39,7 +37,7 @@ public class Database {
         return null;
     }
 
-    public Book getBook(String bookID) {
+    public Book getBook(UUID bookID) {
         return null;
     }
 
