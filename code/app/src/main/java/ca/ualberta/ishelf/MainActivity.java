@@ -47,6 +47,12 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        Database db = new Database(this);
+        User user = new User();
+        user.setUsername("testUsername");
+        db.addUser(user);
+        db.getUser("testUsername");
+        db.deleteUser("testUsername");
     }
 
 }
