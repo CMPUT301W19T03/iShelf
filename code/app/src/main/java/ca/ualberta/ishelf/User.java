@@ -5,12 +5,12 @@ import java.util.UUID;
 
 public class User {
     private String username;
-    private ArrayList<UUID> borrowedBooks;
-    private ArrayList<UUID> ownedBooks;
+    private ArrayList<UUID> borrowedBooks = new ArrayList<UUID>();
+    private ArrayList<UUID> ownedBooks= new ArrayList<UUID>();
     private Rating rating;
-    private ArrayList<Request> listofRequests;
-    private ArrayList<Rating> lenderRatings;
-    private ArrayList<Rating> borrowerRatings;
+    private ArrayList<Request> listofRequests = new ArrayList<Request>();
+    private ArrayList<Rating> lenderRatings= new ArrayList<Rating>();
+    private ArrayList<Rating> borrowerRatings=new ArrayList<Rating>();
     private String state; //user needs to know if it's acting as a lender or borrower
     private String phoneNum;
     private String email;
