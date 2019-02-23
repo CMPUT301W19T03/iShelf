@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 
 /**
  * MainActivity
@@ -47,12 +49,19 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        // Testing Database Object
         Database db = new Database(this);
         User user = new User();
         user.setUsername("testUsername");
         db.addUser(user);
         db.getUser("testUsername");
         db.deleteUser("testUsername");
+        Book book = new Book();
+        UUID id = new UUID(123l, 1234l);
+        book.setId(id);
+        db.addBook(book);
+        db.getBook(book.getId());
+        db.deleteBook(book.getId());
     }
 
 }
