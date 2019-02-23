@@ -17,7 +17,7 @@ public class Book {
     private String description;
     private Long ISBN;
     private int status = 1; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
-    private ArrayList<Rating> bookrating = new ArrayList<Rating>(); // Error due to no Rating class yet
+    private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
     private UUID id; // changed from int to UUID
     private Image photo;
 
@@ -58,7 +58,7 @@ public class Book {
     }
 
     public ArrayList<Rating> getRatings() {
-        return bookrating;
+        return ratings;
     }
 
     public UUID getId() {
@@ -109,7 +109,7 @@ public class Book {
      */
     public void addRating(Rating rating){
         // TODO: implement logic
-        bookrating.add(rating);
+        ratings.add(rating);
     }
 
 }
