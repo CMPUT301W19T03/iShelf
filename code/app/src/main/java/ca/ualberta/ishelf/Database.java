@@ -26,7 +26,7 @@ public class Database extends Application {
     private Firebase ref;
 
     //TODO documentation
-    //TODO saveInFile so that we actually return an object
+    //TODO use arrays to actually return objects
     Database(Context context) {
         Firebase.setAndroidContext(context);
         ref = new Firebase(link);
@@ -64,25 +64,29 @@ public class Database extends Application {
         addUser(user);
     }
 
+
     public User getUser(String username) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Users").child(username);
         final ArrayList<User> userList = new ArrayList<User>();
+        Log.d("SizeBefore ", String.valueOf(userList.size()));
         // create a one time use listener to immediately access datasnapshot
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
                 if (jUser != null) {
                     // Get user object from Gson
                     Gson gson = new Gson();
                     Type tokenType = new TypeToken<User>(){}.getType();
                     User user = gson.fromJson(jUser, tokenType);
-                    userList.add(user);
                     Log.d("Confirm", user.getUsername());
+                    userList.add(user);
                 } else {
-                    Log.d("Firebase Retrieval Error", "User doesn't exist or string is empty");
+                    Log.d("FBerror1", "User doesn't exist or string is empty");
                 }
+                Log.d("Size", String.valueOf(userList.size()));
             }
 
             @Override
@@ -92,7 +96,14 @@ public class Database extends Application {
         });
         // If User doesn't exist, or string is empty, return null
         Log.d("next", "this is where code jumps to next");
-        return userList.get(0);
+        Log.d("SizeAfter", String.valueOf(userList.size()));
+        try {
+            //Log.d("SizeLoop", String.valueOf(userList.size()));
+            return userList.get(0);
+        } catch (Exception e) {
+            Log.d("FBerror", "No user exists in firebase with that username");
+        }
+        return null;
     }
 
     public void addBook(Book book) {

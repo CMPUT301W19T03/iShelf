@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.TextView;
 
@@ -54,14 +55,19 @@ public class MainActivity extends AppCompatActivity {
         User user = new User();
         user.setUsername("testUsername");
         db.addUser(user);
-        db.getUser("testUsername");
+        User user1 = db.getUser("testUsername");
+        Log.d("FinalCheck", user1.getUsername());
+        assert (user.getUsername() == user1.getUsername());
+        /*
         db.deleteUser("testUsername");
         Book book = new Book();
         UUID id = new UUID(123l, 1234l);
         book.setId(id);
         db.addBook(book);
-        db.getBook(book.getId());
+        Book book1 = db.getBook(book.getId());
+        assert  (book.getId() == book1.getId());
         db.deleteBook(book.getId());
+        */
     }
 
 }
