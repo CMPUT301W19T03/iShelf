@@ -17,7 +17,7 @@ public class Book {
     private Long ISBN;
     private int status = 1; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
     private ArrayList<Rating> ratings; // Error due to no Rating class yet
-    private UUID id; // changed from int to UUID
+    private UUID id = UUID.randomUUID(); // changed from int to UUID
     private Image photo;
 
     // Getters and Setters
@@ -72,30 +72,30 @@ public class Book {
     /**
      * setBorrowed() sets the status of the book to borrowed, so that others can't borrow it
      */
-    public void setBorrowed(){
-        // TODO: implement logic
-    }
-
-    /**
-     * setAvailable() sets the status of the book to available, so that others can borrow it
-     */
-    public void setAvailable(){
-        // TODO: implement logic
-    }
-
-    /**
-     * checkBorrowed() returns true if available, false otherwise
-     */
-    public boolean checkBorrowed(){
-        // TODO: implement logic
-    }
-
-
-    /**
-     * addRating() adds a rating to the book's list of ratings
-     */
-    public void addRating(Rating rating){
-        // TODO: implement logic
-    }
+//    public void setBorrowed(){
+//        // TODO: implement logic
+//    }
+//
+//    /**
+//     * setAvailable() sets the status of the book to available, so that others can borrow it
+//     */
+//    public void setAvailable(){
+//        // TODO: implement logic
+//    }
+//
+//    /**
+//     * checkBorrowed() returns true if available, false otherwise
+//     */
+//    public boolean checkBorrowed(){
+//        // TODO: implement logic
+//    }
+//
+//
+//    /**
+//     * addRating() adds a rating to the book's list of ratings
+//     */
+//    public void addRating(Rating rating){
+//        // TODO: implement logic
+//    }
 
 }

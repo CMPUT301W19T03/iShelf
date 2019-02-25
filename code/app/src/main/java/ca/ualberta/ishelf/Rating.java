@@ -1,17 +1,9 @@
 package ca.ualberta.ishelf;
 
 public class Rating {
-
-
     private int rating;
-
-
-
     private String comment;
-    Rating(){}
-
-
-
+    //Rating(){}
     public int getRating() {
         return rating;
     }
@@ -25,7 +17,6 @@ public class Rating {
         }
 
     }
-
     public String getComment() {
         return comment;
     }

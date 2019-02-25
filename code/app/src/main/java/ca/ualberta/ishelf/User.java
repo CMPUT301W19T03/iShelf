@@ -1,6 +1,7 @@
 package ca.ualberta.ishelf;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class User {
     private String username;
@@ -26,7 +27,7 @@ public class User {
         return rating;
     }
 
-    public Rating setRating(Rating rating) {
+    public void setRating(Rating rating) {
         this.rating = rating;
     }
 
