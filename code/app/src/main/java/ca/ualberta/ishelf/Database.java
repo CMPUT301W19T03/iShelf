@@ -67,6 +67,7 @@ public class Database extends Application {
     public User getUser(String username) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Users").child(username);
+        final ArrayList<User> userList = new ArrayList<User>();
         // create a one time use listener to immediately access datasnapshot
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -77,6 +78,7 @@ public class Database extends Application {
                     Gson gson = new Gson();
                     Type tokenType = new TypeToken<User>(){}.getType();
                     User user = gson.fromJson(jUser, tokenType);
+                    userList.add(user);
                     Log.d("Confirm", user.getUsername());
                 } else {
                     Log.d("Firebase Retrieval Error", "User doesn't exist or string is empty");
@@ -90,7 +92,7 @@ public class Database extends Application {
         });
         // If User doesn't exist, or string is empty, return null
         Log.d("next", "this is where code jumps to next");
-        return null;
+        return userList.get(0);
     }
 
     public void addBook(Book book) {
@@ -128,6 +130,7 @@ public class Database extends Application {
     public Book getBook(UUID bookId) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Books").child(bookId.toString());
+        final ArrayList<Book> bookList = new ArrayList<Book>();
         // create a one time use listener to immediately access datasnapshot
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -138,6 +141,7 @@ public class Database extends Application {
                     Gson gson = new Gson();
                     Type tokenType = new TypeToken<Book>(){}.getType();
                     Book book = gson.fromJson(jBook, tokenType);
+                    bookList.add(book);
                     //TODO how to return this book object?
                     //Log.d("Confirm", book.getId());
                 } else {
@@ -151,7 +155,7 @@ public class Database extends Application {
             }
         });
         // If Book doesn't exist, or string is empty, return null
-        return null;
+        return bookList.get(0);
     }
 
 
@@ -190,6 +194,7 @@ public class Database extends Application {
     public Notification getNotification(UUID id){
         // get reference to specific entry
         Firebase tempRef = ref.child("Notifications").child(id.toString());
+        final ArrayList<Notification> notificationList = new ArrayList<Notification>();
         // create a one time use listener to immediately access datasnapshot
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -200,6 +205,7 @@ public class Database extends Application {
                     Gson gson = new Gson();
                     Type tokenType = new TypeToken<Book>(){}.getType();
                     Notification notification = gson.fromJson(jNotification, tokenType);
+                    notificationList.add(notification);
                     //TODO how to return this book object?
                     //Log.d("Confirm", book.getId());
                 } else {
@@ -213,18 +219,17 @@ public class Database extends Application {
             }
         });
         // If Notification doesn't exist, or string is empty, return null
-        return null;
+        return notificationList.get(0);
     }
 
-
-    public ArrayList<Notification> getUserNotifications(String username) {
+    public ArrayList<Notification> getNotifications() {
         // get reference to specific entry
         Firebase tempRef = ref.child("Notifications");
+        final ArrayList<Notification> notificationList = new ArrayList<Notification>();
         // create a one time use listener to immediately access datasnapshot
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                ArrayList<Notification> notificationList = new ArrayList<Notification>();
                 Type tokenType = new TypeToken<Book>(){}.getType();
                 Notification tempNotification;
                 String tempString;
@@ -235,11 +240,6 @@ public class Database extends Application {
                         // Get user object from Gson
                         Gson gson = new Gson();
                         tempNotification = gson.fromJson(tempString, tokenType);
-                        /*
-                        if (tempNotification.getUserName().equals(username)) {
-                            notificationList.add(tempNotification);
-                        }
-                        */
                         notificationList.add(tempNotification);
                     } else {
                         Log.d("Firebase Retrieval Error", "Notification doesn't exist or string is empty");
@@ -253,7 +253,44 @@ public class Database extends Application {
             }
         });
 
-        return null;
+        return notificationList;
+    }
+
+    public ArrayList<Notification> getUserNotifications(String username) {
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Notifications");
+        final ArrayList<Notification> notificationList = new ArrayList<Notification>();
+        final String finalUsername = username;
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Type tokenType = new TypeToken<Book>(){}.getType();
+                Notification tempNotification;
+                String tempString;
+
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    tempString = d.getValue(String.class);
+                    if (tempString != null) {
+                        // Get user object from Gson
+                        Gson gson = new Gson();
+                        tempNotification = gson.fromJson(tempString, tokenType);
+                        if (tempNotification.getUserName().equals(finalUsername)) {
+                            notificationList.add(tempNotification);
+                        }
+                    } else {
+                        Log.d("Firebase Retrieval Error", "Notification doesn't exist or string is empty");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
+
+        return notificationList;
     }
 
     public ArrayList<Book> getBooks() {
