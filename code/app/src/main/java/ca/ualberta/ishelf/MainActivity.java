@@ -1,5 +1,7 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -29,7 +31,11 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_home);
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
+
+                    String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+                    mTextMessage.setText(username);
+                    //mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
@@ -48,5 +54,19 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // Check if logged-in
+        String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        if (username == null) {     // user is not logged-in
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivityForResult(intent, 1);
+        }
+
+    }
+
 
 }
