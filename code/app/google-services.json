@@ -23,6 +23,14 @@
           }
         },
         {
+          "client_id": "1075824538974-o8tto6ncmve9q6mnt1q0gdmnl065hsk4.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ca.ualberta.ishelf",
+            "certificate_hash": "4fe069638b3fe44e1c6a34a36009fd9b2be9b3f7"
+          }
+        },
+        {
           "client_id": "1075824538974-sk0elkp53ff9vtlnm4rtm5nd1bpkliv0.apps.googleusercontent.com",
           "client_type": 3
         }
