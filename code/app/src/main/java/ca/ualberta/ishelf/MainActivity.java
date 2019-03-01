@@ -2,6 +2,7 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -31,11 +32,7 @@ public class MainActivity extends AppCompatActivity {
                     mTextMessage.setText(R.string.title_home);
                     return true;
                 case R.id.navigation_dashboard:
-
-                    String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-
-                    mTextMessage.setText(username);
-                    //mTextMessage.setText(R.string.title_dashboard);
+                    mTextMessage.setText(R.string.title_dashboard);
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText(R.string.title_notifications);
@@ -50,14 +47,18 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SignIn();
+
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
+    private void SignIn(){
+
+        // code to reset username in UserPreferences
+        //SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+        //editor.putString("username", null).apply();
 
         // Check if logged-in
         String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -65,7 +66,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SignInActivity.class);
             startActivityForResult(intent, 1);
         }
-
     }
 
 

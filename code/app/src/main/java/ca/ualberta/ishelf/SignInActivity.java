@@ -10,6 +10,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -24,6 +28,11 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 public class SignInActivity extends AppCompatActivity {
 
@@ -52,16 +61,11 @@ public class SignInActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Log.d("SignIn","Button Clicked");
+                mGoogleSignInClient.signOut();
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }
         });
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
 
     }
 
@@ -80,7 +84,8 @@ public class SignInActivity extends AppCompatActivity {
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e);
-                // TODO updateUI
+                Toast.makeText(SignInActivity.this, "Google SignIn Error", Toast.LENGTH_LONG).show();
+                // TODO
             }
         }
     }
@@ -100,22 +105,74 @@ public class SignInActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
 
-                            // update username in UserPreferences
                             String username = user.getEmail().substring(0, user.getEmail().indexOf('@'));
-                            SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-                            editor.putString("username", username).apply();
-
-                            // TODO updateUI
                             Log.d("LoggedIn", username);
-                            SignInActivity.super.onBackPressed();
+                            SignedIn(username);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(SignInActivity.this, "This is my Toast message!", Toast.LENGTH_LONG).show();
-                            // TODO updateUI
+                            Toast.makeText(SignInActivity.this, "Failed to SignIn", Toast.LENGTH_LONG).show();
+                            // TODO
                         }
                     }
                 });
+    }
+
+
+    /**
+     * Called when user successfully sign in
+     * Sets UserPreferences and check if user in Firebase database.
+     * If not, adds their User object to Firebase.
+     * @param username the username for the logged-in user
+     */
+    private void SignedIn(final String username){
+        // update username in UserPreferences
+        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+        editor.putString("username", username).apply();
+
+        // check user in firebase
+        String link = "https://ishelf-bb4e7.firebaseio.com";
+        final Firebase ref;
+        Firebase.setAndroidContext(this);
+        ref = new Firebase(link);
+
+
+        Firebase tempRef = ref.child("Users");
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean found = false;  // true if user found in firebase
+
+                // look for user in firrebase
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    if (d.getKey().equals(username)){    // user found
+                        Log.d("User", "User found");
+                        found = true;
+                    }
+                }
+
+                if (!found) {
+                    // user not in firebase => new user, add user to Firebase
+                    Log.d("User", "User not in firebase");
+                    // create the new user User object
+                    User newUser = new User();
+                    newUser.setUsername(username);
+                    Firebase userchild = ref.child("Users").child(username);
+                    Gson gson = new Gson();
+                    String jUser = gson.toJson(newUser);
+                    // save the new User object to firebase
+                    userchild.setValue(jUser);
+                }
+
+                // go to previous activity
+                SignInActivity.super.onBackPressed();
+
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
 }
