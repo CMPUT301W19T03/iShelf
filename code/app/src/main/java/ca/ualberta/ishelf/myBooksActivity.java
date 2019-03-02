@@ -39,7 +39,10 @@ public class myBooksActivity<add> extends AppCompatActivity {
         initImage();
     }
     public void addBook(View view){
-        enteredAlert("this works");
+        //enteredAlert("this works");
+        mImageUrls.add("https://i.imgur.com/ZcLLrkY.jpg");
+        mNames.add("Washington");
+        initRecyclerView();
     }
 
     private void initImage(){
@@ -70,8 +73,6 @@ public class myBooksActivity<add> extends AppCompatActivity {
         mImageUrls.add("https://i.redd.it/obx4zydshg601.jpg");
         mNames.add("Austrailia");
 
-        mImageUrls.add("https://i.imgur.com/ZcLLrkY.jpg");
-        mNames.add("Washington");
 
         initRecyclerView();
     }
