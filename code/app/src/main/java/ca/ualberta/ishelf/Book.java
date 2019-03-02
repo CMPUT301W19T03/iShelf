@@ -16,12 +16,26 @@ public class Book {
     private String name;
     private String description;
     private Long ISBN;
-    private int status = 1; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
-    private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
+    private int status; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
+    private ArrayList<Rating> ratings = new ArrayList<>();
     private UUID id; // changed from int to UUID
     private Image photo;
 
-
+    /**
+     * Evan - created a constructor which set all values to null (except status)
+     *  this is to check when the owner is inputing a new books that he has al
+     *      the required fields. So add something like "if (foo == null) {display popup telling him to enter in required fields}"
+     */
+    public Book() {
+        this.owner = null;
+        this.name = null;
+        this.description = null;
+        this.ISBN = null;
+        this.status = 1;
+        this.ratings = null;
+        this.id = null;
+        this.photo = null;
+    }
 
     // Getters and Setters
     public String getName() {
@@ -78,7 +92,6 @@ public class Book {
      * setBorrowed() sets the status of the book to borrowed, so that others can't borrow it
      */
     public void setBorrowed(){
-        // TODO: implement logic
         this.setStatus(0);
     }
 
@@ -86,7 +99,6 @@ public class Book {
      * setAvailable() sets the status of the book to available, so that others can borrow it
      */
     public void setAvailable(){
-        // TODO: implement logic
         this.setStatus(1);
     }
 
@@ -98,9 +110,6 @@ public class Book {
             return true;
         }
         return false;
-
-        // TODO: implement logic
-
     }
 
 
@@ -108,8 +117,6 @@ public class Book {
      * addRating() adds a rating to the book's list of ratings
      */
     public void addRating(Rating rating){
-        // TODO: implement logic
         ratings.add(rating);
     }
-
 }

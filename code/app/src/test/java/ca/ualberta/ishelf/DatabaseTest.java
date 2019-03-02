@@ -110,7 +110,7 @@ public class DatabaseTest {
         // add a book
         Book testBook = new Book();
         testBook.setName("testBook");
-        testBook.setISBN(1234567890l);
+        testBook.setISBN(1234567890L); //long literal should end in capital L
         UUID bookID = testBook.getId();
         fb.addBook(testBook);
 
@@ -127,14 +127,14 @@ public class DatabaseTest {
         // add the first book
         Book testBook1 = new Book();
         testBook1.setName("testBook1");
-        testBook1.setISBN(1234567890l);
+        testBook1.setISBN(1234567890L);
         UUID bookID1 = testBook1.getId();
         fb.addBook(testBook1);
 
         // add a second book
         Book testBook2 = new Book();
         testBook2.setName("testBook2");
-        testBook2.setISBN(5432109876l);
+        testBook2.setISBN(5432109876L);
         UUID bookID2 = testBook2.getId();
         fb.addBook(testBook2);
 
@@ -157,7 +157,7 @@ public class DatabaseTest {
         // add borrowed book
         Book testBook1 = new Book();
         testBook1.setName("testBook1");
-        testBook1.setISBN(1234567890l);
+        testBook1.setISBN(1234567890L);
         testBook1.setBorrowed();
         UUID bookID1 = testBook1.getId();
         fb.addBook(testBook1);
@@ -165,7 +165,7 @@ public class DatabaseTest {
         // add available book
         Book testBook2 = new Book();
         testBook2.setName("testBook2");
-        testBook2.setISBN(5432109876l);
+        testBook2.setISBN(5432109876L);
         testBook2.setAvailable();
         UUID bookID2 = testBook2.getId();
         fb.addBook(testBook2);
@@ -193,7 +193,7 @@ public class DatabaseTest {
         // add borrowed book
         Book testBook1 = new Book();
         testBook1.setName("testBook1");
-        testBook1.setISBN(1234567890l);
+        testBook1.setISBN(1234567890L);
         testBook1.setOwner(username1);
         UUID bookID1 = testBook1.getId();
         fb.addBook(testBook1);
@@ -204,7 +204,7 @@ public class DatabaseTest {
         Book testBook2 = new Book();
         testBook2.setId(bookID1);
         testBook2.setName("testBook2");
-        testBook2.setISBN(5432109876l);
+        testBook2.setISBN(5432109876L);
         testBook1.setOwner(username2);
         UUID bookID2 = testBook2.getId();
         fb.addBook(testBook2);
