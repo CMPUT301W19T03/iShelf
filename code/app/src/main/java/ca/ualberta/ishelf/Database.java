@@ -16,9 +16,12 @@ public class Database extends Application {
     private final String link = "";
     private Firebase ref;
 
-    Database() {
-        Firebase.setAndroidContext(this);
+    public Firebase connect(Context context){
+        final String link = "https://ishelf-bb4e7.firebaseio.com";
+        Firebase ref;
+        Firebase.setAndroidContext(context);
         ref = new Firebase(link);
+        return ref;
     }
 
     public void addUser(User user) {
