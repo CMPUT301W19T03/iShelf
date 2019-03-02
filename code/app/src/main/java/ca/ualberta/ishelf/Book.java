@@ -12,13 +12,16 @@ import java.util.UUID;
  *
  */
 public class Book {
+    private String owner;
     private String name;
     private String description;
     private Long ISBN;
     private int status = 1; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
-    private ArrayList<Rating> ratings; // Error due to no Rating class yet
-    private UUID id = UUID.randomUUID(); // changed from int to UUID
+    private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
+    private UUID id; // changed from int to UUID
     private Image photo;
+
+
 
     // Getters and Setters
     public String getName() {
@@ -66,36 +69,47 @@ public class Book {
         this.id = id;
     }
 
+    public void setOwner(String name) {this.owner = name;}
+
 
     // Public Methods
 
     /**
      * setBorrowed() sets the status of the book to borrowed, so that others can't borrow it
      */
-//    public void setBorrowed(){
-//        // TODO: implement logic
-//    }
-//
-//    /**
-//     * setAvailable() sets the status of the book to available, so that others can borrow it
-//     */
-//    public void setAvailable(){
-//        // TODO: implement logic
-//    }
-//
-//    /**
-//     * checkBorrowed() returns true if available, false otherwise
-//     */
-//    public boolean checkBorrowed(){
-//        // TODO: implement logic
-//    }
-//
-//
-//    /**
-//     * addRating() adds a rating to the book's list of ratings
-//     */
-//    public void addRating(Rating rating){
-//        // TODO: implement logic
-//    }
+    public void setBorrowed(){
+        // TODO: implement logic
+        this.setStatus(0);
+    }
+
+    /**
+     * setAvailable() sets the status of the book to available, so that others can borrow it
+     */
+    public void setAvailable(){
+        // TODO: implement logic
+        this.setStatus(1);
+    }
+
+    /**
+     * checkBorrowed() returns true if available, false otherwise
+     */
+    public boolean checkBorrowed(){
+        if(this.getStatus()== 0){
+            return true;
+        }
+        return false;
+
+        // TODO: implement logic
+
+    }
+
+
+    /**
+     * addRating() adds a rating to the book's list of ratings
+     */
+    public void addRating(Rating rating){
+        // TODO: implement logic
+        ratings.add(rating);
+    }
 
 }
