@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -7,6 +8,10 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -28,7 +33,8 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText DescriptionText;
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
-
+    private final String link = "https://ishelf-bb4e7.firebaseio.com";
+    private Firebase ref = new Firebase(link);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +102,8 @@ public class EditBookActivity extends AppCompatActivity {
         Booklist.add(book);
         saveInFile();
 
+        // Save book changes to Firebase
+        saveInCloud(book);
 
         Intent intent = new Intent(EditBookActivity.this, BookProfileActivity.class);
 
@@ -151,7 +159,31 @@ public class EditBookActivity extends AppCompatActivity {
         }
     }
 
+    private void saveInCloud(Book book) {
+        // Delete old version of book from firebase
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Books").child(book.getId().toString());
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            // Delete our entry
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                dataSnapshot.getRef().removeValue();
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
 
+        // Add new version of book to firebase
+        Firebase bookchild = ref.child("Books").child(book.getId().toString());
+        // Convert to Gson
+        Gson gson = new Gson();
+        String jBook = gson.toJson(book);
+        // Save to firebase
+        bookchild.setValue(jBook);
+    }
 
 }
 
