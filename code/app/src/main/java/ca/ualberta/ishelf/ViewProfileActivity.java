@@ -46,7 +46,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
-        Tag TAG = "editProfile";
+        String TAG = "editProfile";
 
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvPhoneNum = (TextView) findViewById(R.id.tvPhoneNum);
