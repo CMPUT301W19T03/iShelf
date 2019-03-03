@@ -11,6 +11,7 @@ import java.util.UUID;
 public class DatabaseTest {
     @Test
     public void testAddUser() {
+        //TODO get this working
         Database fb = new Database();
         User u1 = new User();
         u1.setUsername("testUsername");
