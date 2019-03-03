@@ -102,8 +102,7 @@ public class EditBookActivity extends AppCompatActivity {
         saveInFile();
 
         // Save book changes to Firebase
-        saveInCloud(book);
-        db.editBook(book.getId());
+        db.editBook(book);
 
         Intent intent = new Intent(EditBookActivity.this, BookProfileActivity.class);
 
@@ -157,32 +156,6 @@ public class EditBookActivity extends AppCompatActivity {
 
             e.printStackTrace();
         }
-    }
-
-    private void saveInCloud(Book book) {
-        // Delete old version of book from firebase
-        // get reference to specific entry
-        Firebase tempRef = ref.child("Books").child(book.getId().toString());
-        // create a one time use listener to immediately access datasnapshot
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            // Delete our entry
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                dataSnapshot.getRef().removeValue();
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                return;
-            }
-        });
-
-        // Add new version of book to firebase
-        Firebase bookchild = ref.child("Books").child(book.getId().toString());
-        // Convert to Gson
-        Gson gson = new Gson();
-        String jBook = gson.toJson(book);
-        // Save to firebase
-        bookchild.setValue(jBook);
     }
 
 }
