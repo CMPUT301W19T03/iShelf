@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,12 +23,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 /*https://www.youtube.com/watch?v=Vyqz_-sJGFk
  */
-public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private static final String TAG = "recyclerviewadapter";
     private ArrayList<String> mImageName = new ArrayList<>();
     private ArrayList<String> mImages = new ArrayList<>();
     private Context mContext;
-
+    //private MyFilter filter;
     public MyAdapter(ArrayList<String> mImageName, ArrayList<String> mImages, Context mContext) {
         this.mImageName = mImageName;
         this.mImages = mImages;
@@ -63,6 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
         return mImageName.size();
     }
 
+
     public class ViewHolder extends RecyclerView.ViewHolder{
         CircleImageView image;
         TextView imageName;
@@ -76,4 +79,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder>{
 
         }
     }
+//    public void updateData(ArrayList name, ArrayList image) {
+//        this.mImageName = name;
+//        this.mImages = image;
+//        notifyDataSetChanged();
+//    }
 }

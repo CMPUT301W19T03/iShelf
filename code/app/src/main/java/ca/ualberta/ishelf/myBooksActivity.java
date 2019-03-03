@@ -16,12 +16,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 
-
+/**
+ *
+ * @author Evan
+ */
 public class myBooksActivity<add> extends AppCompatActivity {
     //    https://stackoverflow.com/questions/44777605/android-studio-how-to-add-filter-on-a-recyclerview-and-how-to-implement-it
     private static final String TAG = "xxxmyBooksActivityxxx";
@@ -32,6 +36,8 @@ public class myBooksActivity<add> extends AppCompatActivity {
     private ArrayList<String> mNames = new ArrayList<>();
     private ArrayList<String> mImage = new ArrayList<>();
     private RatingBar ratingBar;
+    private Spinner spinner; //drop-down filter: https://www.mkyong.com/android/android-spinner-drop-down-list-example/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +47,7 @@ public class myBooksActivity<add> extends AppCompatActivity {
         initImage();
     }
     public void filter(){
-        //TODO suk dik
+
     }
     public void addBook(View view){
         //enteredAlert("this works");
@@ -55,7 +61,7 @@ public class myBooksActivity<add> extends AppCompatActivity {
         this.ratingBar.setRating(4); // this should work but does not work, idk why
         mImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
         mNames.add(book.getName());
-        initRecyclerView();
+        initRecyclerView(); //there should be a way to update without initializing it again
     }
 
     private void initImage(){
