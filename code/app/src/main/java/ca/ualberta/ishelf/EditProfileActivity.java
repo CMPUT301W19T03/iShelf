@@ -37,6 +37,10 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // TODO: get the user from firebase
 
+        // fill the fields with their current info
+        editName.setText(user.getUsername());
+        editEmail.setText(user.getEmail());
+        editPhone.setText(user.getPhoneNum());
     }
 
     public void saveButton(View v){
