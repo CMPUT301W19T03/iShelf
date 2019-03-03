@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 
@@ -18,7 +20,7 @@ import android.widget.TextView;
  */
 
 public class MainActivity extends AppCompatActivity {
-
+    Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        loadFragment(new myBooksFragment());
     }
     private TextView mTextMessage;
 
@@ -36,19 +39,28 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment fragment = null;
             switch (item.getItemId()) {
                 case R.id.navigation_my_books:
-                    Intent i = new Intent(MainActivity.this, myBooksActivity.class);
-                    startActivity(i);
-                    return true;
+                    fragment = new myBooksFragment();
+                    break;
                 case R.id.navigation_borrow:
                     mTextMessage.setText(R.string.borrow_books);
-                    return true;
+                    break;
                 case R.id.navigation_requested:
                     mTextMessage.setText(R.string.requested_books);
-                    return true;
+                    break;
             }
-            return false;
+            return loadFragment(fragment);
         }
     };
+    private boolean loadFragment (Fragment fragment){ //should have error checking
+        getSupportFragmentManager().beginTransaction().replace(R.id.recycler_fragment, fragment).commit();
+        return true;
+    }
+//    public void addBook(View view){
+//        fragment = new myBooksFragment();
+//        ((myBooksFragment) fragment).addBook(view);
+//    }
+
 }
