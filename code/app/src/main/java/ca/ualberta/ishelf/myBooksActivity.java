@@ -14,6 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RatingBar;
+import android.widget.RatingBar.OnRatingBarChangeListener;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,68 +24,66 @@ import java.util.ArrayList;
 
 public class myBooksActivity<add> extends AppCompatActivity {
     //    https://stackoverflow.com/questions/44777605/android-studio-how-to-add-filter-on-a-recyclerview-and-how-to-implement-it
-    private static final String TAG = "myBooksActivityxxx";
+    private static final String TAG = "xxxmyBooksActivityxxx";
     //String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
     //vars
-    //private ArrayList<Book> myBooks = new ArrayList<>();
-    //private ArrayAdapter<Book> adapter;
+    private ArrayList<Book> myBooks = new ArrayList<>();
+    private ArrayAdapter<Book> adapter;
     private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mImageUrls = new ArrayList<>();
-
+    private ArrayList<String> mImage = new ArrayList<>();
+    private RatingBar ratingBar;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "OnCreate started");
         setContentView(R.layout.my_book);
         BottomNavigationView navigation = findViewById(R.id.navigation);
-        Log.d(TAG, "OnCreate started");
         initImage();
+    }
+    public void filter(){
+        //TODO suk dik
     }
     public void addBook(View view){
         //enteredAlert("this works");
-        mImageUrls.add("https://i.imgur.com/ZcLLrkY.jpg");
-        mNames.add("Washington");
+        mImage.add("https://i.imgur.com/ZcLLrkY.jpg"); //wherever the book image comes from
+        mNames.add("Havana oh na na");
+        Book book = new Book();
+        book.setName("50ShadesOfBlack");
+        ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        Rating rating = new Rating();
+        book.addRating(rating);
+        this.ratingBar.setRating(4); // this should work but does not work, idk why
+        mImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+        mNames.add(book.getName());
         initRecyclerView();
     }
 
     private void initImage(){
         Log.d(TAG, "init works");
-        mImageUrls.add("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg");
-        mNames.add("Havasu Falls");
+        mImage.add("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg");
+        mNames.add("Havana oh na na");
 
-        mImageUrls.add("https://i.redd.it/tpsnoz5bzo501.jpg");
-        mNames.add("Trondheim");
+        mImage.add("https://i.redd.it/tpsnoz5bzo501.jpg");
+        mNames.add("half of my heart is in havana oh na na");
 
-        mImageUrls.add("https://i.redd.it/qn7f9oqu7o501.jpg");
-        mNames.add("Portugal");
+        mImage.add("https://i.redd.it/qn7f9oqu7o501.jpg");
+        mNames.add("He took me back to East Atlanta, na-na-na");
 
-        mImageUrls.add("https://i.redd.it/j6myfqglup501.jpg");
-        mNames.add("Rocky Mountain National Park");
+        mImage.add("https://i.redd.it/j6myfqglup501.jpg");
+        mNames.add("Oh, but my heart is in Havana");
 
-
-        mImageUrls.add("https://i.redd.it/0h2gm1ix6p501.jpg");
-        mNames.add("Mahahual");
-
-        mImageUrls.add("https://i.redd.it/k98uzl68eh501.jpg");
-        mNames.add("Frozen Lake");
-
-
-        mImageUrls.add("https://i.redd.it/glin0nwndo501.jpg");
-        mNames.add("White Sands Desert");
-
-        mImageUrls.add("https://i.redd.it/obx4zydshg601.jpg");
-        mNames.add("Austrailia");
-
+        mImage.add("https://i.redd.it/0h2gm1ix6p501.jpg");
+        mNames.add("There's somethin' 'bout his manners");
 
         initRecyclerView();
     }
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.my_recycler_view);
-        MyAdapter adapter = new MyAdapter(mNames, mImageUrls, this); //in the same order as the constructor in MyAdapter
+        MyAdapter adapter = new MyAdapter(mNames, mImage, this); //in the same order as the constructor in MyAdapter
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
-
 
     /*for testing purposes*/
     private void enteredAlert(String msg) {
@@ -97,14 +97,4 @@ public class myBooksActivity<add> extends AppCompatActivity {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
-//    @Override
-//    protected void onStart() {
-//        super.onStart();
-//        //loadFromFile();
-//        myBooks = new ArrayList<Book>();
-//        adapter = new ArrayAdapter<Book>(this, R.layout.list_items, myBooks);
-//        //myBooksActivity.all.setAdapter(adapter);
-//    }
-
 }

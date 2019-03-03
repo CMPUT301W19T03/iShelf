@@ -3,7 +3,12 @@ package ca.ualberta.ishelf;
 public class Rating {
     private int rating;
     private String comment;
-    //Rating(){}
+
+    public Rating() { //Evan - added constructor for rating to test add books
+        this.rating = 4;
+        this.comment = "comment here please";
+    }
+
     public int getRating() {
         return rating;
     }

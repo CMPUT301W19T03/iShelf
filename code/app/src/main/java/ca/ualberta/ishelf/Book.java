@@ -32,7 +32,7 @@ public class Book {
         this.description = null;
         this.ISBN = null;
         this.status = 1;
-        this.ratings = null;
+        this.ratings = getRatings();
         this.id = null;
         this.photo = null;
     }
