@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import java.util.UUID;
 
 
 /**
@@ -53,6 +56,24 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        // Testing Database Object
+        Database db = new Database(this);
+        User user = new User();
+        user.setUsername("testUsername");
+        db.addUser(user);
+        User user1 = db.getUser("testUsername");
+        Log.d("FinalCheck", user1.getUsername());
+        assert (user.getUsername() == user1.getUsername());
+        /*
+        db.deleteUser("testUsername");
+        Book book = new Book();
+        UUID id = new UUID(123l, 1234l);
+        book.setId(id);
+        db.addBook(book);
+        Book book1 = db.getBook(book.getId());
+        assert  (book.getId() == book1.getId());
+        db.deleteBook(book.getId());
+        */
     }
 
     private void SignIn(){
@@ -68,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
             startActivityForResult(intent, 1);
         }
     }
+
 
     private void button1(View v){
         User user1 = new User();
