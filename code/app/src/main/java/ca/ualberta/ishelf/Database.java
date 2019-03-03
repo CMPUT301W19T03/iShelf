@@ -21,6 +21,12 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * Database object used as an interface between our applications and our Firebase
+ * Real-Time database
+ * Important Note: Any method that gets an object from the firebase will not work
+ * due to the nature of threads. Copy and alter code, inserting into the actual activity.
+ */
 public class Database extends Application {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
@@ -32,6 +38,11 @@ public class Database extends Application {
         ref = new Firebase(link);
     }
 
+    /**
+     * Given a user object, adds that object to firebase
+     * Uses Gson to store the object
+     * @param user
+     */
     public void addUser(User user) {
         // Save user to Firebase
         Firebase userchild = ref.child("Users").child(user.getUsername());
@@ -42,6 +53,10 @@ public class Database extends Application {
         userchild.setValue(jUser);
     }
 
+    /**
+     * Given a username, finds that object in our database and deletes it
+     * @param username
+     */
     public void deleteUser(String username) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Users").child(username);
@@ -59,12 +74,33 @@ public class Database extends Application {
         });
     }
 
+    /**
+     * Given a user object, finds that object in the database and replaces it
+     * @param user
+     */
     public void editUser(User user) {
         deleteUser(user.getUsername());
         addUser(user);
     }
 
+    /**
+     * Given a user object, and it's original username, finds the old User object in the
+     * firebase real-time database and replaces it with the new user.
+     * @param oldUsername
+     * @param user
+     */
+    public void editUser(String oldUsername, User user) {
+        deleteUser(oldUsername);
+        addUser(user);
+    }
 
+
+    /**
+     * Given a username, finds and returns that object from Firebase
+     * @param username
+     * @return
+     * @deprecated
+     */
     public User getUser(String username) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Users").child(username);
@@ -106,6 +142,10 @@ public class Database extends Application {
         return null;
     }
 
+    /**
+     * Given a book object, adds that object to the firebase real-time database
+     * @param book
+     */
     public void addBook(Book book) {
         // Save user to Firebase
         Firebase bookchild = ref.child("Books").child(book.getId().toString());
@@ -116,6 +156,11 @@ public class Database extends Application {
         bookchild.setValue(jBook);
     }
 
+    /**
+     * Given the UUID of a book, finds that book in the Firebase real-time database
+     * and removes it
+     * @param id
+     */
     public void deleteBook(UUID id) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Books").child(id.toString());
@@ -133,11 +178,22 @@ public class Database extends Application {
         });
     }
 
+
+    /**
+     * Given a book object, finds that object in the database and replaces it
+     * @param book
+     */
     public void editBook(Book book) {
         deleteBook(book.getId());
         addBook(book);
     }
 
+    /**
+     * Given the Id of a book, finds that book in the database
+     * @param bookId
+     * @return
+     * @deprecated
+     */
     public Book getBook(UUID bookId) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Books").child(bookId.toString());
@@ -170,6 +226,10 @@ public class Database extends Application {
     }
 
 
+    /**
+     * Given a notification object, adds that object to the firebase realt-time database
+     * @param notification
+     */
     public void addNotification(Notification notification) {
         // Save Notification to Firebase
         Firebase notificationchild = ref.child("Notifications").child(notification.getId().toString());
@@ -180,6 +240,10 @@ public class Database extends Application {
         notificationchild.setValue(jNotification);
     }
 
+    /**
+     * Given the id of a notification, finds that obejct in the firebase database and deletes it
+     * @param id
+     */
     public void deleteNotification(UUID id) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Notifications").child(id.toString());
@@ -197,11 +261,23 @@ public class Database extends Application {
         });
     }
 
+    /**
+     * Given a notification, finds that notification in the firebase real-time database
+     * and replaces it with our new notification
+     * @param notification
+     */
     public void editNotification(Notification notification) {
         deleteNotification(notification.getId());
         addNotification(notification);
     }
 
+    /**
+     * Given the id of a notification, finds that notification in the firebase real-time database
+     * and returns it
+     * @param id
+     * @return
+     * @deprecated
+     */
     public Notification getNotification(UUID id){
         // get reference to specific entry
         Firebase tempRef = ref.child("Notifications").child(id.toString());
@@ -233,6 +309,11 @@ public class Database extends Application {
         return notificationList.get(0);
     }
 
+    /**
+     * Returns an ArrayList of all notifications
+     * @return
+     * @deprecated
+     */
     public ArrayList<Notification> getNotifications() {
         // get reference to specific entry
         Firebase tempRef = ref.child("Notifications");
@@ -267,6 +348,12 @@ public class Database extends Application {
         return notificationList;
     }
 
+    /**
+     * Given a username, returns all notifications belonging to that user
+     * @param username
+     * @return
+     * @deprecated
+     */
     public ArrayList<Notification> getUserNotifications(String username) {
         // get reference to specific entry
         Firebase tempRef = ref.child("Notifications");
