@@ -33,9 +33,16 @@ public class Database extends Application {
 
     //TODO documentation
     //TODO use arrays to actually return objects
-    Database(Context context) {
+    Database(Context context){
         Firebase.setAndroidContext(context);
         ref = new Firebase(link);
+    }
+
+    public Firebase connect(Context context){
+        Firebase ref;
+        Firebase.setAndroidContext(context);
+        ref = new Firebase(link);
+        return ref;
     }
 
     /**
