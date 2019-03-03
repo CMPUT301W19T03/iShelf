@@ -19,8 +19,8 @@ public class BookTest {
     @Test
     public void testDescription(){
         Book book = new Book();
-        book.setDescription("Description of book");
-        Assert.assertEquals("Desciption of books", book.getDescription());
+        book.setDescription("Description of books");
+        Assert.assertEquals("Description of books", book.getDescription());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class BookTest {
         rating.setComment("Rating Comment");
         book.addRating(rating);
         ArrayList<Rating> ratingArrayList = book.getRatings();
-        Assert.assertEquals(rating, ratingArrayList.get(ratingArrayList.size()));
+        Assert.assertEquals(rating, ratingArrayList.get(ratingArrayList.size()-1));
     }
 
 
