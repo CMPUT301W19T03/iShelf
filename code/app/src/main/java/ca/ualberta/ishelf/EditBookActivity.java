@@ -33,8 +33,7 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText DescriptionText;
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
-    private final String link = "https://ishelf-bb4e7.firebaseio.com";
-    private Firebase ref = new Firebase(link);
+    private Database db = new Database();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +103,7 @@ public class EditBookActivity extends AppCompatActivity {
 
         // Save book changes to Firebase
         saveInCloud(book);
+        db.editBook(book.getId());
 
         Intent intent = new Intent(EditBookActivity.this, BookProfileActivity.class);
 
