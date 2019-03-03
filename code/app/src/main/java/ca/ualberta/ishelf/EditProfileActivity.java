@@ -10,6 +10,13 @@ import android.widget.EditText;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 /**
  * EditProfileActivity
@@ -22,6 +29,8 @@ public class EditProfileActivity extends AppCompatActivity {
     private EditText editPhone;
     private String username;
     private User user;
+    private final String link = "https://ishelf-bb4e7.firebaseio.com";
+    private Firebase ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +45,61 @@ public class EditProfileActivity extends AppCompatActivity {
         Database database = new Database();
 
         // TODO: get the user from firebase
+        Firebase.setAndroidContext(this);
+        ref = new Firebase(link);
 
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Users").child(username);
+        final ArrayList<User> userList = new ArrayList<User>();
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>(){}.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+
+                    // fill the fields with their current info
+                    editName.setText(user.getUsername());
+                    editEmail.setText(user.getEmail());
+                    editPhone.setText(user.getPhoneNum());
+
+                    Log.d("Confirm", user.getUsername());
+                    userList.add(user);
+                } else {
+                    Log.d("FBerror1", "User doesn't exist or string is empty");
+                }
+                Log.d("Size", String.valueOf(userList.size()));
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+
+        /*
+        // If User doesn't exist, or string is empty, return null
+        Log.d("next", "this is where code jumps to next");
+        Log.d("SizeAfter", String.valueOf(userList.size()));
+        try {
+            //Log.d("SizeLoop", String.valueOf(userList.size()));
+            return userList.get(0);
+        } catch (Exception e) {
+            Log.d("FBerror", "No user exists in firebase with that username");
+        }
+        */
+
+        /*
         // fill the fields with their current info
         editName.setText(user.getUsername());
         editEmail.setText(user.getEmail());
         editPhone.setText(user.getPhoneNum());
+        */
     }
 
     public void saveButton(View v){
