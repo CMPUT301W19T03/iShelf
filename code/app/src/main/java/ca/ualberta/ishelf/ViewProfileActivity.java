@@ -118,7 +118,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         } else {
             editProfileButton.setVisibility(View.GONE);
         }
-        
+
     }
 
     public void EditProfile(){
