@@ -80,7 +80,7 @@ public class SignInActivity extends AppCompatActivity {
         editor.putString("username", username).apply();
 
         // connect to firebase
-        final Firebase ref = new Database().connect(this);
+        final Firebase ref = new Database(this).connect(this);
 
         Firebase tempRef = ref.child("Users");
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
