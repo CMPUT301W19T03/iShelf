@@ -33,7 +33,7 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText DescriptionText;
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
-    private Database db = new Database();
+    private Database db = new Database(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
