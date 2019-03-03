@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 
@@ -21,9 +23,16 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
-class BorrowAdapter extends RecyclerView.Adapter<BorrowAdapter.BorrowViewHolder> {
+
+
+
+
+class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Book> bookList = new ArrayList<Book>();
     private Context bookContext;
+
+    public final int TYPE_BOOK = 0;
+    public final int TYPE_LOAD = 1;
 
     public BorrowAdapter(Context bookContext, ArrayList<Book> bookList) {
         this.bookList = bookList;
@@ -41,36 +50,65 @@ class BorrowAdapter extends RecyclerView.Adapter<BorrowAdapter.BorrowViewHolder>
         }
     }
 
-    @Override
-    public BorrowAdapter.BorrowViewHolder onCreateViewHolder(ViewGroup parent,
-                                                             int viewType) {
-        View v = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.borrow_book_item, parent, false);
-        BorrowViewHolder vh = new BorrowViewHolder(v);
-        return vh;
+    static class LoadHolder extends RecyclerView.ViewHolder {
+        ProgressBar progressBar;
+
+        public LoadHolder(View itemView) {
+            super(itemView);
+            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
+        }
     }
 
     @Override
-    public void onBindViewHolder(BorrowViewHolder holder, final int position) {
-        holder.title.setText(bookList.get(position).getName());
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent,
+                                                             int viewType) {
+        if (viewType==TYPE_BOOK) {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.borrow_book_item, parent, false);
+            BorrowViewHolder vh = new BorrowViewHolder(v);
+            return vh;
+        }
+        else {
+            View v = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.load_borrow, parent, false);
+            LoadHolder vh = new LoadHolder(v);
+            return vh;
+        }
+    }
 
-        holder.borrowBody.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-//                Intent intent = new Intent((Activity) recordContext, ViewActivity.class);
-//                CardioRecord record = cardioList.get(position);
-//                intent.putExtra("record", record);
-//                Activity recordActivity = (Activity)  recordContext;
-//                recordActivity.startActivity(intent);
-            }
+    @Override
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        if (getItemViewType(position)==TYPE_LOAD){
+            // nothing
+        }
 
-        });
+        if (getItemViewType(position)==TYPE_BOOK) {
+            BorrowViewHolder borrowHolder = (BorrowViewHolder) holder;
 
+            borrowHolder.title.setText(bookList.get(position).getName());
+
+            borrowHolder.borrowBody.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent((Activity) bookContext, EditBookActivity.class);
+                    Book book = bookList.get(position);
+                    intent.putExtra("Data", book);
+                    intent.putExtra("Check Data", true);
+                    Activity bookActivity = (Activity) bookContext;
+                    bookActivity.startActivity(intent);
+                }
+            });
+        }
+    }
+
+    public int getItemViewType(int position) {
+        return bookList.get(position) == null ? TYPE_LOAD : TYPE_BOOK;
     }
 
     @Override
     public int getItemCount() {
         return bookList.size();
     }
+
 
 }
