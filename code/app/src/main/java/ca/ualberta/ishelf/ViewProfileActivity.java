@@ -56,50 +56,60 @@ public class ViewProfileActivity extends AppCompatActivity {
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
         if (getIntent().hasExtra("Username")) {
+            // If just a username is passed in
             Bundle bundle = getIntent().getExtras();
             username = (String) bundle.getSerializable("Username");
-        } else {
-            // When no username is passed along, assume we want to view the signed-in user's info
-            Log.d(TAG, "onCreate: no User info passed along");
-            // no extra, therefore working with our username
-            username = currentUsername;
-        }
 
-        // Get user from the passed in username
-        Firebase.setAndroidContext(this);
-        ref = new Firebase(link);
+            // Get user from the passed in username
+            Firebase.setAndroidContext(this);
+            ref = new Firebase(link);
 
-        // get reference to specific entry
-        Firebase tempRef = ref.child("Users").child(username);
-        final ArrayList<User> userList = new ArrayList<User>();
-        // create a one time use listener to immediately access datasnapshot
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
-                if (jUser != null) {
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<User>(){}.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+            // get reference to specific entry
+            Firebase tempRef = ref.child("Users").child(username);
+            final ArrayList<User> userList = new ArrayList<User>();
+            // create a one time use listener to immediately access datasnapshot
+            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String jUser = dataSnapshot.getValue(String.class);
+                    Log.d("jUser", jUser);
+                    if (jUser != null) {
+                        // Get user object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<User>(){}.getType();
+                        User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
 
-                    // fill the fields with their current info
-                    tvUsername.setText(user.getUsername());
-                    tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
-                    tvEmail.setText("EMAIL: " + user.getEmail());
-                    Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
-                    Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
+                        // fill the fields with their current info
+                        tvUsername.setText(user.getUsername());
+                        tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
+                        tvEmail.setText("EMAIL: " + user.getEmail());
+                        Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
+                        Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
 
-                    Log.d("Confirm", user.getUsername());
-                    userList.add(user);
-                } else {
-                    Log.d("FBerror1", "User doesn't exist or string is empty");
+                        Log.d("Confirm", user.getUsername());
+                        userList.add(user);
+                    } else {
+                        Log.d("FBerror1", "User doesn't exist or string is empty");
+                    }
+                    Log.d("Size", String.valueOf(userList.size()));
                 }
-                Log.d("Size", String.valueOf(userList.size()));
-            }
             });
 
+
+        } else if (getIntent().hasExtra("User")){
+            // if the entire user is passed in
+            user = (User) getIntent().getExtras().getSerializable("User");
+
+            tvUsername.setText(user.getUsername());
+            tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
+            tvEmail.setText("EMAIL: " + user.getEmail());
+            Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
+            Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
+        } else {
+            // When nothing is passed in
+            Log.d(TAG, "onCreate: nothing passed in");
+            // TODO: show the logged in user's info?
+        }
 
         editProfileButton = findViewById(R.id.editProfileButton);
         if (user.getUsername() == currentUsername){
@@ -108,15 +118,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         } else {
             editProfileButton.setVisibility(View.GONE);
         }
-
-        /*
-        tvUsername.setText(user.getUsername());
-        tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
-        tvEmail.setText("EMAIL: " + user.getEmail());
-
-        Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
-        Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
-        */
+        
     }
 
     public void EditProfile(){
