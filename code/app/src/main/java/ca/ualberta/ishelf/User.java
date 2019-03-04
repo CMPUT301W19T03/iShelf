@@ -1,9 +1,10 @@
 package ca.ualberta.ishelf;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class User {
+public class User implements Serializable {
     private String username;
     private ArrayList<UUID> borrowedBooks = new ArrayList<UUID>();
     private ArrayList<UUID> ownedBooks= new ArrayList<UUID>();

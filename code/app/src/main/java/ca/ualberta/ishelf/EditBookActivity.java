@@ -3,10 +3,15 @@ package ca.ualberta.ishelf;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -17,6 +22,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class EditBookActivity extends AppCompatActivity {
 
@@ -93,20 +99,64 @@ public class EditBookActivity extends AppCompatActivity {
         Booklist.add(book);
         saveInFile();
 
-
-        Intent intent = new Intent(EditBookActivity.this, BookProfileActivity.class);
-
-        intent.putExtra("Book Data", book);
+        saveFirebase(book);
 
 
+    }
 
-        startActivity(intent);
-        finish();
+    /**
+     * Update book in firebase, if book not in firebase, add it.
+     * @param book book to update/add
+     */
+    private void saveFirebase(final Book book){
+        // connect to firebase
+        final Firebase ref = new Database(this).connect(this);
 
+        Firebase tempRef = ref.child("Books");
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Boolean found = false;  // true if book found in firebase
 
+                // look for user in firebase
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    if (d.getKey().equals(book.getId().toString())){    // book found
+                        Log.d("Book", "Book found");
+                        found = true;
+                        // Book found, update it in firebase
+                        Firebase userchild = ref.child("Books").child(d.getKey());
+                        // set book object JSON
+                        book.setId(UUID.fromString(d.getKey()));
+                        Gson gson = new Gson();
+                        final String jBook = gson.toJson(book);
+                        // save the new Book object to firebase
+                        userchild.setValue(jBook);
+                        break;
+                    }
+                }
 
+                if (!found) {
+                    // book not in firebase => add book to Firebase
+                    Log.d("Book", "Add book to firebase");
+                    Firebase userchild = ref.child("Books").child(book.getId().toString());
+                    // set book object JSON
+                    Gson gson = new Gson();
+                    final String jBook = gson.toJson(book);
+                    // save the new Book object to firebase
+                    userchild.setValue(jBook);
+                }
 
+                Intent intent = new Intent(EditBookActivity.this, BookProfileActivity.class);
+                intent.putExtra("Book Data", book);
+                startActivity(intent);
+                finish();
 
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
+            }
+        });
     }
 
 

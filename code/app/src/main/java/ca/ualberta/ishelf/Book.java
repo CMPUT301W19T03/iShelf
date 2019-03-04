@@ -26,8 +26,12 @@ public class Book implements Parcelable {
     private String genre;
     private String author;
 
-    public  Book(){}
+    public  Book(){
+        this.id = UUID.randomUUID();
+    }
+
     public Book(String name, String description, Long ISBN, String year, String genre, String author) {
+        this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
         this.ISBN = ISBN;
