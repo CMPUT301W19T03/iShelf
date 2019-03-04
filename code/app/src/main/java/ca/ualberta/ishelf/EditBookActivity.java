@@ -45,9 +45,6 @@ public class EditBookActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Boolean check = intent.getBooleanExtra("Check Data", false );
 
-
-
-
         TitleText = (EditText) findViewById(R.id.editTitle);
         AuthorText = (EditText) findViewById(R.id.editAuthor);
         ISBNText = (EditText) findViewById(R.id.editISBN);
