@@ -90,10 +90,10 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             borrowHolder.borrowBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Intent intent = new Intent((Activity) bookContext, EditBookActivity.class);
+                    Intent intent = new Intent((Activity) bookContext, BookProfileActivity.class);
                     Book book = bookList.get(position);
-                    intent.putExtra("Data", book);
-                    intent.putExtra("Check Data", true);
+                    intent.putExtra("Book Data", book);
+                    //intent.putExtra("Check Data", true);
                     Activity bookActivity = (Activity) bookContext;
                     bookActivity.startActivity(intent);
                 }
