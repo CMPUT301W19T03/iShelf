@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -85,6 +86,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                         tvEmail.setText("EMAIL: " + user.getEmail());
                         Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
                         Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
+                        username = user.getUsername();
 
                         Log.d("Confirm", user.getUsername());
                         userList.add(user);
@@ -93,13 +95,17 @@ public class ViewProfileActivity extends AppCompatActivity {
                     }
                     Log.d("Size", String.valueOf(userList.size()));
                 }
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    return;
+                }
             });
 
 
         } else if (getIntent().hasExtra("User")){
             // if the entire user is passed in
             user = (User) getIntent().getExtras().getSerializable("User");
-
+            username = user.getUsername();
             tvUsername.setText(user.getUsername());
             tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
             tvEmail.setText("EMAIL: " + user.getEmail());
@@ -112,16 +118,18 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
 
         editProfileButton = findViewById(R.id.editProfileButton);
-        if (user.getUsername() == currentUsername){
+        if (username.equals(currentUsername)){
             // if profile we are viewing is the logged in user's
+            Log.d(TAG, "onCreate: logged in user");
             editProfileButton.setVisibility(View.VISIBLE);
         } else {
+            Log.d(TAG, "onCreate: not logged in user" + username + currentUsername);
             editProfileButton.setVisibility(View.GONE);
         }
 
     }
 
-    public void EditProfile(){
+    public void EditProfile(View v){
         // when "Edit" button is clicked - "Edit" button is only viewable for the logged-in user
         // nothing needs to be sent in, since we are editing the logged-in user
         Intent intent = new Intent(this, EditProfileActivity.class);

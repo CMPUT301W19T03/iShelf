@@ -56,6 +56,18 @@ public class MainActivity extends AppCompatActivity {
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+
+        /**
+         * To Test viewing profile uncomment set the if statement to true
+         */
+        if(false) {
+            findViewById(R.id.button1).setVisibility(View.GONE);
+            findViewById(R.id.button1).setVisibility(View.GONE);
+            findViewById(R.id.button1).setVisibility(View.GONE);
+        }
+
+
     }
 
     private void SignIn(){
@@ -72,8 +84,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-    private void button1(View v){
+    public void button1(View v){
         User user1 = new User();
         user1.setUsername("User1_username");
         user1.setPhoneNum("809-888-1234");
@@ -84,9 +95,9 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void button2(View v){
+    public void button2(View v){
         User user2 = new User();
-        user2.setUsername("User2 USERNAME");
+        user2.setUsername("ABC");
         user2.setPhoneNum("222-222-2222");
         user2.setEmail("user2@t22est.com");
 
@@ -95,12 +106,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void button3(View v){
+    public void button3(View v){
         Intent intent = new Intent(this, ViewProfileActivity.class);
-        intent.putExtra("User", user3);
+        //intent.putExtra("User", user3);
+        intent.putExtra("Username",
+                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
         startActivity(intent);
 
     }
-
-
 }

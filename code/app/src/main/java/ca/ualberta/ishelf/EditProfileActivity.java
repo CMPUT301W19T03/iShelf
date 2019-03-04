@@ -42,8 +42,6 @@ public class EditProfileActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editEmail);
         editPhone = findViewById(R.id.editPhone);
 
-        Database database = new Database();
-
         // TODO: get the user from firebase
         Firebase.setAndroidContext(this);
         ref = new Firebase(link);
@@ -119,7 +117,7 @@ public class EditProfileActivity extends AppCompatActivity {
         editor.putString("username", newUsername).apply();
 
         // update the user in the database
-        Database database = new Database();
+        Database database = new Database(this);
         database.editUser(oldUsername, user);
 
         finish();
