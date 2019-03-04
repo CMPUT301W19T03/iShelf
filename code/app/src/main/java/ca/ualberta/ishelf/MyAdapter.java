@@ -79,9 +79,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         }
     }
-//    public void updateData(ArrayList name, ArrayList image) {
-//        this.mImageName = name;
-//        this.mImages = image;
-//        notifyDataSetChanged();
-//    }
+    public void updateData() {
+
+        this.notifyDataSetChanged();
+    }
 }

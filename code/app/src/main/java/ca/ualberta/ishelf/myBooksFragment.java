@@ -36,12 +36,16 @@ public class myBooksFragment extends Fragment {
     private static final String TAG = "xxxmyBooksActivityxxx";
     //String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
     //vars
-    private ArrayList<Book> myBooks = new ArrayList<>();
-    private ArrayAdapter<Book> adapter;
-    private ArrayList<String> mNames = new ArrayList<>();
-    private ArrayList<String> mImage = new ArrayList<>();
+    private ArrayList<String> myBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
+    private ArrayList<String> myBookImage = new ArrayList<>();
+    private ArrayList<String> borrowBooksName = new ArrayList<>();
+    private ArrayList<String> borrowBooksImage = new ArrayList<>();
+    private ArrayList<String> requestedBooksName = new ArrayList<>();
+    private ArrayList<String> requestedBooksImage = new ArrayList<>();
     private RatingBar ratingBar;
     private Spinner spinner; //drop-down filter: https://www.mkyong.com/android/android-spinner-drop-down-list-example/
+    private RecyclerView recyclerView;
+    private MyAdapter myAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.my_book, container, false);
@@ -62,21 +66,29 @@ public class myBooksFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                if(selectedItem.equals("My Books"))
-                {
-                    enteredAlert("yay!!");
-                }
+                Filter(selectedItem);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+        recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
+        myAdapter = new MyAdapter(myBookNames, myBookImage, this.getContext()); //in the same order as the constructor in MyAdapter
+        recyclerView.setAdapter(myAdapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         initImage();
     }
 
-    public void filter(){
+    public void Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
+        if(filter.equals("My Books")) {
+            initRecyclerView(myBookNames, myBookImage, this.getContext());
+        }else if (filter.equals(("Lent out"))){
+            initRecyclerView(borrowBooksName, borrowBooksImage, this.getContext()); // basically do nothing and go back to main page
+        }else if (filter.equals("Requested")){
+            initRecyclerView(requestedBooksName, requestedBooksImage, this.getContext()); // basically do nothing and go back to main page
 
+        }
     }
 
     /*
@@ -84,48 +96,59 @@ public class myBooksFragment extends Fragment {
      * illegalStateException
      */
 
-    public void addBook(View view){
-        //enteredAlert("this works");
-        mImage.add("https://i.imgur.com/ZcLLrkY.jpg"); //wherever the book image comes from
-        mNames.add("Havana oh na na");
+    public void addBook(View view){ //so when you add a book, you immediately filter by status
+
+        //im not sure if my books gets from user or book but i don't see a your borrowed books or requests
+
+//        mImage.add("https://i.imgur.com/ZcLLrkY.jpg"); //wherever the book image comes from
+//        mNames.add("Havana oh na na");
         Book book = new Book();
         book.setName("50ShadesOfBlack");
-        //ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         ratingBar = getActivity().findViewById(R.id.ratingBar);
         Rating rating = new Rating();
         book.addRating(rating);
         this.ratingBar.setRating(4); // this should work but does not work, idk why
-        mImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-        mNames.add(book.getName());
-        initRecyclerView(); //there should be a way to update without initializing it again
+        myBookImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+        //font see any constructors for image in Book class yet
+        myBookNames.add(book.getName());
+        //myAdapter.updateData(); //this doesn't work for some reason
+        book.setStatus(0);
+        if (book.getStatus() == 0){ //available to borrow
+            borrowBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+            borrowBooksName.add(book.getName());
+        }
+        if(book.getStatus() == 2){ //should be lent if there is such a status
+            requestedBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+            requestedBooksName.add(book.getName());
+        }
+        initRecyclerView(myBookNames, myBookImage, this.getContext()); //there should be a way to update without initializing it again
+
     }
 
     private void initImage(){
         Log.d(TAG, "init works");
-        mImage.add("https://c1.staticflickr.com/5/4636/25316407448_de5fbf183d_o.jpg");
-        mNames.add("Havana oh na na");
 
-        mImage.add("https://i.redd.it/tpsnoz5bzo501.jpg");
-        mNames.add("half of my heart is in havana oh na na");
+        myBookImage.add("https://i.redd.it/qn7f9oqu7o501.jpg");
+        myBookNames.add("Havana oh na-na");
 
-        mImage.add("https://i.redd.it/qn7f9oqu7o501.jpg");
-        mNames.add("He took me back to East Atlanta, na-na-na");
+        myBookImage.add("https://i.redd.it/j6myfqglup501.jpg");
+        myBookNames.add("Oh, but my heart is in Havana");
 
-        mImage.add("https://i.redd.it/j6myfqglup501.jpg");
-        mNames.add("Oh, but my heart is in Havana");
+        myBookImage.add("https://i.redd.it/0h2gm1ix6p501.jpg");
+        myBookNames.add("There's somethin' 'bout his manners");
 
-        mImage.add("https://i.redd.it/0h2gm1ix6p501.jpg");
-        mNames.add("There's somethin' 'bout his manners");
+        //myAdapter.updateData();   -- need to work on adding objects and not just strings, i just used strings to test - Evan
 
-        initRecyclerView();
+        initRecyclerView(myBookNames, myBookImage, this.getContext());
     }
     /*
     getActivity() is bad practice but not sure how else to code it
      */
-    private void initRecyclerView(){
+
+    private void initRecyclerView(ArrayList name, ArrayList image, Context context){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
-        MyAdapter adapter = new MyAdapter(mNames, mImage, this.getContext()); //in the same order as the constructor in MyAdapter
+        MyAdapter adapter = new MyAdapter(name, image, this.getContext()); //in the same order as the constructor in MyAdapter
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
