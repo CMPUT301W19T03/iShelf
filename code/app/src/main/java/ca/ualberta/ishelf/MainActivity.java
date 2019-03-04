@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -31,20 +32,26 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            Fragment selectedFragment = null;
+
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
-                    return true;
-                case R.id.navigation_dashboard:
-                    mTextMessage.setText(R.string.title_dashboard);
-                    return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText(R.string.title_notifications);
-                    return true;
+                case R.id.my_books:
+                    break;
+                case R.id.borrow_books:
+                    selectedFragment = new BorrowFragment();
+                    //selectedFragment = new FavoritesFragment();
+                    break;
+                case R.id.request_books:
+                    //selectedFragment = new SearchFragment();
+                    break;
             }
-            return false;
+
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    selectedFragment).commit();
+
+            return true;
         }
-    };
+        };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,15 +64,19 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        if (savedInstanceState == null) {
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
+                    new BorrowFragment()).commit();
+        }
 
         /**
          * To Test viewing profile uncomment set the if statement to true
          */
-        if(false) {
-            findViewById(R.id.button1).setVisibility(View.GONE);
-            findViewById(R.id.button1).setVisibility(View.GONE);
-            findViewById(R.id.button1).setVisibility(View.GONE);
-        }
+//        if(false) {
+//            findViewById(R.id.button1).setVisibility(View.GONE);
+//            findViewById(R.id.button1).setVisibility(View.GONE);
+//            findViewById(R.id.button1).setVisibility(View.GONE);
+//        }
 
 
     }
@@ -84,34 +95,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void button1(View v){
-        User user1 = new User();
-        user1.setUsername("User1_username");
-        user1.setPhoneNum("809-888-1234");
-        user1.setEmail("user1@test.com");
-
-        Intent intent = new Intent(this, ViewProfileActivity.class);
-        intent.putExtra("User", user1);
-        startActivity(intent);
-    }
-
-    public void button2(View v){
-        User user2 = new User();
-        user2.setUsername("ABC");
-        user2.setPhoneNum("222-222-2222");
-        user2.setEmail("user2@t22est.com");
-
-        Intent intent = new Intent(this, ViewProfileActivity.class);
-        intent.putExtra("User", user2);
-        startActivity(intent);
-    }
-
-    public void button3(View v){
-        Intent intent = new Intent(this, ViewProfileActivity.class);
-        //intent.putExtra("User", user3);
-        intent.putExtra("Username",
-                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
-        startActivity(intent);
-
-    }
+//    public void button1(View v){
+//        User user1 = new User();
+//        user1.setUsername("User1_username");
+//        user1.setPhoneNum("809-888-1234");
+//        user1.setEmail("user1@test.com");
+//
+//        Intent intent = new Intent(this, ViewProfileActivity.class);
+//        intent.putExtra("User", user1);
+//        startActivity(intent);
+//    }
+//
+//    public void button2(View v){
+//        User user2 = new User();
+//        user2.setUsername("ABC");
+//        user2.setPhoneNum("222-222-2222");
+//        user2.setEmail("user2@t22est.com");
+//
+//        Intent intent = new Intent(this, ViewProfileActivity.class);
+//        intent.putExtra("User", user2);
+//        startActivity(intent);
+//    }
+//
+//    public void button3(View v){
+//        Intent intent = new Intent(this, ViewProfileActivity.class);
+//        //intent.putExtra("User", user3);
+//        intent.putExtra("Username",
+//                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
+//        startActivity(intent);
+//
+//    }
 }
