@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     // Here is my first comment
     private TextView mTextMessage;
     private Toolbar myToolbar;
+    private static final String TAG = "MainActivity";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -57,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         }
         };
 
+    Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -89,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
+        //loadFragment(new myBooksFragment());
     }
 
     @Override
@@ -105,7 +108,8 @@ public class MainActivity extends AppCompatActivity {
                 // User chose the "Settings" item, show the app settings UI...
                 Intent intent = new Intent(this, ViewProfileActivity.class);
                 String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
-                intent.putExtra(username, "Username");
+                Log.d(TAG, "onOptionsItemSelected: Username:" + username);
+                intent.putExtra("Username", username);
                 startActivity(intent);
                 finish();
                 return true;
@@ -167,5 +171,4 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(intent);
 //
 //    }
-
 }
