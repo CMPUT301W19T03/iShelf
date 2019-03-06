@@ -30,7 +30,7 @@
         android:onClick="addBook"
         android:src="@android:drawable/ic_input_add"
         app:backgroundTint="@android:color/holo_orange_light"
-        app:layout_constraintBottom_toTopOf="@+id/navigation"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <android.support.v7.widget.RecyclerView
