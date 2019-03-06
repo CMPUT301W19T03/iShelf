@@ -50,7 +50,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             RequestViewHolder requestHolder = (RequestViewHolder) holder;
 
             requestHolder.title.setText(requestList.get(position).getBook().getName());
-            requestHolder.userName.setText(requestList.get(position).getBook().getAuthor());
+            requestHolder.userName.setText(requestList.get(position).getRequester().getUsername());
             requestHolder.requestBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
