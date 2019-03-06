@@ -6,7 +6,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
-    
+
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:contentInsetStartWithNavigation="0dp"
+        android:elevation="4dp"
+        app:menu="@menu/toolbar"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
+
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="0dp"
@@ -16,7 +29,7 @@
         app:layout_constraintBottom_toTopOf="@+id/navigation"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar" />
 
     <android.support.design.widget.BottomNavigationView
         android:id="@+id/navigation"

@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -26,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
 
     // Here is my first comment
     private TextView mTextMessage;
+    private Toolbar myToolbar;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -64,10 +68,16 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.setNavigationIcon(R.drawable.ic_home_black_24dp);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new BorrowFragment()).commit();
         }
+
+
 
         /**
          * To Test viewing profile uncomment set the if statement to true
@@ -81,11 +91,43 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                // User chose the "Settings" item, show the app settings UI...
+                Intent intent = new Intent(this, ViewProfileActivity.class);
+                String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+                intent.putExtra(username, "Username");
+                startActivity(intent);
+                finish();
+                return true;
+
+            case R.id.action_settings:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
     private void SignIn(){
 
         // code to reset username in UserPreferences
-//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-//        editor.putString("username", null).apply();
+        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+        editor.putString("username", null).apply();
 
         // Check if logged-in
         String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -125,4 +167,5 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(intent);
 //
 //    }
+
 }
