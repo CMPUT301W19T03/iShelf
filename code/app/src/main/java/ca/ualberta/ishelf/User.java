@@ -6,12 +6,12 @@ import java.util.UUID;
 
 public class User implements Serializable {
     private String username;
-    private ArrayList<UUID> borrowedBooks = new ArrayList<UUID>();
-    private ArrayList<UUID> ownedBooks= new ArrayList<UUID>();
+    private ArrayList<UUID> borrowedBooks = new ArrayList<>();
+    private ArrayList<UUID> ownedBooks= new ArrayList<>();
     private Rating rating;
-    private ArrayList<Request> listofRequests = new ArrayList<Request>();
-    private ArrayList<Rating> lenderRatings= new ArrayList<Rating>();
-    private ArrayList<Rating> borrowerRatings=new ArrayList<Rating>();
+    private ArrayList<Request> listofRequests = new ArrayList<>();
+    private ArrayList<Rating> lenderRatings= new ArrayList<>();
+    private ArrayList<Rating> borrowerRatings=new ArrayList<>();
     private String state; //user needs to know if it's acting as a lender or borrower
     private String phoneNum;
     private String email;
@@ -109,7 +109,7 @@ public class User implements Serializable {
         }
     }
     public void deleteBook(UUID book){
-        if (state == "borrower"){
+        if (state.equals("borrower")){
             for (int i = 0; i < borrowedBooks.size(); i++){
                 if (borrowedBooks.get(i) == book){
                     borrowedBooks.remove(i);

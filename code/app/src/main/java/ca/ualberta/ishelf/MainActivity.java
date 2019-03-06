@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
@@ -20,6 +19,7 @@ import java.util.UUID;
  * MainActivity
  *
  * - mehrab edit
+ * - Evan edited Feb 27
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         }
         };
 
+    Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
+        loadFragment(new myBooksFragment());
     }
 
     private void SignIn(){
@@ -95,34 +97,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    public void button1(View v){
-//        User user1 = new User();
-//        user1.setUsername("User1_username");
-//        user1.setPhoneNum("809-888-1234");
-//        user1.setEmail("user1@test.com");
-//
-//        Intent intent = new Intent(this, ViewProfileActivity.class);
-//        intent.putExtra("User", user1);
-//        startActivity(intent);
-//    }
-//
-//    public void button2(View v){
-//        User user2 = new User();
-//        user2.setUsername("ABC");
-//        user2.setPhoneNum("222-222-2222");
-//        user2.setEmail("user2@t22est.com");
-//
-//        Intent intent = new Intent(this, ViewProfileActivity.class);
-//        intent.putExtra("User", user2);
-//        startActivity(intent);
-//    }
-//
-//    public void button3(View v){
-//        Intent intent = new Intent(this, ViewProfileActivity.class);
-//        //intent.putExtra("User", user3);
-//        intent.putExtra("Username",
-//                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
-//        startActivity(intent);
-//
-//    }
+    public void button1(View v){
+        User user1 = new User();
+        user1.setUsername("User1_username");
+        user1.setPhoneNum("809-888-1234");
+        user1.setEmail("user1@test.com");
+
+        Intent intent = new Intent(this, ViewProfileActivity.class);
+        intent.putExtra("User", user1);
+        startActivity(intent);
+    }
+
+    public void button2(View v){
+        User user2 = new User();
+        user2.setUsername("ABC");
+        user2.setPhoneNum("222-222-2222");
+        user2.setEmail("user2@t22est.com");
+
+        Intent intent = new Intent(this, ViewProfileActivity.class);
+        intent.putExtra("User", user2);
+        startActivity(intent);
+    }
+
+    public void button3(View v){
+        Intent intent = new Intent(this, ViewProfileActivity.class);
+        //intent.putExtra("User", user3);
+        intent.putExtra("Username",
+                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
+        startActivity(intent);
+
+    }
 }
