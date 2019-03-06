@@ -61,6 +61,8 @@ public class ViewProfileActivity extends AppCompatActivity {
             Bundle bundle = getIntent().getExtras();
             username = (String) bundle.getSerializable("Username");
 
+            tvUsername.setText(username);
+
             // Get user from the passed in username
             Firebase.setAndroidContext(this);
             ref = new Firebase(link);
@@ -81,7 +83,6 @@ public class ViewProfileActivity extends AppCompatActivity {
                         User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
 
                         // fill the fields with their current info
-                        tvUsername.setText(user.getUsername());
                         tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
                         tvEmail.setText("EMAIL: " + user.getEmail());
                         Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
@@ -118,7 +119,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         }
 
         editProfileButton = findViewById(R.id.editProfileButton);
-        if (username.equals(currentUsername)){
+        if (currentUsername.equals(username)){
             // if profile we are viewing is the logged in user's
             Log.d(TAG, "onCreate: logged in user");
             editProfileButton.setVisibility(View.VISIBLE);
