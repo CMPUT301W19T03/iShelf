@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +9,9 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -20,13 +23,14 @@ import java.util.UUID;
  * MainActivity
  *
  * - mehrab edit
- * - Evan edited Feb 27
  */
 
 public class MainActivity extends AppCompatActivity {
 
     // Here is my first comment
     private TextView mTextMessage;
+    private Toolbar myToolbar;
+    private static final String TAG = "MainActivity";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -66,10 +70,16 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
+        myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        setSupportActionBar(myToolbar);
+        myToolbar.setNavigationIcon(R.drawable.ic_home_black_24dp);
+
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
                     new BorrowFragment()).commit();
         }
+
+
 
         /**
          * To Test viewing profile uncomment set the if statement to true
@@ -81,14 +91,47 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-        loadFragment(new myBooksFragment());
+        //loadFragment(new myBooksFragment());
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_favorite:
+                // User chose the "Settings" item, show the app settings UI...
+                Intent intent = new Intent(this, ViewProfileActivity.class);
+                String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+                Log.d(TAG, "onOptionsItemSelected: Username:" + username);
+                intent.putExtra("Username", username);
+                startActivity(intent);
+                finish();
+                return true;
+
+            case R.id.action_settings:
+                // User chose the "Favorite" action, mark the current item
+                // as a favorite...
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void SignIn(){
 
         // code to reset username in UserPreferences
-//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-//        editor.putString("username", null).apply();
+        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+        editor.putString("username", null).apply();
 
         // Check if logged-in
         String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -98,34 +141,34 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void button1(View v){
-        User user1 = new User();
-        user1.setUsername("User1_username");
-        user1.setPhoneNum("809-888-1234");
-        user1.setEmail("user1@test.com");
-
-        Intent intent = new Intent(this, ViewProfileActivity.class);
-        intent.putExtra("User", user1);
-        startActivity(intent);
-    }
-
-    public void button2(View v){
-        User user2 = new User();
-        user2.setUsername("ABC");
-        user2.setPhoneNum("222-222-2222");
-        user2.setEmail("user2@t22est.com");
-
-        Intent intent = new Intent(this, ViewProfileActivity.class);
-        intent.putExtra("User", user2);
-        startActivity(intent);
-    }
-
-    public void button3(View v){
-        Intent intent = new Intent(this, ViewProfileActivity.class);
-        //intent.putExtra("User", user3);
-        intent.putExtra("Username",
-                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
-        startActivity(intent);
-
-    }
+//    public void button1(View v){
+//        User user1 = new User();
+//        user1.setUsername("User1_username");
+//        user1.setPhoneNum("809-888-1234");
+//        user1.setEmail("user1@test.com");
+//
+//        Intent intent = new Intent(this, ViewProfileActivity.class);
+//        intent.putExtra("User", user1);
+//        startActivity(intent);
+//    }
+//
+//    public void button2(View v){
+//        User user2 = new User();
+//        user2.setUsername("ABC");
+//        user2.setPhoneNum("222-222-2222");
+//        user2.setEmail("user2@t22est.com");
+//
+//        Intent intent = new Intent(this, ViewProfileActivity.class);
+//        intent.putExtra("User", user2);
+//        startActivity(intent);
+//    }
+//
+//    public void button3(View v){
+//        Intent intent = new Intent(this, ViewProfileActivity.class);
+//        //intent.putExtra("User", user3);
+//        intent.putExtra("Username",
+//                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
+//        startActivity(intent);
+//
+//    }
 }
