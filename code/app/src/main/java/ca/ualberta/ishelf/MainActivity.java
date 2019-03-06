@@ -1,7 +1,9 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -28,7 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        /*in actuality, it would be some sort of login view*/
+
+        SignIn();
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -36,6 +39,18 @@ public class MainActivity extends AppCompatActivity {
         loadFragment(new myBooksFragment());
     }
     private TextView mTextMessage;
+
+        // code to reset username in UserPreferences
+//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+//        editor.putString("username", null).apply();
+
+        // Check if logged-in
+        String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        if (username == null) {     // user is not logged-in
+            Intent intent = new Intent(this, SignInActivity.class);
+            startActivityForResult(intent, 1);
+        }
+    }
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -61,9 +76,5 @@ public class MainActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.recycler_fragment, fragment).commit();
         return true;
     }
-//    public void addBook(View view){
-//        fragment = new myBooksFragment();
-//        ((myBooksFragment) fragment).addBook(view);
-//    }
 
 }
