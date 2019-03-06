@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_my_books"
+        android:id="@+id/borrow_books"
         android:icon="@drawable/ic_home_black_24dp"
-        android:title="@string/my_books" />
+        android:title="Borrow Books" />
 
     <item
-        android:id="@+id/navigation_borrow"
+        android:id="@+id/my_books"
         android:icon="@drawable/ic_dashboard_black_24dp"
-        android:title="@string/borrow_books" />
+        android:title="My Books" />
 
     <item
-        android:id="@+id/navigation_requested"
+        android:id="@+id/request_books"
         android:icon="@drawable/ic_notifications_black_24dp"
-        android:title="@string/requested_books" />
+        android:title="Requests" />
 
 </menu>
