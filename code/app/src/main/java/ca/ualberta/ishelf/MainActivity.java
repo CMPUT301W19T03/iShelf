@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
         }
         };
 
+    Fragment fragment;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -90,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
+        loadFragment(new myBooksFragment());
     }
 
     @Override
@@ -169,5 +171,4 @@ public class MainActivity extends AppCompatActivity {
 //        startActivity(intent);
 //
 //    }
-
 }

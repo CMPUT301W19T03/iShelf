@@ -3,4 +3,13 @@
     <string name="title_home">Home</string>
     <string name="title_dashboard">Dashboard</string>
     <string name="title_notifications">Notifications</string>
+    <string name="my_books">My Books</string>
+    <string name="borrow_books">Borrow Books</string>
+    <string name="requested_books">Requested Books</string>
+    <string-array name="array">
+        <item name="mine">My Books</item>
+        <item name="borrowed">Lent out</item>
+        <item name="requested">Requested</item>
+    </string-array>
+
 </resources>

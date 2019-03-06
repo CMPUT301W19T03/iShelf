@@ -11,16 +11,16 @@ public class UserTest {
     public void addBookTest() {
         User Evan = new User();
         Evan.setState("owner");
-        UUID fiftyShadesofGrey = new UUID(21341234l, 12341234l);
+        UUID fiftyShadesofGrey = new UUID(21341234L, 12341234L);
         Evan.addBook(fiftyShadesofGrey);
-        Assert.assertEquals(true, Evan.getOwnedBooks().contains(fiftyShadesofGrey));
+        Assert.assertTrue(Evan.getOwnedBooks().contains(fiftyShadesofGrey));
         //assertTrue(Evan.getOwnedBooks().contains(fiftyShadesofGrey));
     }
     @Test
     public void deleteBookTest() {
         User Evan = new User();
         Evan.setState("owner");
-        UUID fiftyShadesofGrey = new UUID(123412l, 12341234l);
+        UUID fiftyShadesofGrey = new UUID(123412L, 12341234L);
         Evan.deleteBook(fiftyShadesofGrey);
         assertFalse(Evan.getOwnedBooks().contains(fiftyShadesofGrey));
     }
