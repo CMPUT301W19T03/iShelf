@@ -30,6 +30,7 @@ import java.util.ArrayList;
  * author: Jeremy
  */
 public class ViewProfileActivity extends AppCompatActivity {
+    private String TAG = "ViewProfileActivity";
     /*
     TextView tvUsername = (TextView) findViewById(R.id.tvUsername);
     TextView tvContactInformation = (TextView) findViewById(R.id.tvContactInformation);
@@ -56,9 +57,10 @@ public class ViewProfileActivity extends AppCompatActivity {
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
-        if (getIntent().hasExtra("Username")) {
+        if (this.getIntent().hasExtra("Username")) {
+            Log.d(TAG, "onCreate: USERNAME passed in");
             // If just a username is passed in
-            Bundle bundle = getIntent().getExtras();
+            Bundle bundle = this.getIntent().getExtras();
             username = (String) bundle.getSerializable("Username");
 
             tvUsername.setText(username);
@@ -103,9 +105,11 @@ public class ViewProfileActivity extends AppCompatActivity {
             });
 
 
-        } else if (getIntent().hasExtra("User")){
+        } else if (this.getIntent().hasExtra("User")){
+            Log.d(TAG, "onCreate: USER");
+
             // if the entire user is passed in
-            user = (User) getIntent().getExtras().getSerializable("User");
+            user = (User) this.getIntent().getExtras().getSerializable("User");
             username = user.getUsername();
             tvUsername.setText(user.getUsername());
             tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
@@ -113,8 +117,8 @@ public class ViewProfileActivity extends AppCompatActivity {
             Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
             Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
         } else {
+            Log.d(TAG, "onCreate: NOTHING PASSED IN");
             // When nothing is passed in
-            Log.d(TAG, "onCreate: nothing passed in");
             // TODO: show the logged in user's info?
         }
 
