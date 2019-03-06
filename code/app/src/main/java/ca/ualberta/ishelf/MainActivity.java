@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
 //        }
 
 
-        loadFragment(new myBooksFragment());
+        //loadFragment(new myBooksFragment());
     }
 
     @Override
