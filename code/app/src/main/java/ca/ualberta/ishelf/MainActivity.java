@@ -40,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     }
     private TextView mTextMessage;
 
+    public void SignIn(){
         // code to reset username in UserPreferences
 //        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
 //        editor.putString("username", null).apply();
