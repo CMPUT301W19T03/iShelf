@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
-        myToolbar.setNavigationIcon(R.drawable.ic_home_black_24dp);
+
 
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container,
@@ -122,6 +122,12 @@ public class MainActivity extends AppCompatActivity {
 
         }
     }
+
+
+
+
+
+
 
     private void SignIn(){
 
