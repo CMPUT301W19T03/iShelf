@@ -71,7 +71,6 @@ public class ViewProfileActivity extends AppCompatActivity {
 
             // get reference to specific entry
             Firebase tempRef = ref.child("Users").child(username);
-            final ArrayList<User> userList = new ArrayList<User>();
             // create a one time use listener to immediately access datasnapshot
             tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -92,11 +91,9 @@ public class ViewProfileActivity extends AppCompatActivity {
                         username = user.getUsername();
 
                         Log.d("Confirm", user.getUsername());
-                        userList.add(user);
                     } else {
                         Log.d("FBerror1", "User doesn't exist or string is empty");
                     }
-                    Log.d("Size", String.valueOf(userList.size()));
                 }
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
