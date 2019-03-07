@@ -68,7 +68,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
                 //intent.putExtra("Check Data", true);
                 Activity bookActivity = (Activity) mContext;
-                bookActivity.startActivityForResult(intent, 2);
+                bookActivity.startActivity(intent);
 
             }
         });

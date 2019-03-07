@@ -219,44 +219,44 @@ public class myBooksFragment extends Fragment {
             }
         }
 
-        if(requestCode == 2){
-            if(resultCode == RESULT_OK){
-                boolean check = data.getBooleanExtra("Check Data", true);
-                if(check) {
-                    Book book = data.getParcelableExtra("Book Data");
-                    int pos = data.getIntExtra("Pos Data", 0);
-
-                    ratingBar = getActivity().findViewById(R.id.ratingBar);
-                    Rating rating = new Rating();
-                    book.addRating(rating);
-                    this.ratingBar.setRating(4); // this should work but does not work, idk why
-                    myOwnedBooks.set(pos, book);
-                    myBookImage.set(pos, "https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                    //font see any constructors for image in Book class yet
-                    myBookNames.set(pos, book.getName());
-                    //myAdapter.updateData(); //this doesn't work for some reason
-                    book.setStatus(1);
-                    if (book.getStatus() == 0) { //available to borrow
-                        borrowBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                        borrowBooksName.add(book.getName());
-                    }
-                    if (book.getStatus() == 2) { //should be lent if there is such a status
-                        requestedBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                        requestedBooksName.add(book.getName());
-                    }
-                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
-                }
-                else{
-                    int pos = data.getIntExtra("Pos Data", 1);
-                    myOwnedBooks.remove(pos);
-                    myBookNames.remove(pos);
-                    myBookImage.remove(pos);
-                    myAdapter.notifyDataSetChanged();
-
-                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
-
-                }
-            }
-        }
+//        if(requestCode == 2){
+//            if(resultCode == RESULT_OK){
+//                boolean check = data.getBooleanExtra("Check", true);
+//                if(check) {
+//                    Book book = data.getParcelableExtra("Data");
+//                    int pos = data.getIntExtra("Pos", 0);
+//
+//                    ratingBar = getActivity().findViewById(R.id.ratingBar);
+//                    Rating rating = new Rating();
+//                    book.addRating(rating);
+//                    this.ratingBar.setRating(4); // this should work but does not work, idk why
+//                    myOwnedBooks.set(pos, book);
+//                    myBookImage.set(pos, "https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+//                    //font see any constructors for image in Book class yet
+//                    myBookNames.set(pos, book.getName());
+//                    //myAdapter.updateData(); //this doesn't work for some reason
+//                    book.setStatus(1);
+//                    if (book.getStatus() == 0) { //available to borrow
+//                        borrowBooksImage.set(pos,"https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+//                        borrowBooksName.set(pos,book.getName());
+//                    }
+//                    if (book.getStatus() == 2) { //should be lent if there is such a status
+//                        requestedBooksImage.set(pos, "https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+//                        requestedBooksName.set(pos, book.getName());
+//                    }
+//                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
+//                }
+//                else{
+//                    int pos = data.getIntExtra("Pos Data", 1);
+//                    myOwnedBooks.remove(pos);
+//                    myBookNames.remove(pos);
+//                    myBookImage.remove(pos);
+//                    myAdapter.notifyDataSetChanged();
+//
+//                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
+//
+//                }
+//            }
+//        }
     }
 }
