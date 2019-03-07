@@ -66,19 +66,19 @@ public class Database extends Application {
      */
     public void deleteUser(String username) {
         // get reference to specific entry
-        Firebase tempRef = ref.child("Users").child(username);
+        ref.child("Users").child(username).getRef().removeValue();
         // create a one time use listener to immediately access datasnapshot
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            // Delete our entry
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                dataSnapshot.getRef().removeValue();
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                return;
-            }
-        });
+//        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            // Delete our entry
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                dataSnapshot.getRef().removeValue();
+//            }
+//            @Override
+//            public void onCancelled(FirebaseError firebaseError) {
+//                return;
+//            }
+//        });
     }
 
     /**

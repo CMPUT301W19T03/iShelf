@@ -114,11 +114,11 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // update username in UserPreferences
         SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-        editor.putString("username", newUsername).apply();
+        //editor.putString("username", newUsername).apply();
 
         // update the user in the database
         Database database = new Database(this);
-        database.editUser(oldUsername, user);
+        //database.editUser(oldUsername, user);
 
         finish();
     }

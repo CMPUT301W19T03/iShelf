@@ -2,10 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/code/app/src/androidTest/androidTest.iml" filepath="$PROJECT_DIR$/code/app/src/androidTest/androidTest.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/iShelf.iml" filepath="$PROJECT_DIR$/.idea/iShelf.iml" />
-      <module fileurl="file://$PROJECT_DIR$/code/app/src/main/main.iml" filepath="$PROJECT_DIR$/code/app/src/main/main.iml" />
-      <module fileurl="file://$PROJECT_DIR$/code/app/src/test/test.iml" filepath="$PROJECT_DIR$/code/app/src/test/test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/iShelf.iml" filepath="$PROJECT_DIR$/iShelf.iml" />
     </modules>
   </component>
 </project>

@@ -31,8 +31,6 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Book> bookList = new ArrayList<Book>();
     private Context bookContext;
 
-    public final int TYPE_BOOK = 0;
-    public final int TYPE_LOAD = 1;
 
     public BorrowAdapter(Context bookContext, ArrayList<Book> bookList) {
         this.bookList = bookList;
@@ -50,39 +48,17 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
     }
 
-    static class LoadHolder extends RecyclerView.ViewHolder {
-        ProgressBar progressBar;
-
-        public LoadHolder(View itemView) {
-            super(itemView);
-            progressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
-        }
-    }
-
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                              int viewType) {
-        if (viewType==TYPE_BOOK) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.borrow_book_item, parent, false);
             BorrowViewHolder vh = new BorrowViewHolder(v);
             return vh;
-        }
-        else {
-            View v = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.load_borrow, parent, false);
-            LoadHolder vh = new LoadHolder(v);
-            return vh;
-        }
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        if (getItemViewType(position)==TYPE_LOAD){
-            // nothing
-        }
-
-        if (getItemViewType(position)==TYPE_BOOK) {
             BorrowViewHolder borrowHolder = (BorrowViewHolder) holder;
 
             borrowHolder.title.setText(bookList.get(position).getName());
@@ -99,11 +75,6 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             });
         }
-    }
-
-    public int getItemViewType(int position) {
-        return bookList.get(position) == null ? TYPE_LOAD : TYPE_BOOK;
-    }
 
     @Override
     public int getItemCount() {
