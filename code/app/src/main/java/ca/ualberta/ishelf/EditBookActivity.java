@@ -110,7 +110,8 @@ public class EditBookActivity extends AppCompatActivity {
      */
     private void saveFirebase(final Book book){
         // connect to firebase
-        final Firebase ref = new Database(this).connect(this);
+        final Database db = new Database(this);
+        final Firebase ref = db.connect(this);
 
         Firebase tempRef = ref.child("Books");
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -138,12 +139,7 @@ public class EditBookActivity extends AppCompatActivity {
                 if (!found) {
                     // book not in firebase => add book to Firebase
                     Log.d("Book", "Add book to firebase");
-                    Firebase userchild = ref.child("Books").child(book.getId().toString());
-                    // set book object JSON
-                    Gson gson = new Gson();
-                    final String jBook = gson.toJson(book);
-                    // save the new Book object to firebase
-                    userchild.setValue(jBook);
+                    db.addBook(book);
                 }
 
 
