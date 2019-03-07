@@ -18,6 +18,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
@@ -135,6 +136,26 @@ public class ViewProfileActivity extends AppCompatActivity {
         // when "Edit" button is clicked - "Edit" button is only viewable for the logged-in user
         // nothing needs to be sent in, since we are editing the logged-in user
         Intent intent = new Intent(this, EditProfileActivity.class);
-        startActivity(intent);
+        startActivityForResult(intent, 3);
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
+        if (requestCode == 3) {
+
+            Log.d(TAG, "onCreate: USER");
+
+            // if the entire user is passed in
+            user = (User) intent.getExtras().getSerializable("User");
+            username = user.getUsername();
+            tvUsername.setText(user.getUsername());
+            tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
+            tvEmail.setText("EMAIL: " + user.getEmail());
+            Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
+            Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
+
+        }
+    }
+
 }
