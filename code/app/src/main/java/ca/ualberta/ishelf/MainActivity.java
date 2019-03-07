@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
     // Here is my first comment
     private TextView mTextMessage;
     private Toolbar myToolbar;
+
     private static final String TAG = "MainActivity";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        SignIn();
+        //SignIn();
 
         mTextMessage = (TextView) findViewById(R.id.message);
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -73,6 +74,10 @@ public class MainActivity extends AppCompatActivity {
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
         setSupportActionBar(myToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        // for back button later
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
 
         if (savedInstanceState == null) {
@@ -95,38 +100,38 @@ public class MainActivity extends AppCompatActivity {
         //loadFragment(new myBooksFragment());
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbar, menu);
-        return true;
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+//        getMenuInflater().inflate(R.menu.toolbar, menu);
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.action_favorite:
-                // User chose the "Settings" item, show the app settings UI...
-                Intent intent = new Intent(this, ViewProfileActivity.class);
-                String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
-                Log.d(TAG, "onOptionsItemSelected: Username:" + username);
-                intent.putExtra("Username", username);
-                startActivity(intent);
-                finish();
-                return true;
-
-            case R.id.action_settings:
-                // User chose the "Favorite" action, mark the current item
-                // as a favorite...
-                return true;
-
-            default:
-                // If we got here, the user's action was not recognized.
-                // Invoke the superclass to handle it.
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        switch (item.getItemId()) {
+//            case R.id.action_favorite:
+//                // User chose the "Settings" item, show the app settings UI...
+//                Intent intent = new Intent(this, ViewProfileActivity.class);
+//                String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+//                Log.d(TAG, "onOptionsItemSelected: Username:" + username);
+//                intent.putExtra("Username", username);
+//                startActivity(intent);
+//                finish();
+//                return true;
+//
+//            case R.id.action_settings:
+//                // User chose the "Favorite" action, mark the current item
+//                // as a favorite...
+//                return true;
+//
+//            default:
+//                // If we got here, the user's action was not recognized.
+//                // Invoke the superclass to handle it.
+//                return super.onOptionsItemSelected(item);
+//
+//        }
+//    }
 
 
 
