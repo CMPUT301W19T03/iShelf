@@ -59,7 +59,7 @@ public class EditBookActivity extends AppCompatActivity {
         loadFromFile();
 
         if(check){
-            Book data = intent.getParcelableExtra("Data");
+            Book data = intent.getParcelableExtra("Book Data");
 
             String title = data.getName();
             String author = data.getAuthor();
@@ -146,10 +146,36 @@ public class EditBookActivity extends AppCompatActivity {
                     userchild.setValue(jBook);
                 }
 
-                Intent intent = new Intent(EditBookActivity.this, BookProfileActivity.class);
-                intent.putExtra("Book Data", book);
-                startActivity(intent);
-                finish();
+
+                Intent intent = getIntent();
+                Boolean check = intent.getBooleanExtra("Check Data", false );
+
+
+                if(check){
+
+                    int pos = intent.getIntExtra("Pos Data", 0);
+                    Intent newINTent = new Intent(EditBookActivity.this, myBooksFragment.class);
+
+
+                    newINTent.putExtra("Book Data", book);
+                    newINTent.putExtra("Pos Data", pos);
+                    newINTent.putExtra("Check Data", true);
+
+                    System.out.print("HElllllllloooooowewrwejrjoejiorwejrweijorij");
+
+                    setResult(RESULT_OK,newINTent);
+                    finish();
+
+
+                }
+                else{
+                    Intent newintent = new Intent(EditBookActivity.this, myBooksFragment.class);
+                    newintent.putExtra("Book Data", book);
+                    setResult(RESULT_OK, newintent);
+                    finish();
+
+                }
+
 
             }
             @Override

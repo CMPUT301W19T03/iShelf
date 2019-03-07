@@ -30,6 +30,7 @@ import java.util.ArrayList;
  * author: Jeremy
  */
 public class ViewProfileActivity extends AppCompatActivity {
+    private String TAG = "ViewProfileActivity";
     /*
     TextView tvUsername = (TextView) findViewById(R.id.tvUsername);
     TextView tvContactInformation = (TextView) findViewById(R.id.tvContactInformation);
@@ -56,10 +57,13 @@ public class ViewProfileActivity extends AppCompatActivity {
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
-        if (getIntent().hasExtra("Username")) {
+        if (this.getIntent().hasExtra("Username")) {
+            Log.d(TAG, "onCreate: USERNAME passed in");
             // If just a username is passed in
-            Bundle bundle = getIntent().getExtras();
+            Bundle bundle = this.getIntent().getExtras();
             username = (String) bundle.getSerializable("Username");
+
+            tvUsername.setText(username);
 
             // Get user from the passed in username
             Firebase.setAndroidContext(this);
@@ -67,7 +71,6 @@ public class ViewProfileActivity extends AppCompatActivity {
 
             // get reference to specific entry
             Firebase tempRef = ref.child("Users").child(username);
-            final ArrayList<User> userList = new ArrayList<User>();
             // create a one time use listener to immediately access datasnapshot
             tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
@@ -81,7 +84,6 @@ public class ViewProfileActivity extends AppCompatActivity {
                         User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
 
                         // fill the fields with their current info
-                        tvUsername.setText(user.getUsername());
                         tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
                         tvEmail.setText("EMAIL: " + user.getEmail());
                         Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
@@ -89,11 +91,9 @@ public class ViewProfileActivity extends AppCompatActivity {
                         username = user.getUsername();
 
                         Log.d("Confirm", user.getUsername());
-                        userList.add(user);
                     } else {
                         Log.d("FBerror1", "User doesn't exist or string is empty");
                     }
-                    Log.d("Size", String.valueOf(userList.size()));
                 }
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
@@ -102,9 +102,11 @@ public class ViewProfileActivity extends AppCompatActivity {
             });
 
 
-        } else if (getIntent().hasExtra("User")){
+        } else if (this.getIntent().hasExtra("User")){
+            Log.d(TAG, "onCreate: USER");
+
             // if the entire user is passed in
-            user = (User) getIntent().getExtras().getSerializable("User");
+            user = (User) this.getIntent().getExtras().getSerializable("User");
             username = user.getUsername();
             tvUsername.setText(user.getUsername());
             tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
@@ -112,13 +114,13 @@ public class ViewProfileActivity extends AppCompatActivity {
             Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
             Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
         } else {
+            Log.d(TAG, "onCreate: NOTHING PASSED IN");
             // When nothing is passed in
-            Log.d(TAG, "onCreate: nothing passed in");
             // TODO: show the logged in user's info?
         }
 
         editProfileButton = findViewById(R.id.editProfileButton);
-        if (username.equals(currentUsername)){
+        if (currentUsername.equals(username)){
             // if profile we are viewing is the logged in user's
             Log.d(TAG, "onCreate: logged in user");
             editProfileButton.setVisibility(View.VISIBLE);
