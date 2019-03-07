@@ -22,10 +22,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".myBooksActivity"
-            android:label="@string/my_books"
-            android:parentActivityName=".MainActivity">
-        </activity>
+
     </application>
 
 </manifest>

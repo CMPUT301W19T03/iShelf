@@ -97,6 +97,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="ACCEPT"
+        android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/ret"
         app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toEndOf="@+id/editGenre"
@@ -109,6 +110,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="36dp"
         android:text="RETURN"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
@@ -119,6 +121,7 @@
         android:layout_marginStart="36dp"
         android:layout_marginTop="16dp"
         android:text="LEND"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
@@ -129,6 +132,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:text="BOOKING"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
@@ -142,7 +146,7 @@
         android:layout_marginTop="12dp"
         android:onClick="edit"
         android:text="EDIT"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/acpt" />
 
@@ -152,8 +156,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         android:layout_marginEnd="100dp"
+        android:onClick="delete"
         android:text="DELETE"
-        android:visibility="visible"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/acpt" />
 
@@ -237,6 +242,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginEnd="8dp"
         android:text="Pending Requests"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
