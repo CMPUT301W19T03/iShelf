@@ -1,7 +1,9 @@
 package ca.ualberta.ishelf;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -10,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -27,11 +30,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private static final String TAG = "recyclerviewadapter";
     private ArrayList<String> mImageName = new ArrayList<>();
     private ArrayList<String> mImages = new ArrayList<>();
+    private  ArrayList<Book> mbookList =new ArrayList<>();
     private Context mContext;
     //private MyFilter filter;
-    public MyAdapter(ArrayList<String> mImageName, ArrayList<String> mImages, Context mContext) {
+    public MyAdapter(ArrayList<String> mImageName, ArrayList<String> mImages,ArrayList<Book> mbookList, Context mContext) {
         this.mImageName = mImageName;
         this.mImages = mImages;
+        this.mbookList = mbookList;
         this.mContext = mContext;
     }
 
@@ -53,8 +58,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d(TAG, "onClick: " + mImageName.get(position));
-                Toast.makeText(mContext, mImageName.get(position), Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent((Activity) mContext, BookProfileActivity.class);
+                Book book = mbookList.get(position);
+                intent.putExtra("Book Data", book);
+                intent.putExtra("pos data", position);
+                intent.putExtra("Button Visible", true);
+
+
+
+                //intent.putExtra("Check Data", true);
+                Activity bookActivity = (Activity) mContext;
+                bookActivity.startActivityForResult(intent, 2);
+
             }
         });
     }
