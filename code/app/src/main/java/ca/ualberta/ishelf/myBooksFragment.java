@@ -45,9 +45,9 @@ public class myBooksFragment extends Fragment {
     private ArrayList<String> borrowBooksImage = new ArrayList<>();
     private ArrayList<String> requestedBooksName = new ArrayList<>();
     private ArrayList<String> requestedBooksImage = new ArrayList<>();
-    private  ArrayList<Book> myOwnedBooks = new ArrayList<>();
-    private  ArrayList<Book> myBorrowBooks = new ArrayList<>();
-    private  ArrayList<Book> myRequestedBooks = new ArrayList<>();
+    private ArrayList<Book> myOwnedBooks = new ArrayList<>();
+    private ArrayList<Book> myBorrowBooks = new ArrayList<>();
+    private ArrayList<Book> myRequestedBooks = new ArrayList<>();
     private RatingBar ratingBar;
     private Spinner spinner; //drop-down filter: https://www.mkyong.com/android/android-spinner-drop-down-list-example/
     private RecyclerView recyclerView;
@@ -104,40 +104,10 @@ public class myBooksFragment extends Fragment {
 
     public void addBook(View view){ //so when you add a book, you immediately filter by status
 
-        //im not sure if my books gets from user or book but i don't see a your borrowed books or requests
-
-//        mImage.add("https://i.imgur.com/ZcLLrkY.jpg"); //wherever the book image comes from
-//        mNames.add("Havana oh na na");
-
-
-
 
         Intent intent = new Intent(view.getContext(), EditBookActivity.class);
         intent.putExtra("Check Data",false);
         startActivityForResult(intent, 1);
-
-
-
-//        Book book = new Book();
-//        book.setName("50ShadesOfBlack");
-//        ratingBar = getActivity().findViewById(R.id.ratingBar);
-//        Rating rating = new Rating();
-//        book.addRating(rating);
-//        this.ratingBar.setRating(4); // this should work but does not work, idk why
-//        myBookImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-//        //font see any constructors for image in Book class yet
-//        myBookNames.add(book.getName());
-//        //myAdapter.updateData(); //this doesn't work for some reason
-//        book.setStatus(0);
-//        if (book.getStatus() == 0){ //available to borrow
-//            borrowBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-//            borrowBooksName.add(book.getName());
-//        }
-//        if(book.getStatus() == 2){ //should be lent if there is such a status
-//            requestedBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-//            requestedBooksName.add(book.getName());
-//        }
-//        initRecyclerView(myBookNames, myBookImage, this.getContext()); //there should be a way to update without initializing it again
 
     }
 
