@@ -66,7 +66,8 @@ public class SignInActivity extends AppCompatActivity {
         editor.putString("username", username).apply();
 
         // connect to firebase
-        final Firebase ref = new Database(this).connect(this);
+        final Database db = new Database(this);
+        final Firebase ref = db.connect(this);
 
         Firebase tempRef = ref.child("Users");
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -88,11 +89,7 @@ public class SignInActivity extends AppCompatActivity {
                     // create the new user User object
                     User newUser = new User();
                     newUser.setUsername(username);
-                    Firebase userchild = ref.child("Users").child(username);
-                    Gson gson = new Gson();
-                    String jUser = gson.toJson(newUser);
-                    // save the new User object to firebase
-                    userchild.setValue(jUser);
+                    db.addUser(newUser);
                 }
 
                 // go to previous activity

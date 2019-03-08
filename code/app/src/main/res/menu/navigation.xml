@@ -3,12 +3,12 @@
 
     <item
         android:id="@+id/borrow_books"
-        android:icon="@drawable/ic_home_black_24dp"
+        android:icon="@drawable/ic_dashboard_black_24dp"
         android:title="Borrow Books" />
 
     <item
         android:id="@+id/my_books"
-        android:icon="@drawable/ic_dashboard_black_24dp"
+        android:icon="@drawable/ic_home_black_24dp"
         android:title="My Books" />
 
     <item
