@@ -8,6 +8,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,12 +29,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-
 class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
     private ArrayList<Book> filterList = new ArrayList<Book>();
     private ArrayList<Book> originalList = new ArrayList<Book>();
     private Context bookContext;
-
 
     public BorrowAdapter(Context bookContext, ArrayList<Book> filterList, ArrayList<Book> originalList) {
         this.filterList = filterList;
@@ -73,7 +72,6 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                     Intent intent = new Intent((Activity) bookContext, BookProfileActivity.class);
                     Book book = originalList.get(position);
                     intent.putExtra("Book Data", book);
-                    //intent.putExtra("Check Data", true);
                     Activity bookActivity = (Activity) bookContext;
                     bookActivity.startActivity(intent);
                 }
@@ -92,7 +90,6 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 filterList = (ArrayList<Book>) results.values;
-                updateList(filterList);
                 notifyDataSetChanged();
             }
 
@@ -121,13 +118,16 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                 results.add(item);
             }
         }
+        Log.d("test","trst");
         return results;
     }
 
-    public void updateList(ArrayList<Book> newList) {
-        DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new BorrowDiffUtil(this.filterList, newList));
-        diffResult.dispatchUpdatesTo(this);
+    public void updateList(ArrayList<Book> list){
+        originalList = list;
+        filterList = list;
+
     }
+
 }
 
 
