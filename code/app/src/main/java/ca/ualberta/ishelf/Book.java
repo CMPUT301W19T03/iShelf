@@ -18,7 +18,7 @@ public class Book implements Parcelable{
     private String name;
     private String description;
     private Long ISBN;
-    private int status = 1; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
+    private int status; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
     private Boolean borrowedBook = false;
     private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
     private UUID id; // changed from int to UUID
@@ -39,6 +39,7 @@ public class Book implements Parcelable{
         this.year = year;
         this.genre = genre;
         this.author = author;
+        this.status = 1;
         this.borrowedBook = borrowedBook;
     }
 

@@ -1,5 +1,7 @@
 package ca.ualberta.ishelf;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -9,12 +11,14 @@ public class User implements Serializable {
     private ArrayList<UUID> borrowedBooks = new ArrayList<>();
     private ArrayList<UUID> ownedBooks= new ArrayList<>();
     private Rating rating;
+    private ArrayList<Rating> ratingArrayList;
     private ArrayList<Request> listofRequests = new ArrayList<>();
     private ArrayList<Rating> lenderRatings= new ArrayList<>();
     private ArrayList<Rating> borrowerRatings=new ArrayList<>();
     private String state; //user needs to know if it's acting as a lender or borrower
     private String phoneNum;
     private String email;
+    private String TAG = "User";
 
     public  User(){}
 
@@ -75,6 +79,7 @@ public class User implements Serializable {
         this.listofRequests = listofRequests;
     }
 
+    /*
     public ArrayList<Rating> getLenderRatings() {
         return lenderRatings;
     }
@@ -89,6 +94,21 @@ public class User implements Serializable {
 
     public void setBorrowerRatings(ArrayList<Rating> borrowerRatings) {
         this.borrowerRatings = borrowerRatings;
+    }
+    */
+    public float getOverallRating(){
+        int numberOfRatings = 0;
+        float aggregateRating = 0;
+        for (Rating x : ratingArrayList){
+            aggregateRating += x.getRating();
+            numberOfRatings++;
+        }
+        if (numberOfRatings == 0){
+            Log.d(TAG, "getOverallRatings: No ratings");
+            return 0;
+        } else {
+            return aggregateRating / numberOfRatings;
+        }
     }
 
     public String getPhoneNum() {
@@ -139,4 +159,9 @@ public class User implements Serializable {
             lenderRatings.add(rating);
         }
     }
+
+    public void addRequest(Request request){
+        listofRequests.add(request);
+    }
+
 }
