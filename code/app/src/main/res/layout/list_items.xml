@@ -7,7 +7,8 @@
     android:layout_height="wrap_content"
     android:background="@color/black"
     android:backgroundTint="#80FFFFFF"
-    android:padding="15dp">
+    android:padding="15dp"
+    android:paddingVertical="1dp">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/image"
