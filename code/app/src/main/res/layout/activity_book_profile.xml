@@ -189,6 +189,7 @@
         android:layout_marginStart="8dp"
         android:onClick="viewProfile"
         android:text="TextView"
+        android:textColorLink="@color/ColorPrimary"
         app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
         app:layout_constraintStart_toEndOf="@+id/textView9" />
 

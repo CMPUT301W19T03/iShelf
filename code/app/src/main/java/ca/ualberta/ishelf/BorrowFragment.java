@@ -6,11 +6,19 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.app.SearchManager;
+import android.util.Log;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -22,16 +30,28 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import android.widget.Toast;
+
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-public class BorrowFragment extends Fragment {
+public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private ArrayList<Book> bookList = new ArrayList<Book>();
 
     private RecyclerView bookRecyclerView;
-    private RecyclerView.Adapter bookAdapter;
+    private BorrowAdapter bookAdapter;
     private RecyclerView.LayoutManager bookLayoutManager;
+    private SwipeRefreshLayout borrowRefresh;
 
-    boolean isLoading = false;
+
+    private SearchView searchView;
 
     @Nullable
     @Override
@@ -41,9 +61,8 @@ public class BorrowFragment extends Fragment {
         bookRecyclerView = (RecyclerView) view.findViewById((R.id.borrow_recycler));
         bookLayoutManager = new LinearLayoutManager(view.getContext());
         bookRecyclerView.setLayoutManager(bookLayoutManager);
-        bookAdapter = new BorrowAdapter(view.getContext(), bookList);
+        bookAdapter = new BorrowAdapter(view.getContext(), bookList, bookList);
         bookRecyclerView.setAdapter(bookAdapter);
-        initializeScrollListener();
 
         // creates a line between each individual record in the list
         // https://developer.android.com/reference/android/support/v7/widget/DividerItemDecoration
@@ -53,32 +72,26 @@ public class BorrowFragment extends Fragment {
 
         getAvailableBooks();
 
-        return view;
-    }
+        searchView = (SearchView) getActivity().findViewById(R.id.searchView1);
 
+        borrowRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
+        borrowRefresh.setOnRefreshListener(this);
 
-    private void initializeScrollListener() {
-        bookRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
+            public boolean onQueryTextSubmit(String text) {
+                return false;
             }
 
             @Override
-            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-                super.onScrolled(recyclerView, dx, dy);
-
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == bookList.size() - 1) {
-                        //bottom of list!
-                        //loadMore(); No need it gets book from firebase in the background!
-                        isLoading = true;
-                    }
-                }
+            public boolean onQueryTextChange(String text) {
+                ((BorrowAdapter) bookAdapter).getFilter().filter(text);
+                return true;
             }
         });
+
+
+        return view;
     }
 
     /**
@@ -110,6 +123,7 @@ public class BorrowFragment extends Fragment {
                         Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
                     }
                 }
+                bookAdapter.updateList(bookList);
                 bookAdapter.notifyDataSetChanged();
             }
 
@@ -121,52 +135,11 @@ public class BorrowFragment extends Fragment {
         });
     }
 
-    private void loadMore() {
-        bookList.add(null);
-        bookAdapter.notifyItemInserted(bookList.size() - 1);
-
-
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                bookList.remove(bookList.size() - 1);
-                int scrollPosition = bookList.size();
-                bookAdapter.notifyItemRemoved(scrollPosition);
-                int currentSize = scrollPosition;
-                int nextLimit = currentSize + 10;
-
-                while (currentSize - 1 < nextLimit) {
-                    Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author");
-                    bookList.add(testBook8);
-                    currentSize++;
-                }
-
-                bookAdapter.notifyDataSetChanged();
-                isLoading = false;
-            }
-        }, 2000);
-    }
-
-
-
-    void createDummy(){
-        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook2 = new Book("Book 2", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook3 = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook4 = new Book("Book 4", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook5 = new Book("Book 5", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook6 = new Book("Book 6", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook7 = new Book("Book 7", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author");
-        bookList.add(testBook);
-        bookList.add(testBook2);
-        bookList.add(testBook3);
-        bookList.add(testBook4);
-        bookList.add(testBook5);
-        bookList.add(testBook6);
-        bookList.add(testBook7);
-        bookList.add(testBook8);
+    @Override
+    public void onRefresh(){
+        bookList.clear();
+        getAvailableBooks();
+        borrowRefresh.setRefreshing(false);
     }
 
 }
