@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
 //    public void button1(View v){
 //        User user1 = new User();
 //        user1.setUsername("User1_username");
