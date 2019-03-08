@@ -118,6 +118,18 @@ public class Book implements Parcelable{
         return description;
     }
 
+    public String getOwner() {
+        return owner;
+    }
+
+    public Image getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Image photo) {
+        this.photo = photo;
+    }
+
     public void setDescription(String description) {
         this.description = description;
     }

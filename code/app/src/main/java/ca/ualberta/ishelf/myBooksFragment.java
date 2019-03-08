@@ -3,6 +3,7 @@ package ca.ualberta.ishelf;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -42,12 +43,15 @@ public class myBooksFragment extends Fragment {
     private ArrayList<String> myBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
     private ArrayList<String> myBookImage = new ArrayList<>();
     private ArrayList<String> borrowBooksName = new ArrayList<>();
-    private ArrayList<String> borrowBooksImage = new ArrayList<>();
+    private ArrayList<String> borrowBooksImage = new ArrayList<>();//Should be a image string
     private ArrayList<String> requestedBooksName = new ArrayList<>();
     private ArrayList<String> requestedBooksImage = new ArrayList<>();
     private  ArrayList<Book> myOwnedBooks = new ArrayList<>();
     private  ArrayList<Book> myBorrowBooks = new ArrayList<>();
     private  ArrayList<Book> myRequestedBooks = new ArrayList<>();
+    private  ArrayList<Book> myBorrowedBooks = new ArrayList<>();
+    private ArrayList<String> myBorrowedBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
+    private ArrayList<Image> myBorrowedBookImage = new ArrayList<>();
     private RatingBar ratingBar;
     private Spinner spinner; //drop-down filter: https://www.mkyong.com/android/android-spinner-drop-down-list-example/
     private RecyclerView recyclerView;
@@ -96,8 +100,18 @@ public class myBooksFragment extends Fragment {
 
         }
         else if(filter.equals("Borrowed Books")){
+            initRecyclerView(myBorrowedBookNames, myBorrowedBookImage, myBorrowedBooks, this.getContext());
+
 
         }
+    }
+
+
+    public void BorrowBook(Book book){
+        book.setBorrowedBook(true);
+        myBorrowedBookImage.add(book.getPhoto());
+        myBorrowedBookNames.add(book.getName());
+        myBorrowBooks.add(book);
     }
 
     /*

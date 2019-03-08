@@ -10,6 +10,7 @@
         <item name="mine">My Books</item>
         <item name="borrowed">Lent out</item>
         <item name="requested">Requested</item>
+        <item name="borrowedBooks">Borrowed Books</item>
     </string-array>
 
 </resources>
