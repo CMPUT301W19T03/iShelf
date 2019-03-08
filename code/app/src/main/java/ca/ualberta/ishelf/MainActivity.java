@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                     //selectedFragment = new FavoritesFragment();
                     break;
                 case R.id.request_books:
-                    //selectedFragment = new SearchFragment();
+                    selectedFragment = new RequestFragment();
                     break;
             }
 

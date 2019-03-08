@@ -1,11 +1,13 @@
 package ca.ualberta.ishelf;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.firebase.client.DataSnapshot;
@@ -36,6 +38,7 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
         username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
         editName = findViewById(R.id.editName);
@@ -59,7 +62,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     // Get user object from Gson
                     Gson gson = new Gson();
                     Type tokenType = new TypeToken<User>(){}.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    user = gson.fromJson(jUser, tokenType); // here is where we get the user object
 
                     // fill the fields with their current info
                     editName.setText(user.getUsername());
@@ -114,11 +117,16 @@ public class EditProfileActivity extends AppCompatActivity {
 
         // update username in UserPreferences
         SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-        //editor.putString("username", newUsername).apply();
+        editor.putString("username", newUsername).apply();
 
         // update the user in the database
         Database database = new Database(this);
-        //database.editUser(oldUsername, user);
+        database.editUser(oldUsername, user);
+
+        // add result for viewProfile
+        Intent intent = new Intent();
+        intent.putExtra("User", user);
+        setResult(3, intent);
 
         finish();
     }
