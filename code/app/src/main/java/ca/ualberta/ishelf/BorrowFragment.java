@@ -28,14 +28,14 @@ public class BorrowFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_borrow, container, false);
 
-        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook2 = new Book("Book 2", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook3 = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook4 = new Book("Book 4", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook5 = new Book("Book 5", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook6 = new Book("Book 6", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook7 = new Book("Book 7", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author");
+        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook2 = new Book("Book 2", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook3 = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook4 = new Book("Book 4", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook5 = new Book("Book 5", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook6 = new Book("Book 6", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook7 = new Book("Book 7", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author", false);
         bookList.add(testBook);
         bookList.add(testBook2);
         bookList.add(testBook3);
@@ -107,7 +107,7 @@ public class BorrowFragment extends Fragment {
                 int nextLimit = currentSize + 10;
 
                 while (currentSize - 1 < nextLimit) {
-                    Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author");
+                    Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author", false);
                     bookList.add(testBook8);
                     currentSize++;
                 }
@@ -121,14 +121,14 @@ public class BorrowFragment extends Fragment {
 
 
     void createDummy(){
-        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook2 = new Book("Book 2", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook3 = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook4 = new Book("Book 4", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook5 = new Book("Book 5", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook6 = new Book("Book 6", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook7 = new Book("Book 7", "Description", 1234L, "Year", "Genre", "author");
-        Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author");
+        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook2 = new Book("Book 2", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook3 = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook4 = new Book("Book 4", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook5 = new Book("Book 5", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook6 = new Book("Book 6", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook7 = new Book("Book 7", "Description", 1234L, "Year", "Genre", "author", false);
+        Book testBook8 = new Book("Book 8", "Description", 1234L, "Year", "Genre", "author", false);
         bookList.add(testBook);
         bookList.add(testBook2);
         bookList.add(testBook3);

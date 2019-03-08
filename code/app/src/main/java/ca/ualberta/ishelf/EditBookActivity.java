@@ -93,7 +93,7 @@ public class EditBookActivity extends AppCompatActivity {
         String genre = GenreText.getText().toString();
         String description = DescriptionText.getText().toString();
 
-        Book book = new Book(title, description, isbn, year, genre, author);
+        Book book = new Book(title, description, isbn, year, genre, author, false);
 
 
         Booklist.add(book);

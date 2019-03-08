@@ -42,7 +42,7 @@ public class RequestFragment extends Fragment {
     }
 
     public void createDummy() {
-        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author");
+        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author", false);
         User testRequester = new User("ppl", "1234567", "someone@Email.com");
         Request request1 = new Request(null, testRequester, testBook);
         requestList.add(request1);
