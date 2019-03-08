@@ -58,7 +58,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile);
-        String TAG = "editProfile";
+        String TAG = "viewProfile";
 
         // initialize the various TextViews
         tvUsername = (TextView) findViewById(R.id.tvUsername);
@@ -75,7 +75,8 @@ public class ViewProfileActivity extends AppCompatActivity {
             // If just a username is passed in
             Bundle bundle = this.getIntent().getExtras();
             username = (String) bundle.getSerializable("Username");
-            if (username == null) {
+            Log.d(TAG, "onCreate: username passed in is: " + username);
+            if (username != null) {
                 tvUsername.setText(username);
 
                 // Get user from the passed in username
@@ -95,7 +96,7 @@ public class ViewProfileActivity extends AppCompatActivity {
                             Gson gson = new Gson();
                             Type tokenType = new TypeToken<User>() {
                             }.getType();
-                            User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                            user = gson.fromJson(jUser, tokenType); // here is where we get the user object
 
                             // fill the fields with their current info
                             tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
