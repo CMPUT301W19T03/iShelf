@@ -78,10 +78,44 @@ public class BookProfileActivity extends AppCompatActivity {
         TextView textView6 = findViewById(R.id.status);
         textView6.setText("AVAILABLE");
 
-        // TODO: retrieve user from firebase
-        final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
-        ownerRatingBar.setRating(3); //); // TODO: get user's user.getOverallRating() here
+        /**
+         * Retrieve the owner user info from Firebase so we can get their overall rating
+         */
+        /*
+        // Get user from the passed in username
+        Firebase.setAndroidContext(this);
+        ref = new Firebase(link);
 
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Users").child(owner);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>(){}.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+
+                    // TODO: update the rating in here
+                    final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
+                    ownerRatingBar.setRating(user.getOverallRating());
+                } else {
+                    Log.d("FBerror1", "User doesn't exist or string is empty");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+        // TODO: retrieve user from firebase
+        //final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
+        //ownerRatingBar.setRating(3); //); // TODO: get user's user.getOverallRating() here
+        */
 
 
     }
