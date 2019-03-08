@@ -150,7 +150,7 @@ public class EditBookActivity extends AppCompatActivity {
                 if(check){
 
                     int pos = intent.getIntExtra("Pos Data", 0);
-                    Intent newINTent = new Intent(EditBookActivity.this, BookProfileActivity.class);
+                    Intent newINTent = new Intent(EditBookActivity.this, MyAdapter.class);
 
 
                     newINTent.putExtra("Data", book);

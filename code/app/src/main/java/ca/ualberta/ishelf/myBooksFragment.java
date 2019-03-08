@@ -194,7 +194,7 @@ public class myBooksFragment extends Fragment {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
+        myAdapter.onActivityResult(requestCode, resultCode, data);
 
         if(requestCode == 1){
             if(resultCode == RESULT_OK){
@@ -222,7 +222,7 @@ public class myBooksFragment extends Fragment {
             }
         }
 
-        if(requestCode == 2){
+        if(requestCode == 1002){
             if(resultCode == RESULT_OK){
                 boolean check = data.getBooleanExtra("Check", true);
                 if(check) {
@@ -252,7 +252,7 @@ public class myBooksFragment extends Fragment {
                     initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
                 }
                 else{
-                    int pos = data.getIntExtra("Pos Data", 1);
+                    int pos = data.getIntExtra("Pos", 1);
                     myOwnedBooks.remove(pos);
                     myBookNames.remove(pos);
                     myBookImage.remove(pos);
