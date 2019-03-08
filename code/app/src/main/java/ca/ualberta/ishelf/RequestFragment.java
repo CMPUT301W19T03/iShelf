@@ -39,8 +39,6 @@ public class RequestFragment extends Fragment {
 
         //createDummy();
 
-        getRequests();
-
         requestRecyclerView = (RecyclerView) view.findViewById((R.id.request_recycler));
         requestLayoutManager = new LinearLayoutManager(view.getContext());
         requestRecyclerView.setLayoutManager(requestLayoutManager);
@@ -52,6 +50,8 @@ public class RequestFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requestRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL);
         requestRecyclerView.addItemDecoration(dividerItemDecoration);
+
+        getRequests();
         
         return view;
     }
