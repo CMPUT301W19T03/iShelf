@@ -172,6 +172,7 @@ public class myBooksFragment extends Fragment {
         Book book1 = new Book("Oh, but my heart is in Havana", "Description", 1234L, "Year", "Genre", "author", false);
         myBookImage.add("https://i.redd.it/j6myfqglup501.jpg");
         myBookNames.add("Oh, but my heart is in Havana");
+        book1.setOwner("abcdef");
         myOwnedBooks.add(book1);
 
         Book book2= new Book("There's somethin' 'bout his manners", "Description", 1234L, "Year", "Genre", "author", false);

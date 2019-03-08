@@ -17,6 +17,8 @@ import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import org.w3c.dom.Text;
+
 import java.lang.reflect.Type;
 
 public class BookProfileActivity extends AppCompatActivity {
@@ -79,6 +81,11 @@ public class BookProfileActivity extends AppCompatActivity {
         TextView textView6 = findViewById(R.id.status);
         textView6.setText("AVAILABLE");
 
+        TextView ownerUsername = findViewById(R.id.ownerUsername);
+        ownerUsername.setText(owner);
+        //ownerUsername.setCol
+
+
         /**
          * Retrieve the owner user info from Firebase so we can get their overall rating
          */
@@ -104,7 +111,7 @@ public class BookProfileActivity extends AppCompatActivity {
                         Log.d(TAG, "User found");
                         Gson gson = new Gson();
                         Type tokenType = new TypeToken<User>(){}.getType();
-                        User user = gson.fromJson(d.getKey(), tokenType);
+                        User user = gson.fromJson(d.getValue().toString(), tokenType);
                         final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
                         float rating = user.getOverallRating();
                         ownerRatingBar.setRating(rating);
