@@ -159,4 +159,9 @@ public class User implements Serializable {
             lenderRatings.add(rating);
         }
     }
+
+    public void addRequest(Request request){
+        listofRequests.add(request);
+    }
+
 }

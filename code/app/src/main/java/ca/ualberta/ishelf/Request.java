@@ -1,18 +1,21 @@
 package ca.ualberta.ishelf;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Request {
 
     private Book book;
-
-
-
     private User requester;
+    private UUID id;
 
 
+    public Request(){
+        this.id = UUID.randomUUID();
+    }
 
     public Request(Date timeRequested, User requester, Book book) {
+        this.id = UUID.randomUUID();
         this.requester = requester;
         this.book = book;
         this.timeRequested = timeRequested;
@@ -44,6 +47,14 @@ public class Request {
 
     public void setRequester(User requester) {
         this.requester = requester;
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
 }
