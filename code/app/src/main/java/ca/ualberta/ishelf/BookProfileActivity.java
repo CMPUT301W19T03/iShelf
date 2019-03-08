@@ -78,9 +78,9 @@ public class BookProfileActivity extends AppCompatActivity {
         TextView textView6 = findViewById(R.id.status);
         textView6.setText("AVAILABLE");
 
-        // retrieve user from firebase
+        // TODO: retrieve user from firebase
         final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
-        ownerRatingBar.setRating(//); // TODO: get user's user.getOverallRating() here
+        ownerRatingBar.setRating(3); //); // TODO: get user's user.getOverallRating() here
 
 
 
