@@ -103,7 +103,8 @@ public class ViewProfileActivity extends AppCompatActivity {
                             tvEmail.setText("EMAIL: " + user.getEmail());
 
                             // set the Rating
-                            //ratingBar.setRating(user.getOverallRating());
+                            ratingBar.setRating(user.getOverallRating());
+                            ratingBar.setIsIndicator(true);
                             Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
                             Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
                             username = user.getUsername();
@@ -133,6 +134,8 @@ public class ViewProfileActivity extends AppCompatActivity {
             tvUsername.setText(user.getUsername());
             tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
             tvEmail.setText("EMAIL: " + user.getEmail());
+            ratingBar.setRating(user.getOverallRating());
+            ratingBar.setIsIndicator(true); // make it so the rating is non-changeable by the user
             Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
             Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
         } else {
