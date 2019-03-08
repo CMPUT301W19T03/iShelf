@@ -10,6 +10,11 @@
         <item name="mine">My Books</item>
         <item name="borrowed">Lent out</item>
         <item name="requested">Requested</item>
+        <item name="borrowedBooks">Borrowed Books</item>
+    </string-array>
+    <string-array name="requested_array">
+        <item name="Pending">Pending Requests</item>
+        <item name="Accepted">Accepted Requests</item>
     </string-array>
 
 </resources>

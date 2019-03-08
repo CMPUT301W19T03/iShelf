@@ -163,18 +163,19 @@ public class BookProfileActivity extends AppCompatActivity {
         int pos = intent.getIntExtra("pos data", 0);
 
         Intent newintent;
-        newintent = new Intent(BookProfileActivity.this, myBooksFragment.class);
+        newintent = new Intent(BookProfileActivity.this, MyAdapter.class);
 
 
         System.out.print("Here:");
         System.out.print(pos);
-        newintent.putExtra("Pos Data", pos );
+        newintent.putExtra("Pos", pos );
 
         newintent.putExtra("Check Data", false);
 
 
         setResult(RESULT_OK,newintent);
         finish();
+
 
     }
 

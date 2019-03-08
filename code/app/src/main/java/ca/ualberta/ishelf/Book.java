@@ -13,12 +13,13 @@ import java.util.UUID;
  * Signatures created by Jeremy
  *
  */
-public class Book implements Parcelable {
+public class Book implements Parcelable{
     private String owner;
     private String name;
     private String description;
     private Long ISBN;
     private int status; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
+    private Boolean borrowedBook = false;
     private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
     private UUID id; // changed from int to UUID
     private Image photo;
@@ -30,7 +31,7 @@ public class Book implements Parcelable {
         this.id = UUID.randomUUID();
     }
 
-    public Book(String name, String description, Long ISBN, String year, String genre, String author) {
+    public Book(String name, String description, Long ISBN, String year, String genre, String author, boolean borrowedBook) {
         this.id = UUID.randomUUID();
         this.name = name;
         this.description = description;
@@ -39,7 +40,9 @@ public class Book implements Parcelable {
         this.genre = genre;
         this.author = author;
         this.status = 1;
+        this.borrowedBook = borrowedBook;
     }
+
 
     protected Book(Parcel in) {
         owner = in.readString();
@@ -51,6 +54,8 @@ public class Book implements Parcelable {
             ISBN = in.readLong();
         }
         status = in.readInt();
+        byte tmpBorrowedBook = in.readByte();
+        borrowedBook = tmpBorrowedBook == 0 ? null : tmpBorrowedBook == 1;
         year = in.readString();
         genre = in.readString();
         author = in.readString();
@@ -70,6 +75,14 @@ public class Book implements Parcelable {
 
     public String getAuthor() {
         return author;
+    }
+
+    public Boolean getBorrowedBook() {
+        return borrowedBook;
+    }
+
+    public void setBorrowedBook(Boolean borrowedBook) {
+        this.borrowedBook = borrowedBook;
     }
 
     public void setAuthor(String author) {
@@ -104,6 +117,16 @@ public class Book implements Parcelable {
 
     public String getDescription() {
         return description;
+    }
+
+
+
+    public Image getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Image photo) {
+        this.photo = photo;
     }
 
     public void setDescription(String description) {
@@ -184,6 +207,7 @@ public class Book implements Parcelable {
         ratings.add(rating);
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -201,6 +225,7 @@ public class Book implements Parcelable {
             dest.writeLong(ISBN);
         }
         dest.writeInt(status);
+        dest.writeByte((byte) (borrowedBook == null ? 0 : borrowedBook ? 1 : 2));
         dest.writeString(year);
         dest.writeString(genre);
         dest.writeString(author);

@@ -58,7 +58,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent((Activity) mContext, BookProfileActivity.class);
+                Intent intent = new Intent( mContext, BookProfileActivity.class);
                 Book book = mbookList.get(position);
                 intent.putExtra("Book Data", book);
                 intent.putExtra("pos data", position);
@@ -67,11 +67,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
 
                 //intent.putExtra("Check Data", true);
-                Activity bookActivity = (Activity) mContext;
-                bookActivity.startActivityForResult(intent, 2);
+
+                ((Activity) mContext).startActivityForResult(intent,1002);
+
 
             }
         });
+
+
+    }
+
+
+    public  void onActivityResult(int requestCode, int resultCode, Intent data) {
+        Log.d("MyAdapter", "onActivityResult");
     }
 
     @Override
