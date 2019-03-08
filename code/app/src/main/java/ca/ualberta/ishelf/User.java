@@ -99,16 +99,19 @@ public class User implements Serializable {
     public float getOverallRating(){
         int numberOfRatings = 0;
         float aggregateRating = 0;
-        for (Rating x : ratingArrayList){
-            aggregateRating += x.getRating();
-            numberOfRatings++;
+        if (ratingArrayList == null) {
+            for (Rating x : ratingArrayList) {
+                aggregateRating += x.getRating();
+                numberOfRatings++;
+            }
+            if (numberOfRatings == 0) {
+                Log.d(TAG, "getOverallRatings: No ratings");
+                return 0;
+            } else {
+                return aggregateRating / numberOfRatings;
+            }
         }
-        if (numberOfRatings == 0){
-            Log.d(TAG, "getOverallRatings: No ratings");
-            return 0;
-        } else {
-            return aggregateRating / numberOfRatings;
-        }
+        return 0;
     }
 
     public String getPhoneNum() {

@@ -166,6 +166,8 @@ public class Book implements Parcelable{
 
     public void setOwner(String name) {this.owner = name;}
 
+    public String getOwner(){ return owner; }
+
 
     // Public Methods
 

@@ -87,6 +87,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/des" />
 
+    <TextView
+        android:id="@+id/textView9"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Owner:"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
     <Button
         android:id="@+id/acpt"
         android:layout_width="wrap_content"
@@ -171,6 +181,16 @@
         app:layout_constraintTop_toBottomOf="@+id/des" />
 
     <TextView
+        android:id="@+id/ownerUsername"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:onClick="viewProfile"
+        android:text="TextView"
+        app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
+        app:layout_constraintStart_toEndOf="@+id/textView9" />
+
+    <TextView
         android:id="@+id/des"
         android:layout_width="0dp"
         android:layout_height="110sp"
@@ -244,6 +264,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/status" />
+
+    <RatingBar
+        android:id="@+id/ownerRatingBar"
+        style="@style/Widget.AppCompat.RatingBar.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toEndOf="@+id/ownerUsername"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
 </android.support.constraint.ConstraintLayout>
