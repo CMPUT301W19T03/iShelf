@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.firebase.client.DataSnapshot;
@@ -37,6 +38,7 @@ public class EditProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
         username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
         editName = findViewById(R.id.editName);

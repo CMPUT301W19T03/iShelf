@@ -1,19 +1,31 @@
 package ca.ualberta.ishelf;
 
 public class Rating {
-    private int rating;
+    private float rating;
     private String comment;
 
     public Rating() { //Evan - added constructor for rating to test add books
-        this.rating = 4;
-        this.comment = "comment here please";
+        //this.rating = 4;
+        //this.comment = "comment here please";
     }
 
-    public int getRating() {
+    // constructor that takes a rating and a string
+    public Rating(float rating, String comment){
+        if(rating > 5){
+            this.rating = 5;
+        } else if(rating < 0){
+            this.rating = 0;
+        } else {
+            this.rating = rating;
+        }
+        this.comment = comment;
+    }
+
+    public float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(float rating) {
         if(rating>=0 && rating <=5) {
             this.rating = rating;
         }
