@@ -3,11 +3,25 @@ package ca.ualberta.ishelf;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.util.Linkify;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+
 public class BookProfileActivity extends AppCompatActivity {
+    private final String link = "https://ishelf-bb4e7.firebaseio.com";
+    private Firebase ref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +53,9 @@ public class BookProfileActivity extends AppCompatActivity {
         String year = data.getYear();
         String description = data.getDescription();
         Long isbn = data.getISBN();
+        String owner = data.getOwner();
+
+
 
         TextView textView = findViewById(R.id.Title);
         textView.setText(title);
@@ -61,8 +78,9 @@ public class BookProfileActivity extends AppCompatActivity {
         TextView textView6 = findViewById(R.id.status);
         textView6.setText("AVAILABLE");
 
-
-
+        // retrieve user from firebase
+        final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
+        ownerRatingBar.setRating(//); // TODO: get user's user.getOverallRating() here
 
 
 
