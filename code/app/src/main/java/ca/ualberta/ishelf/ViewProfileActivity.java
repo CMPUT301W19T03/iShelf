@@ -33,7 +33,6 @@ import java.util.ArrayList;
  * If the user is the signed in user, an "Edit" button is visible
  * The Edit button takes the user to the EditProfileActivity
  *
- * TODO: add a display for the rating
  * TODO: add message to the screen if viewing the profile of no-one (aka nothing passed in)
  *
  * author: Jeremy
