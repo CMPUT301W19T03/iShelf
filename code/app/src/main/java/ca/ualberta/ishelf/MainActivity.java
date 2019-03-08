@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //SignIn();
+        SignIn();
 
 
         mTextMessage = (TextView) findViewById(R.id.message);
@@ -217,7 +217,6 @@ public class MainActivity extends AppCompatActivity {
 //    }
 
 
-
     private void SignIn(){
 
         // code to reset username in UserPreferences
@@ -230,6 +229,22 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(this, SignInActivity.class);
             startActivityForResult(intent, 1);
         }
+    }
+
+
+    /**
+     * When the profile icon is hit on the appbar
+     * Takes the user to the ViewProfileActivity
+     * @author Jeremy
+     * @param v
+     */
+    public void ViewProfile(View v){
+        Log.d(TAG, "ViewProfile: button clicked");
+        Intent intent = new Intent(v.getContext(), ViewProfileActivity.class);
+        String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+        Log.d(TAG, "onOptionsItemSelected: Username:" + username);
+        intent.putExtra("Username", username);
+        startActivity(intent);
     }
 
 //    public void button1(View v){

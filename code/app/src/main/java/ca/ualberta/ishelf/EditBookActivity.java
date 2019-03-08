@@ -94,7 +94,7 @@ public class EditBookActivity extends AppCompatActivity {
         String genre = GenreText.getText().toString();
         String description = DescriptionText.getText().toString();
 
-        Book book = new Book(title, description, isbn, year, genre, author);
+        Book book = new Book(title, description, isbn, year, genre, author, false);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -154,12 +154,12 @@ public class EditBookActivity extends AppCompatActivity {
                 if(check){
 
                     int pos = intent.getIntExtra("Pos Data", 0);
-                    Intent newINTent = new Intent(EditBookActivity.this, myBooksFragment.class);
+                    Intent newINTent = new Intent(EditBookActivity.this, MyAdapter.class);
 
 
-                    newINTent.putExtra("Book Data", book);
-                    newINTent.putExtra("Pos Data", pos);
-                    newINTent.putExtra("Check Data", true);
+                    newINTent.putExtra("Data", book);
+                    newINTent.putExtra("Pos", pos);
+                    newINTent.putExtra("Check", true);
 
                     System.out.print("HElllllllloooooowewrwejrjoejiorwejrweijorij");
 

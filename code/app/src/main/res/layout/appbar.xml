@@ -44,6 +44,7 @@
             android:layout_marginTop="4dp"
             android:background="?attr/selectableItemBackgroundBorderless"
             android:clickable="true"
+            android:onClick="ViewProfile"
             android:padding="12dp"
             android:tint="@android:color/holo_orange_light"
             app:layout_constraintStart_toStartOf="parent"

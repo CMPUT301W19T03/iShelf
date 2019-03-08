@@ -29,14 +29,14 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         public TextView title;
         public TextView userName;
         public ConstraintLayout requestBody;
-        public RatingBar requesterRatingBar;
+
 
         public RequestViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title1);
             userName = (TextView) view.findViewById(R.id.user_name);
             requestBody = (ConstraintLayout) view.findViewById(R.id.request_body);
-            requesterRatingBar = (RatingBar) view.findViewById(R.id.requesterRatingBar);
+//            requesterRatingBar = (RatingBar) view.findViewById(R.id.requesterRatingBar);
         }
     }
     
@@ -55,7 +55,8 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             requestHolder.title.setText(requestList.get(position).getBook().getName());
             requestHolder.userName.setText(requestList.get(position).getRequester().getUsername());
             //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
-            requestHolder.requesterRatingBar.setRating(3); // TODO: change this to get the Requester's actual rating
+
+
             requestHolder.requestBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
