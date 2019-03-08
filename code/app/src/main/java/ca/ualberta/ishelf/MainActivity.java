@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
             switch (item.getItemId()) {
                 case R.id.my_books:
+                    selectedFragment = new myBooksFragment();
                     break;
                 case R.id.borrow_books:
                     selectedFragment = new BorrowFragment();
