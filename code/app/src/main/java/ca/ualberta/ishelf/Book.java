@@ -119,9 +119,7 @@ public class Book implements Parcelable{
         return description;
     }
 
-    public String getOwner() {
-        return owner;
-    }
+
 
     public Image getPhoto() {
         return photo;

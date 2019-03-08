@@ -36,7 +36,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             title = (TextView) view.findViewById(R.id.title1);
             userName = (TextView) view.findViewById(R.id.user_name);
             requestBody = (ConstraintLayout) view.findViewById(R.id.request_body);
-            requesterRatingBar = (RatingBar) view.findViewById(R.id.requesterRatingBar);
+//            requesterRatingBar = (RatingBar) view.findViewById(R.id.requesterRatingBar);
         }
     }
     
