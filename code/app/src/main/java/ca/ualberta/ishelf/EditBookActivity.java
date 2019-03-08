@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -95,6 +96,9 @@ public class EditBookActivity extends AppCompatActivity {
 
         Book book = new Book(title, description, isbn, year, genre, author);
 
+        // Get the signed in user's username from Shared Preferences
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        book.setOwner(currentUsername);
 
         Booklist.add(book);
         saveInFile();

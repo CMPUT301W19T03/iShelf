@@ -99,7 +99,7 @@ public class User implements Serializable {
     public float getOverallRating(){
         int numberOfRatings = 0;
         float aggregateRating = 0;
-        if (ratingArrayList == null) {
+        if (ratingArrayList != null) {
             for (Rating x : ratingArrayList) {
                 aggregateRating += x.getRating();
                 numberOfRatings++;
