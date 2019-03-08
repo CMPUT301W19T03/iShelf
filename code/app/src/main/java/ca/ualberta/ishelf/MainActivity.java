@@ -10,11 +10,17 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.app.SearchManager;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -30,6 +36,10 @@ public class MainActivity extends AppCompatActivity {
     // Here is my first comment
     private TextView mTextMessage;
     private Toolbar myToolbar;
+    private SearchView searchView;
+    private TextView appName;
+    private ImageView profileIcon;
+
 
     private static final String TAG = "MainActivity";
 
@@ -61,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         };
 
     Fragment fragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,13 +79,47 @@ public class MainActivity extends AppCompatActivity {
 
         //SignIn();
 
+
         mTextMessage = (TextView) findViewById(R.id.message);
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
         myToolbar = (Toolbar) findViewById(R.id.my_toolbar);
+        appName = (TextView) findViewById(R.id.app_name);
+        profileIcon = (ImageView) findViewById(R.id.profile_icon);
+
+
         setSupportActionBar(myToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+
+        searchView = (SearchView) findViewById(R.id.searchView1);
+        searchView.setQueryHint("Search for Books");
+
+
+
+
+
+        searchView.setOnSearchClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appName.setVisibility(View.INVISIBLE);
+                profileIcon.setVisibility(View.INVISIBLE);
+            }
+        });
+
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                appName.setVisibility(View.VISIBLE);
+                profileIcon.setVisibility(View.VISIBLE);
+                return false;
+            }
+        });
+
+
+
         // for back button later
 //        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getSupportActionBar().setDisplayShowHomeEnabled(true);
@@ -136,6 +181,40 @@ public class MainActivity extends AppCompatActivity {
 
 
 
+
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        getMenuInflater().inflate(R.menu.search_menu, menu);
+//
+//        MenuItem searchItem = menu.findItem(R.id.book_search);
+//        SearchView searchView = (SearchView) searchItem.getActionView();
+//
+//        return true;
+//    }
+
+//    @Override
+//    public boolean onQueryTextChange(String query) {
+//        // Here is where we are going to implement the filter logic
+//        return false;
+//    }
+//
+//    @Override
+//    public boolean onQueryTextSubmit(String query) {
+//        return false;
+//    }
+
+
+
+
+
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//
+//        final MenuItem searchItem = menu.findItem(R.id.book_search);
+//        final android.support.v7.widget.SearchView searchView = (SearchView) searchItem.getActionView();
+//        searchView.setQueryHint("test for something");
+//
+//        return true;
+//    }
 
 
 
