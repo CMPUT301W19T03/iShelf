@@ -27,6 +27,7 @@ public class BookProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
+        final String TAG = "BookProfileActivity";
 
 
 
@@ -53,7 +54,7 @@ public class BookProfileActivity extends AppCompatActivity {
         String year = data.getYear();
         String description = data.getDescription();
         Long isbn = data.getISBN();
-        String owner = data.getOwner();
+        final String owner = data.getOwner();
 
 
 
@@ -81,42 +82,51 @@ public class BookProfileActivity extends AppCompatActivity {
         /**
          * Retrieve the owner user info from Firebase so we can get their overall rating
          */
-        /*
-        // Get user from the passed in username
-        Firebase.setAndroidContext(this);
-        ref = new Firebase(link);
 
-        // get reference to specific entry
-        Firebase tempRef = ref.child("Users").child(owner);
-        // create a one time use listener to immediately access datasnapshot
+        // connect to firebase
+        final Database db = new Database(this);
+        final Firebase ref = db.connect(this);
+
+        Firebase tempRef = ref.child("Users");
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
-                if (jUser != null) {
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<User>(){}.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                Boolean found = false;  // true if user found in firebase
 
-                    // TODO: update the rating in here
+                // look for user in firebase
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    if (d.getKey().equals(owner)){    // user found
+                        /**
+                         * If the Owner is in Firebase
+                         * retrieves the Owner object
+                         * updates the RatingBar to display their overall rating
+                         */
+                        Log.d(TAG, "User found");
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<User>(){}.getType();
+                        User user = gson.fromJson(d.getKey(), tokenType);
+                        final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
+                        float rating = user.getOverallRating();
+                        ownerRatingBar.setRating(rating);
+                    }
+                }
+
+                if (!found) {
+                    /**
+                     * If the Owner is not in Firebase
+                     * Prints a debug log
+                     * Hide the RatingBar
+                     */
+                    Log.d(TAG, "Username: [" + owner + "] is not in firebase");
                     final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
-                    ownerRatingBar.setRating(user.getOverallRating());
-                } else {
-                    Log.d("FBerror1", "User doesn't exist or string is empty");
+                    ownerRatingBar.setVisibility(View.GONE);
                 }
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-                return;
+
             }
         });
-        // TODO: retrieve user from firebase
-        //final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
-        //ownerRatingBar.setRating(3); //); // TODO: get user's user.getOverallRating() here
-        */
-
 
     }
 
@@ -159,5 +169,13 @@ public class BookProfileActivity extends AppCompatActivity {
         setResult(RESULT_OK,newintent);
         finish();
 
+    }
+
+    public void viewProfile(View view){
+        Intent intent = getIntent();
+        Book data = intent.getParcelableExtra("Book Data");
+        Intent newIntent = new Intent(this, ViewProfileActivity.class);
+        newIntent.putExtra("Username", data.getOwner());
+        startActivity(newIntent);
     }
 }

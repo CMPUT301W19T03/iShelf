@@ -75,47 +75,52 @@ public class ViewProfileActivity extends AppCompatActivity {
             // If just a username is passed in
             Bundle bundle = this.getIntent().getExtras();
             username = (String) bundle.getSerializable("Username");
+            if (username == null) {
+                tvUsername.setText(username);
 
-            tvUsername.setText(username);
+                // Get user from the passed in username
+                Firebase.setAndroidContext(this);
+                ref = new Firebase(link);
 
-            // Get user from the passed in username
-            Firebase.setAndroidContext(this);
-            ref = new Firebase(link);
+                // get reference to specific entry
+                Firebase tempRef = ref.child("Users").child(username);
+                // create a one time use listener to immediately access datasnapshot
+                tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        String jUser = dataSnapshot.getValue(String.class);
+                        Log.d("jUser", jUser);
+                        if (jUser != null) {
+                            // Get user object from Gson
+                            Gson gson = new Gson();
+                            Type tokenType = new TypeToken<User>() {
+                            }.getType();
+                            User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
 
-            // get reference to specific entry
-            Firebase tempRef = ref.child("Users").child(username);
-            // create a one time use listener to immediately access datasnapshot
-            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String jUser = dataSnapshot.getValue(String.class);
-                    Log.d("jUser", jUser);
-                    if (jUser != null) {
-                        // Get user object from Gson
-                        Gson gson = new Gson();
-                        Type tokenType = new TypeToken<User>(){}.getType();
-                        User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                            // fill the fields with their current info
+                            tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
+                            tvEmail.setText("EMAIL: " + user.getEmail());
 
-                        // fill the fields with their current info
-                        tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
-                        tvEmail.setText("EMAIL: " + user.getEmail());
+                            // set the Rating
+                            //ratingBar.setRating(user.getOverallRating());
+                            Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
+                            Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
+                            username = user.getUsername();
 
-                        // set the Rating
-                        //ratingBar.setRating(user.getOverallRating());
-                        Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
-                        Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
-                        username = user.getUsername();
-
-                        Log.d("Confirm", user.getUsername());
-                    } else {
-                        Log.d("FBerror1", "User doesn't exist or string is empty");
+                            Log.d("Confirm", user.getUsername());
+                        } else {
+                            Log.d("FBerror1", "User doesn't exist or string is empty");
+                        }
                     }
-                }
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    return;
-                }
-            });
+
+                    @Override
+                    public void onCancelled(FirebaseError firebaseError) {
+                        return;
+                    }
+                });
+            } else {
+                Log.d(TAG, "onCreate: Username passed in is Null");
+            }
 
 
         } else if (this.getIntent().hasExtra("User")){
