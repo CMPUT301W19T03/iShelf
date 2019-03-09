@@ -25,7 +25,6 @@ import java.util.ArrayList;
 /**
  * SignInActivity
  *
- * TODO: check if username is in Firebase, otherwise they need to register
  * TODO: (low-priority) add a rudimentary password function
  * @author rmnattas
  */
@@ -82,10 +81,6 @@ public class SignInActivity extends AppCompatActivity {
      * @param username the username for the logged-in user
      */
     private void signedIn(final String username){
-        // update username in UserPreferences
-        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-        editor.putString("username", username).apply();
-
         // connect to firebase
         final Database db = new Database(this);
         final Firebase ref = db.connect(this);
@@ -100,21 +95,27 @@ public class SignInActivity extends AppCompatActivity {
                 for(DataSnapshot d: dataSnapshot.getChildren()) {
                     if (d.getKey().equals(username)){    // user found
                         Log.d("User", "User found");
+
+                        // update username in UserPreferences
+                        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+                        editor.putString("username", username).apply();
+
                         found = true;
+
+                        // go to previous activity
+                        SignInActivity.super.onBackPressed();
                     }
                 }
 
                 if (!found) {
                     // user not in firebase => new user, add user to Firebase
                     Log.d("User", "User not in firebase");
-                    // create the new user User object
-                    User newUser = new User();
-                    newUser.setUsername(username);
-                    db.addUser(newUser);
+                    // user not found, ask user to register
+                    Toast toast = Toast.makeText(getApplicationContext(),
+                            "User Not Found\nPlease Register",
+                            Toast.LENGTH_LONG);
+                    toast.show();
                 }
-
-                // go to previous activity
-                SignInActivity.super.onBackPressed();
 
             }
             @Override
