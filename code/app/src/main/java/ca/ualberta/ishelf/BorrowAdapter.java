@@ -70,7 +70,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent((Activity) bookContext, BookProfileActivity.class);
-                    Book book = originalList.get(position);
+                    Book book = filterList.get(position);
                     intent.putExtra("Book Data", book);
                     Activity bookActivity = (Activity) bookContext;
                     bookActivity.startActivity(intent);
