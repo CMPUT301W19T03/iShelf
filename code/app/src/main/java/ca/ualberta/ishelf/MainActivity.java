@@ -208,8 +208,8 @@ public class MainActivity extends AppCompatActivity {
     private void SignIn(){
 
         // code to reset username in UserPreferences
-        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-        editor.putString("username", null).apply();
+//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+//        editor.putString("username", null).apply();
 
         // Check if logged-in
         String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);

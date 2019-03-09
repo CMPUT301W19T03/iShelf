@@ -22,6 +22,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+/**
+ * SignInActivity
+ *
+ * TODO: check if username is in Firebase, otherwise they need to register
+ * TODO: (low-priority) add a rudimentary password function
+ * @author rmnattas
+ */
 public class SignInActivity extends AppCompatActivity {
 
 //    private FirebaseAuth mAuth;
@@ -52,6 +59,20 @@ public class SignInActivity extends AppCompatActivity {
     public void singinClicked(View view){
         // For now, only use the entered username without a password
         signedIn(txtusername.getText().toString());
+    }
+
+    /**
+     * registerClicked
+     * Called when the Register button is clicked
+     * Takes the new user to the EditProfileActivity
+     * for them to register for a new account
+     * @author Jeremy
+     * @param view
+     */
+    public void registerClicked(View view){
+        Intent intent = new Intent(this, EditProfileActivity.class);
+        intent.putExtra("Registering", true);
+        startActivity(intent);
     }
 
     /**
