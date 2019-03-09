@@ -238,4 +238,9 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("Username", username);
         startActivity(intent);
     }
+
+    public void ViewNotification(View v){
+        Intent intent = new Intent(v.getContext(), NotificationActivity.class);
+        startActivity(intent);
+    }
 }
