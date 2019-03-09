@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/borrow_body"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/borrow_body"
     android:layout_width="match_parent"
-    android:layout_height="160dp">
+    android:layout_height="160dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@color/black"
+    android:backgroundTint="#80FFFFFF">
+
 
     <TextView
         android:id="@+id/title"
@@ -13,10 +20,10 @@
         android:layout_marginStart="24dp"
         android:layout_marginTop="16dp"
         android:text="Book Name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:textColor="@color/black"
         android:textSize="15sp"
         android:textStyle="bold"
-        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         app:layout_constraintStart_toEndOf="@+id/imageView2"
         app:layout_constraintTop_toTopOf="parent" />
 
