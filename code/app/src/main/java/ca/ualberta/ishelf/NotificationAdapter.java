@@ -74,4 +74,9 @@ class NotificationAdapter extends RecyclerView.Adapter<ViewHolder> {
     public int getItemCount() {
         return notificationList.size();
     }
+
+    public void updateList(ArrayList<Notification> notificationList){
+        this.notificationList = notificationList;
+    }
+
 }

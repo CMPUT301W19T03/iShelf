@@ -44,10 +44,16 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-
+/**
+ * Notifications Activity
+ *
+ *
+ * TODO get only the logged in user notifications from firebase
+ * @author mehrab
+ */
 public class NotificationActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
-    private RecyclerView.Adapter nAdapter;
+    private NotificationAdapter nAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private ArrayList<Notification> notificationList = new ArrayList<Notification>();
 
@@ -56,7 +62,8 @@ public class NotificationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_notification);
-        createDummy();
+
+        // createDummy();
 
         recyclerView = (RecyclerView) findViewById(R.id.notification_recycler_view);
 
@@ -81,7 +88,48 @@ public class NotificationActivity extends AppCompatActivity {
 
     }
 
-    public  void getNotifications(){}
+    /**
+     * get notifications from firebase
+     * @author rmnattas
+     */
+    public  void getNotifications(){
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+        Firebase childRef = fb.child("Notifications");
+
+        // get logged in username
+        final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jNotification = d.getValue(String.class);
+                    if (jNotification != null) {
+                        // Get notification object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Notification>() {
+                        }.getType();
+                        Notification notification = gson.fromJson(jNotification, tokenType); // here is where we get the user object
+                        // if (notification.getUserName().equals(currentUsername)){
+                            notificationList.add(notification);
+                        // }
+                    } else {
+                        Log.d("NotificationActivity", "Notification ERROR");
+                    }
+                }
+                nAdapter.updateList(notificationList);
+                nAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
+    }
 
 
 
@@ -101,31 +149,6 @@ public class NotificationActivity extends AppCompatActivity {
         Notification notification4 = new Notification(null,"Book Request Recieved", null);
 
         notificationList.add(notification4);
-        Notification notification5 = new Notification(null,"Book Request Accepted", null);
-        notificationList.add(notification5);
-
-        Notification notification6 = new Notification(null,"Book Request Rejected", null);
-        notificationList.add(notification6);
-
-
-        Notification notification7 = new Notification(null,"Book Request Recieved", null);
-
-        notificationList.add(notification7);
-        Notification notification8 = new Notification(null,"Book Request Accepted", null);
-        notificationList.add(notification8);
-
-        Notification notification9 = new Notification(null,"Book Request Rejected", null);
-        notificationList.add(notification9);
-
-
-        Notification notification10 = new Notification(null,"Book Request Recieved", null);
-
-        notificationList.add(notification10);
-        Notification notification11 = new Notification(null,"Book Request Accepted", null);
-        notificationList.add(notification11);
-        Notification notification12 = new Notification(null,"Book Request Rejected", null);
-        notificationList.add(notification12);
-
 
 
     }
