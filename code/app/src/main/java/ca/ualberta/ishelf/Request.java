@@ -3,58 +3,129 @@ package ca.ualberta.ishelf;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * A request object represents one user requesting to borrow a book from its owner
+ * A request will always be stored under the owners User object, so we only need
+ * to store the requesters username
+ * Status is used to represent whether a request has been accepted, declined, or
+ * if no action has been taken yet
+ * Since these objects are not directly stored in firebase, they don't need a unique id
+ */
 public class Request {
-
-    private Book book;
-    private User requester;
-    private UUID id;
-
-
-    public Request(){
-        this.id = UUID.randomUUID();
-    }
-
-    public Request(Date timeRequested, User requester, Book book) {
-        this.id = UUID.randomUUID();
-        this.requester = requester;
-        this.book = book;
-        this.timeRequested = timeRequested;
-    }
-
-
+    // id of book to be borrowed
+    private UUID bookId;
+    // username of requester
+    private String requester;
+    // when the book was requested
     private Date timeRequested;
+    private int status;
+    // 1: accepted
+    // -1: declined
+    // 0: neither accepted nor declined
 
-    public void setTimeRequested(Date timeRequested) {
-        this.timeRequested = timeRequested;
+    /**
+     * Empty initializer
+     */
+    public Request(){
     }
 
+    /**
+     * Request initializer
+     * timeRequested is automatically set to when the request object is created
+     * but can be manually set afterwards
+     * @param bookId
+     * @param requester
+     */
+    public Request(UUID bookId, String requester) {
+        this.bookId = bookId;
+        this.requester = requester;
+        this.timeRequested = new Date();
+    }
 
+    /**
+     * get the id of the book to be borrowed
+     * @return
+     */
+    public UUID getBookId() {
+        return bookId;
+    }
+
+    /**
+     * set the id of the book to be borrowed
+     * @param bookId
+     */
+    public void setBookId(UUID bookId) {
+        this.bookId = bookId;
+    }
+
+    /**
+     * Get the username of the user requesting the book
+     * @return
+     */
+    public String getRequester() {
+        return requester;
+    }
+
+    /**
+     * set the username of the user requesting the book
+     * @param requester
+     */
+    public void setRequester(String requester) {
+        this.requester = requester;
+    }
+
+    /**
+     * get the time that the book was requested
+     * @return
+     */
     public Date getTimeRequested() {
         return timeRequested;
     }
 
-    public Book getBook() {
-        return book;
+    /**
+     * set the time that the book was requested
+     * @param timeRequested
+     */
+    public void setTimeRequested(Date timeRequested) {
+        this.timeRequested = timeRequested;
     }
 
-    public void setBook(Book book) {
-        this.book = book;
+    /**
+     * Set the status of the request to accepted, reprented by a 1
+     * This means that the owner has accepted the request
+     */
+    public void accept() {
+        this.status = 1;
     }
 
-    public User getRequester() {
-        return requester;
+    /**
+     * Set the status of the request to declined, represented by -1
+     * This means that the owner has declined the request
+     */
+    public void decline() {
+        this.status = -1;
     }
 
-    public void setRequester(User requester) {
-        this.requester = requester;
+    /**
+     * Get the status of the request
+     * If the status is 0, then the owner has taken no action on the request
+     * If the status is 1, then the owner has accepted the request
+     * If the status is -1, then the owner has declined the request
+     * @return
+     */
+    public int getStatus() {
+        return status;
     }
 
-    public UUID getId() {
-        return id;
+    /**
+     * Return a string representation of the request
+     * This is a very simple toSting method which may or may not be useful
+     * @return
+     */
+    @Override
+    public String toString() {
+        String message = "User " + requester + "requested to borrow a book at "
+                + timeRequested.toString();
+        return message;
     }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
 }
