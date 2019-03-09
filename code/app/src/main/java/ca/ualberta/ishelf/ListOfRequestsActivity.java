@@ -145,7 +145,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                         Gson gson = new Gson();
                         tempRequest = gson.fromJson(tempString, tokenType);
                         //TODO get user and their rating
-                        if (tempRequest.getOwner().equals(username)) {
+                        if (tempRequest.getRequester().equals(username)) {
                             // Add to array of requests
                             userRequests.add(tempRequest);
                             // Add to array of dispalyed strings
