@@ -25,44 +25,40 @@ import java.lang.reflect.Type;
 public class BookProfileActivity extends AppCompatActivity {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
+    private Book passedBook = null;
+    final String TAG = "BookProfileActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
-        final String TAG = "BookProfileActivity";
 
+        // get the book object passed by intent
         Intent intent = getIntent();
-        Book data = intent.getParcelableExtra("Book Data");
-        Boolean vis = intent.getBooleanExtra("Button Visible", false);
+        passedBook = intent.getParcelableExtra("Book Data");
+        Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        Boolean isOwner = (currentUsername.equals(data.getOwner()));
+        Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
 
-        if(vis || isOwner){
 
-            Button delButton = (Button) findViewById(R.id.del);
-            Button editButton =(Button) findViewById(R.id.edit);
-
+        if(canEdit || isOwner){
+            // show the edit and delete book buttons
+            Button delButton = findViewById(R.id.del);
+            Button editButton = findViewById(R.id.edit);
             delButton.setVisibility(View.VISIBLE);
             editButton.setVisibility(View.VISIBLE);
-
         }
 
 
-
-
-
-
-        String title = data.getName();
-        String author = data.getAuthor();
-        String genre = data.getGenre();
-        String year = data.getYear();
-        String description = data.getDescription();
-        Long isbn = data.getISBN();
-        final String owner = data.getOwner();
-
+        String title = passedBook.getName();
+        String author = passedBook.getAuthor();
+        String genre = passedBook.getGenre();
+        String year = passedBook.getYear();
+        String description = passedBook.getDescription();
+        Long isbn = passedBook.getISBN();
+        final String owner = passedBook.getOwner();
 
 
         TextView textView = findViewById(R.id.Title);
@@ -88,13 +84,15 @@ public class BookProfileActivity extends AppCompatActivity {
 
         TextView ownerUsername = findViewById(R.id.ownerUsername);
         ownerUsername.setText(owner);
-        //ownerUsername.setCol
 
+        getOwner();
 
-        /**
-         * Retrieve the owner user info from Firebase so we can get their overall rating
-         */
+    }
 
+    /**
+     * Retrieve the owner user info from Firebase so we can get their overall rating
+     */
+    public void getOwner(){
         // connect to firebase
         final Database db = new Database(this);
         final Firebase ref = db.connect(this);
@@ -107,7 +105,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
                 // look for user in firebase
                 for(DataSnapshot d: dataSnapshot.getChildren()) {
-                    if (d.getKey().equals(owner)){    // user found
+                    if (d.getKey().equals(passedBook)){    // user found
                         /**
                          * If the Owner is in Firebase
                          * retrieves the Owner object
@@ -129,7 +127,7 @@ public class BookProfileActivity extends AppCompatActivity {
                      * Prints a debug log
                      * Hide the RatingBar
                      */
-                    Log.d(TAG, "Username: [" + owner + "] is not in firebase");
+                    Log.d(TAG, "Username: [" + passedBook.getOwner() + "] is not in firebase");
                     final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
                     ownerRatingBar.setVisibility(View.GONE);
                 }
@@ -139,7 +137,6 @@ public class BookProfileActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
 
@@ -155,15 +152,12 @@ public class BookProfileActivity extends AppCompatActivity {
         newINTent.putExtra("Pos Data",pos );
         newINTent.putExtra("Check Data", true);
 
-
-
         startActivity(newINTent);
         finish();
 
     }
 
     public  void delete(View view){
-
         Intent intent = getIntent();
         int pos = intent.getIntExtra("pos data", 0);
 
@@ -180,8 +174,6 @@ public class BookProfileActivity extends AppCompatActivity {
 
         setResult(RESULT_OK,newintent);
         finish();
-
-
     }
 
     public void viewProfile(View view){

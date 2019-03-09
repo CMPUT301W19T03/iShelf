@@ -209,7 +209,11 @@ public class MainActivity extends AppCompatActivity {
 //        return true;
 //    }
 
-
+    /**
+     * Check if a user is signed in, if not
+     * go to the SignInActivity
+     * @author rmnattas
+     */
     private void SignIn(){
 
         // code to reset username in UserPreferences
@@ -237,6 +241,11 @@ public class MainActivity extends AppCompatActivity {
         String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
         Log.d(TAG, "onOptionsItemSelected: Username:" + username);
         intent.putExtra("Username", username);
+        startActivity(intent);
+    }
+
+    public void ViewNotification(View v){
+        Intent intent = new Intent(v.getContext(), NotificationActivity.class);
         startActivity(intent);
     }
 }

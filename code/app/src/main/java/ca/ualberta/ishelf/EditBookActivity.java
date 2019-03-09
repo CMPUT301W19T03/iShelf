@@ -115,6 +115,7 @@ public class EditBookActivity extends AppCompatActivity {
 
     /**
      * Update book in firebase, if book not in firebase, add it.
+     * @author rmnattas
      * @param book book to update/add
      */
     private void saveFirebase(final Book book){
