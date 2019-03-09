@@ -35,6 +35,7 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText DescriptionText;
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
+    private Book passedBook = null;
 
 
     @Override
@@ -60,14 +61,14 @@ public class EditBookActivity extends AppCompatActivity {
         loadFromFile();
 
         if(check){
-            Book data = intent.getParcelableExtra("Book Data");
+            passedBook = intent.getParcelableExtra("Book Data");
 
-            String title = data.getName();
-            String author = data.getAuthor();
-            String genre = data.getGenre();
-            String year = data.getYear();
-            String description = data.getDescription();
-            Long isbn = data.getISBN();
+            String title = passedBook.getName();
+            String author = passedBook.getAuthor();
+            String genre = passedBook.getGenre();
+            String year = passedBook.getYear();
+            String description = passedBook.getDescription();
+            Long isbn = passedBook.getISBN();
 
 
             TitleText.setText(title);
@@ -100,6 +101,10 @@ public class EditBookActivity extends AppCompatActivity {
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         book.setOwner(currentUsername);
 
+        if (passedBook != null){
+            book.setId(passedBook.getId());
+        }
+
         Booklist.add(book);
         saveInFile();
 
@@ -128,14 +133,8 @@ public class EditBookActivity extends AppCompatActivity {
                     if (d.getKey().equals(book.getId().toString())){    // book found
                         Log.d("Book", "Book found");
                         found = true;
-                        // Book found, update it in firebase
-                        Firebase userchild = ref.child("Books").child(d.getKey());
-                        // set book object JSON
-                        book.setId(UUID.fromString(d.getKey()));
-                        Gson gson = new Gson();
-                        final String jBook = gson.toJson(book);
-                        // save the new Book object to firebase
-                        userchild.setValue(jBook);
+                        //edit the book in firebase
+                        db.editBook(book);
                         break;
                     }
                 }

@@ -59,6 +59,7 @@ public class Book implements Parcelable{
         year = in.readString();
         genre = in.readString();
         author = in.readString();
+        id = UUID.fromString(in.readString());
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -229,5 +230,6 @@ public class Book implements Parcelable{
         dest.writeString(year);
         dest.writeString(genre);
         dest.writeString(author);
+        dest.writeString(id.toString());
     }
 }
