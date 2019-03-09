@@ -173,14 +173,14 @@ public class RequestFragment extends Fragment {
         User testRequester = new User("ppl", "1234567", "someone@Email.com");
         Rating rating = new Rating(3, "Okay");
         testRequester.addRating(rating);
-        Request request1 = new Request(new Date(), testRequester, testBook);
+        Request request1 = new Request(null, testRequester, testBook);
         requestPendingList.add(request1);
 
         Book test1Book = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author", false);
         User test1Requester = new User("people", "1234567", "someone@Email.com");
         Rating rating1 = new Rating(3, "Okay");
         testRequester.addRating(rating1);
-        Request request2 = new Request(new Date(), test1Requester, test1Book);
+        Request request2 = new Request(null, test1Requester, test1Book);
         requestAcceptedList.add(request2);
 
 
