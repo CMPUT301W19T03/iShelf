@@ -9,6 +9,10 @@ public class Notification {
     private String userName;
     private UUID id; // changed from int to UUID
 
+    public Notification(){
+        this.id = UUID.randomUUID();
+    }
+
     public Notification(Date date, String text, String userName){
         this.date = date;
         this.text = text;

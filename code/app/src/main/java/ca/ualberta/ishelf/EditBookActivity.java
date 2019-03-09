@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -34,6 +35,7 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText DescriptionText;
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
+    private Book passedBook = null;
 
 
     @Override
@@ -59,14 +61,14 @@ public class EditBookActivity extends AppCompatActivity {
         loadFromFile();
 
         if(check){
-            Book data = intent.getParcelableExtra("Data");
+            passedBook = intent.getParcelableExtra("Book Data");
 
-            String title = data.getName();
-            String author = data.getAuthor();
-            String genre = data.getGenre();
-            String year = data.getYear();
-            String description = data.getDescription();
-            Long isbn = data.getISBN();
+            String title = passedBook.getName();
+            String author = passedBook.getAuthor();
+            String genre = passedBook.getGenre();
+            String year = passedBook.getYear();
+            String description = passedBook.getDescription();
+            Long isbn = passedBook.getISBN();
 
 
             TitleText.setText(title);
@@ -93,8 +95,15 @@ public class EditBookActivity extends AppCompatActivity {
         String genre = GenreText.getText().toString();
         String description = DescriptionText.getText().toString();
 
-        Book book = new Book(title, description, isbn, year, genre, author);
+        Book book = new Book(title, description, isbn, year, genre, author, false);
 
+        // Get the signed in user's username from Shared Preferences
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        book.setOwner(currentUsername);
+
+        if (passedBook != null){
+            book.setId(passedBook.getId());
+        }
 
         Booklist.add(book);
         saveInFile();
@@ -110,7 +119,8 @@ public class EditBookActivity extends AppCompatActivity {
      */
     private void saveFirebase(final Book book){
         // connect to firebase
-        final Firebase ref = new Database(this).connect(this);
+        final Database db = new Database(this);
+        final Firebase ref = db.connect(this);
 
         Firebase tempRef = ref.child("Books");
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -123,14 +133,8 @@ public class EditBookActivity extends AppCompatActivity {
                     if (d.getKey().equals(book.getId().toString())){    // book found
                         Log.d("Book", "Book found");
                         found = true;
-                        // Book found, update it in firebase
-                        Firebase userchild = ref.child("Books").child(d.getKey());
-                        // set book object JSON
-                        book.setId(UUID.fromString(d.getKey()));
-                        Gson gson = new Gson();
-                        final String jBook = gson.toJson(book);
-                        // save the new Book object to firebase
-                        userchild.setValue(jBook);
+                        //edit the book in firebase
+                        db.editBook(book);
                         break;
                     }
                 }
@@ -138,18 +142,39 @@ public class EditBookActivity extends AppCompatActivity {
                 if (!found) {
                     // book not in firebase => add book to Firebase
                     Log.d("Book", "Add book to firebase");
-                    Firebase userchild = ref.child("Books").child(book.getId().toString());
-                    // set book object JSON
-                    Gson gson = new Gson();
-                    final String jBook = gson.toJson(book);
-                    // save the new Book object to firebase
-                    userchild.setValue(jBook);
+                    db.addBook(book);
                 }
 
-                Intent intent = new Intent(EditBookActivity.this, BookProfileActivity.class);
-                intent.putExtra("Book Data", book);
-                startActivity(intent);
-                finish();
+
+                Intent intent = getIntent();
+                Boolean check = intent.getBooleanExtra("Check Data", false );
+
+
+                if(check){
+
+                    int pos = intent.getIntExtra("Pos Data", 0);
+                    Intent newINTent = new Intent(EditBookActivity.this, MyAdapter.class);
+
+
+                    newINTent.putExtra("Data", book);
+                    newINTent.putExtra("Pos", pos);
+                    newINTent.putExtra("Check", true);
+
+                    System.out.print("HElllllllloooooowewrwejrjoejiorwejrweijorij");
+
+                    setResult(RESULT_OK,newINTent);
+                    finish();
+
+
+                }
+                else{
+                    Intent newintent = new Intent(EditBookActivity.this, myBooksFragment.class);
+                    newintent.putExtra("Book Data", book);
+                    setResult(RESULT_OK, newintent);
+                    finish();
+
+                }
+
 
             }
             @Override

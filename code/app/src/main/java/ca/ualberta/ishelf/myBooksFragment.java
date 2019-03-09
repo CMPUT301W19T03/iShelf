@@ -2,6 +2,8 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -27,6 +29,8 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  *
  * @author Evan
@@ -39,9 +43,15 @@ public class myBooksFragment extends Fragment {
     private ArrayList<String> myBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
     private ArrayList<String> myBookImage = new ArrayList<>();
     private ArrayList<String> borrowBooksName = new ArrayList<>();
-    private ArrayList<String> borrowBooksImage = new ArrayList<>();
+    private ArrayList<String> borrowBooksImage = new ArrayList<>();//Should be a image string
     private ArrayList<String> requestedBooksName = new ArrayList<>();
     private ArrayList<String> requestedBooksImage = new ArrayList<>();
+    private  ArrayList<Book> myOwnedBooks = new ArrayList<>();
+    private  ArrayList<Book> myBorrowBooks = new ArrayList<>();
+    private  ArrayList<Book> myRequestedBooks = new ArrayList<>();
+    private  ArrayList<Book> myBorrowedBooks = new ArrayList<>();
+    private ArrayList<String> myBorrowedBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
+    private ArrayList<Image> myBorrowedBookImage = new ArrayList<>();
     private RatingBar ratingBar;
     private Spinner spinner; //drop-down filter: https://www.mkyong.com/android/android-spinner-drop-down-list-example/
     private RecyclerView recyclerView;
@@ -74,7 +84,7 @@ public class myBooksFragment extends Fragment {
             }
         });
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
-        myAdapter = new MyAdapter(myBookNames, myBookImage, this.getContext()); //in the same order as the constructor in MyAdapter
+        myAdapter = new MyAdapter(myBookNames, myBookImage, myOwnedBooks, this.getContext()); //in the same order as the constructor in MyAdapter
         recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         initImage();
@@ -82,13 +92,26 @@ public class myBooksFragment extends Fragment {
 
     public void Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
         if(filter.equals("My Books")) {
-            initRecyclerView(myBookNames, myBookImage, this.getContext());
+            initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
         }else if (filter.equals(("Lent out"))){
-            initRecyclerView(borrowBooksName, borrowBooksImage, this.getContext()); // basically do nothing and go back to main page
+            initRecyclerView(borrowBooksName, borrowBooksImage,myBorrowBooks ,this.getContext()); // basically do nothing and go back to main page
         }else if (filter.equals("Requested")){
-            initRecyclerView(requestedBooksName, requestedBooksImage, this.getContext()); // basically do nothing and go back to main page
+            initRecyclerView(requestedBooksName, requestedBooksImage,myRequestedBooks, this.getContext()); // basically do nothing and go back to main page
 
         }
+        else if(filter.equals("Borrowed Books")){
+            initRecyclerView(myBorrowedBookNames, myBorrowedBookImage, myBorrowedBooks, this.getContext());
+
+
+        }
+    }
+
+
+    public void BorrowBook(Book book){
+        book.setBorrowedBook(true);
+        myBorrowedBookImage.add(book.getPhoto());
+        myBorrowedBookNames.add(book.getName());
+        myBorrowBooks.add(book);
     }
 
     /*
@@ -98,57 +121,46 @@ public class myBooksFragment extends Fragment {
 
     public void addBook(View view){ //so when you add a book, you immediately filter by status
 
-        //im not sure if my books gets from user or book but i don't see a your borrowed books or requests
 
-//        mImage.add("https://i.imgur.com/ZcLLrkY.jpg"); //wherever the book image comes from
-//        mNames.add("Havana oh na na");
-        Book book = new Book();
-        book.setName("50ShadesOfBlack");
-        ratingBar = getActivity().findViewById(R.id.ratingBar);
-        Rating rating = new Rating();
-        book.addRating(rating);
-        this.ratingBar.setRating(4); // this should work but does not work, idk why
-        myBookImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-        //font see any constructors for image in Book class yet
-        myBookNames.add(book.getName());
-        //myAdapter.updateData(); //this doesn't work for some reason
-        book.setStatus(0);
-        if (book.getStatus() == 0){ //available to borrow
-            borrowBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-            borrowBooksName.add(book.getName());
-        }
-        if(book.getStatus() == 2){ //should be lent if there is such a status
-            requestedBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-            requestedBooksName.add(book.getName());
-        }
-        initRecyclerView(myBookNames, myBookImage, this.getContext()); //there should be a way to update without initializing it again
+        Intent intent = new Intent(view.getContext(), EditBookActivity.class);
+        intent.putExtra("Check Data",false);
+        startActivityForResult(intent, 1);
 
     }
 
     private void initImage(){
         Log.d(TAG, "init works");
 
+        Book book = new Book("Havana oh na-na", "Description", 1234L, "Year", "Genre", "author", false);
+
         myBookImage.add("https://i.redd.it/qn7f9oqu7o501.jpg");
         myBookNames.add("Havana oh na-na");
+        myOwnedBooks.add(book);
 
+
+
+        Book book1 = new Book("Oh, but my heart is in Havana", "Description", 1234L, "Year", "Genre", "author", false);
         myBookImage.add("https://i.redd.it/j6myfqglup501.jpg");
         myBookNames.add("Oh, but my heart is in Havana");
+        book1.setOwner("abcdef");
+        myOwnedBooks.add(book1);
 
+        Book book2= new Book("There's somethin' 'bout his manners", "Description", 1234L, "Year", "Genre", "author", false);
         myBookImage.add("https://i.redd.it/0h2gm1ix6p501.jpg");
         myBookNames.add("There's somethin' 'bout his manners");
-
+        myOwnedBooks.add(book2);
         //myAdapter.updateData();   -- need to work on adding objects and not just strings, i just used strings to test - Evan
 
-        initRecyclerView(myBookNames, myBookImage, this.getContext());
+        initRecyclerView(myBookNames, myBookImage,myOwnedBooks, this.getContext());
     }
     /*
     getActivity() is bad practice but not sure how else to code it
      */
 
-    private void initRecyclerView(ArrayList name, ArrayList image, Context context){
+    private void initRecyclerView(ArrayList name, ArrayList image, ArrayList list, Context context){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
-        MyAdapter adapter = new MyAdapter(name, image, this.getContext()); //in the same order as the constructor in MyAdapter
+        MyAdapter adapter = new MyAdapter(name, image, list, this.getContext()); //in the same order as the constructor in MyAdapter
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
@@ -163,5 +175,78 @@ public class myBooksFragment extends Fragment {
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        myAdapter.onActivityResult(requestCode, resultCode, data);
+
+        if(requestCode == 1){
+            if(resultCode == RESULT_OK){
+                Book book = data.getParcelableExtra("Book Data");
+
+                ratingBar = getActivity().findViewById(R.id.ratingBar);
+                Rating rating = new Rating();
+                book.addRating(rating);
+                this.ratingBar.setRating(4); // this should work but does not work, idk why
+                myOwnedBooks.add(book);
+                myBookImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+                //font see any constructors for image in Book class yet
+                myBookNames.add(book.getName());
+                //myAdapter.updateData(); //this doesn't work for some reason
+                book.setStatus(0);
+                if (book.getStatus() == 0){ //available to borrow
+                    borrowBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+                    borrowBooksName.add(book.getName());
+                }
+                if(book.getStatus() == 2){ //should be lent if there is such a status
+                    requestedBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+                    requestedBooksName.add(book.getName());
+                }
+                initRecyclerView(myBookNames, myBookImage,myOwnedBooks, this.getContext());
+            }
+        }
+
+        if(requestCode == 1002){
+            if(resultCode == RESULT_OK){
+                boolean check = data.getBooleanExtra("Check", true);
+                if(check) {
+
+
+                    Book book = data.getParcelableExtra("Data");
+                    int pos = data.getIntExtra("Pos", 0);
+
+                    ratingBar = getActivity().findViewById(R.id.ratingBar);
+                    Rating rating = new Rating();
+                    book.addRating(rating);
+                    this.ratingBar.setRating(4); // this should work but does not work, idk why
+                    myOwnedBooks.set(pos, book);
+                    myBookImage.set(pos, "https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+                    //font see any constructors for image in Book class yet
+                    myBookNames.set(pos, book.getName());
+                    //myAdapter.updateData(); //this doesn't work for some reason
+                    book.setStatus(1);
+                    if (book.getStatus() == 0) { //available to borrow
+                        borrowBooksImage.set(pos,"https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+                        borrowBooksName.set(pos,book.getName());
+                    }
+                    if (book.getStatus() == 2) { //should be lent if there is such a status
+                        requestedBooksImage.set(pos, "https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
+                        requestedBooksName.set(pos, book.getName());
+                    }
+                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
+                }
+                else{
+                    int pos = data.getIntExtra("Pos", 1);
+                    myOwnedBooks.remove(pos);
+                    myBookNames.remove(pos);
+                    myBookImage.remove(pos);
+                    myAdapter.notifyDataSetChanged();
+
+                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
+
+                }
+            }
+        }
     }
 }

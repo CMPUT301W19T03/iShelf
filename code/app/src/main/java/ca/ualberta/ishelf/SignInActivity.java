@@ -22,6 +22,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+/**
+ * SignInActivity
+ *
+ * TODO: check if username is in Firebase, otherwise they need to register
+ * TODO: (low-priority) add a rudimentary password function
+ * @author rmnattas
+ */
 public class SignInActivity extends AppCompatActivity {
 
 //    private FirebaseAuth mAuth;
@@ -55,6 +62,20 @@ public class SignInActivity extends AppCompatActivity {
     }
 
     /**
+     * registerClicked
+     * Called when the Register button is clicked
+     * Takes the new user to the EditProfileActivity
+     * for them to register for a new account
+     * @author Jeremy
+     * @param view
+     */
+    public void registerClicked(View view){
+        Intent intent = new Intent(this, EditProfileActivity.class);
+        intent.putExtra("Registering", true);
+        startActivity(intent);
+    }
+
+    /**
      * Called when user successfully sign in
      * Sets UserPreferences and check if user in Firebase database.
      * If not, adds their User object to Firebase.
@@ -66,7 +87,8 @@ public class SignInActivity extends AppCompatActivity {
         editor.putString("username", username).apply();
 
         // connect to firebase
-        final Firebase ref = new Database(this).connect(this);
+        final Database db = new Database(this);
+        final Firebase ref = db.connect(this);
 
         Firebase tempRef = ref.child("Users");
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -88,11 +110,7 @@ public class SignInActivity extends AppCompatActivity {
                     // create the new user User object
                     User newUser = new User();
                     newUser.setUsername(username);
-                    Firebase userchild = ref.child("Users").child(username);
-                    Gson gson = new Gson();
-                    String jUser = gson.toJson(newUser);
-                    // save the new User object to firebase
-                    userchild.setValue(jUser);
+                    db.addUser(newUser);
                 }
 
                 // go to previous activity
