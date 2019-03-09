@@ -8,6 +8,10 @@ public class Request {
     private String bookName;
     private int borrowerRating;
     private Date timeRequested;
+    // 1: accepted
+    // -1: declined
+    // 0: neither accepted nor declined
+    private int status;
 
     public Request(Date timeRequested) {
         this.timeRequested = timeRequested;
@@ -20,8 +24,8 @@ public class Request {
         this.borrower = borrower;
         this.bookName = bookName;
         this.borrowerRating = borrowerRating;
+        this.status = 0;
     }
-
 
     public Date getTimeRequested() {
         return timeRequested;
@@ -49,6 +53,14 @@ public class Request {
 
     public String getBookName() {
         return bookName;
+    }
+
+    public void accept() {
+        this.status = 1;
+    }
+
+    public void decline() {
+        this.status = -1;
     }
 
     @Override
