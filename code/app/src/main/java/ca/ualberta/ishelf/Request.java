@@ -1,58 +1,78 @@
 package ca.ualberta.ishelf;
 
 import java.util.Date;
+import java.util.UUID;
 
 public class Request {
-    private String owner;
-    private String borrower;
-    private String bookName;
-    private int borrowerRating;
+    private UUID id;
+    private User requester;
+    private User owner;
+    private Book book;
     private Date timeRequested;
     // 1: accepted
     // -1: declined
     // 0: neither accepted nor declined
     private int status;
 
-    public Request(Date timeRequested) {
+    public Request(){
+        this.id = UUID.randomUUID();
+    }
+
+    public Request(Date timeRequested, User requester, Book book) {
+        this.id = UUID.randomUUID();
+        this.requester = requester;
+        this.book = book;
         this.timeRequested = timeRequested;
     }
 
-    public Request(Date timeRequested, String owner, String borrower,
-                   String bookName, int borrowerRating) {
-        this.timeRequested = timeRequested;
+    public Request(User requester, User owner, Book book) {
+        this.id = UUID.randomUUID();
+        this.timeRequested = new Date();
         this.owner = owner;
-        this.borrower = borrower;
-        this.bookName = bookName;
-        this.borrowerRating = borrowerRating;
+        this.requester = requester;
+        this.book = book;
         this.status = 0;
     }
+
+    public void setTimeRequested(Date timeRequested) {
+        this.timeRequested = timeRequested;
+    }
+
 
     public Date getTimeRequested() {
         return timeRequested;
     }
 
-    public void setOwner(String owner) {
-        this.owner = owner;
+    public Book getBook() {
+        return book;
     }
 
-    public void setBorrower(String borrower) {
-        this.borrower = borrower;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
-    public void setBookName(String bookName) {
-        this.bookName = bookName;
+    public User getRequester() {
+        return requester;
     }
 
-    public String getOwner() {
+    public void setRequester(User requester) {
+        this.requester = requester;
+    }
+
+    public User getOwner() {
         return owner;
     }
 
-    public String getBorrower() {
-        return borrower;
+    public void setOwner(User owner) {
+        this.owner = owner;
     }
 
-    public String getBookName() {
-        return bookName;
+    public UUID getId() {
+        return id;
+    }
+
+    public void setId(UUID id) {
+        this.id = id;
     }
 
     public void accept() {
@@ -65,8 +85,8 @@ public class Request {
 
     @Override
     public String toString() {
-        String message = "User " + borrower + " with rating " + borrowerRating +
-                " requested to borrow " + bookName + " at " + timeRequested.toString();
+        String message = "User " + requester.getUsername() + " with rating " + requester.getRating() +
+                " requested to borrow " + book.getName() + " at " + timeRequested.toString();
         return message;
     }
 }

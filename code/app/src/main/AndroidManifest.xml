@@ -13,6 +13,7 @@
         <activity android:name=".BookProfileActivity"></activity>
         <activity android:name=".EditBookActivity" />
         <activity android:name=".ViewProfileActivity"/>
+        <activity android:name=".ListOfRequestsActivity"/>
         <activity android:name=".EditProfileActivity"
             android:windowSoftInputMode="adjustResize"> <!-- makes the save button appear above the keyboard -->
         </activity>
