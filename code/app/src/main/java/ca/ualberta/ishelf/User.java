@@ -140,6 +140,25 @@ public class User implements Serializable {
             ownedBooks.add(book);
         }
     }
+
+    /**
+     * add the book UUID to the list of user owned books
+     * @param bookId
+     * @author rmnattas
+     */
+    public void addOwnedBook(UUID bookId){
+        ownedBooks.add(bookId);
+    }
+
+    /**
+     * delete the book UUID from the list of user owned books
+     * @param bookId
+     * @author rmnattas
+     */
+    public void deleteOwnedBook(UUID bookId){
+        ownedBooks.remove(bookId);
+    }
+
     public void deleteBook(UUID book){
         if (state.equals("borrower")){
             for (int i = 0; i < borrowedBooks.size(); i++){
