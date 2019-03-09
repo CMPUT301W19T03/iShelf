@@ -96,6 +96,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
     /**
      * get available books from firebase
+     * @author rmnattas
      */
     public void getAvailableBooks(){
 

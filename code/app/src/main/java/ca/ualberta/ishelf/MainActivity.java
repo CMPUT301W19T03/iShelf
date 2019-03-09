@@ -204,7 +204,11 @@ public class MainActivity extends AppCompatActivity {
 //        return true;
 //    }
 
-
+    /**
+     * Check if a user is signed in, if not
+     * go to the SignInActivity
+     * @author rmnattas
+     */
     private void SignIn(){
 
         // code to reset username in UserPreferences
