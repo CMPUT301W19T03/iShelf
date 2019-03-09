@@ -2,6 +2,7 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,33 +26,55 @@ import java.util.ArrayList;
 
 /**
  * ViewProfileActivity
- * Send in either:  - a Username in the form of a String
- *                  - a User object
- * Send in a parcelled User with your intent called "User"
+ * Send in either:  key: "Username" - a Username in the form of a String
+ *                  key: "User" - a User object
  *
  * This Activity shows the profile/user information of any user.
  * If the user is the signed in user, an "Edit" button is visible
  * The Edit button takes the user to the EditProfileActivity
  *
+ * User Stories:
+ * US 02.01.01
+ * As an owner or borrower, I want a profile with a unique username and my contact information.
+ *      -> This profile displays a user's unique username and contact information
+ *
+ * US 02.02.01:
+ * As an owner or borrower, I want to edit the contact information in my profile.
+ *      -> If user is viewing their profile, an edit button appears which takes
+ *      them to the Edit Profile Activity
+ *
+ * US 02.03.01
+ * As an owner or borrower, I want to retrieve and show the profile of a presented username.
+ *      -> When a user clicks on a username somewhere in the app, it brings them to this profile
+ *      to retrieve that user's information
+ *
+ * US 10.04.01 (1)
+ * As a user, I want to be able to see an owners rating when viewing their profile.
+ *      -> The rating of an owner is displayed when viewing their profile as a score out of 5 stars
+ *
+ * US 10.06.01 (1)
+ * As a user, I want to be able to see a borrowers rating when viewing their profile.
+ *      -> The rating of a borrower is displayed when viewing their profile as a score out of 5 stars
+ *
+ * Allows User to sign out of their account
+ *
+ *
  * TODO: add message to the screen if viewing the profile of no-one (aka nothing passed in)
  *
- * author: Jeremy
+ * @author: Jeremy
  */
 public class ViewProfileActivity extends AppCompatActivity {
     private String TAG = "ViewProfileActivity";
-    /*
-    TextView tvUsername = (TextView) findViewById(R.id.tvUsername);
-    TextView tvContactInformation = (TextView) findViewById(R.id.tvContactInformation);
-    */
-    Button editProfileButton;
+    private Button editProfileButton;
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
-    TextView tvUsername;
-    TextView tvPhoneNum;
-    TextView tvEmail;
-    User user;
-    String username;
-    RatingBar ratingBar;
+    private TextView tvUsername;
+    private TextView tvPhoneNum;
+    private TextView tvEmail;
+    private User user;
+    private String username;
+    private RatingBar ratingBar;
+    private Button signOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,16 +82,18 @@ public class ViewProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_profile);
         String TAG = "viewProfile";
 
-        // initialize the various TextViews
+        // Initialize the various UI components (TextViews, RatingBar, Button)
         tvUsername = (TextView) findViewById(R.id.tvUsername);
         tvPhoneNum = (TextView) findViewById(R.id.tvPhoneNum);
         tvEmail = (TextView) findViewById(R.id.tvEmail);
-        // initialize the RatingBar
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
+        editProfileButton = (Button) findViewById(R.id.editProfileButton);
+        signOutButton = (Button) findViewById(R.id.signOutButton);
 
-        // get the signed-in user's username
+
+        // Retrieve the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-
+        
         if (this.getIntent().hasExtra("Username")) {
             Log.d(TAG, "onCreate: USERNAME passed in");
             // If just a username is passed in
@@ -76,8 +101,9 @@ public class ViewProfileActivity extends AppCompatActivity {
             username = (String) bundle.getSerializable("Username");
             Log.d(TAG, "onCreate: username passed in is: " + username);
             if (username != null) {
-                tvUsername.setText(username);
-
+                /**
+                 * Retrieve the user's info from the database (Firebase)
+                 */
                 // Get user from the passed in username
                 Firebase.setAndroidContext(this);
                 ref = new Firebase(link);
@@ -96,24 +122,12 @@ public class ViewProfileActivity extends AppCompatActivity {
                             Type tokenType = new TypeToken<User>() {
                             }.getType();
                             user = gson.fromJson(jUser, tokenType); // here is where we get the user object
-
-                            // fill the fields with their current info
-                            tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
-                            tvEmail.setText("EMAIL: " + user.getEmail());
-
-                            // set the Rating
-                            ratingBar.setRating(user.getOverallRating());
-                            ratingBar.setIsIndicator(true);
-                            Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
-                            Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
-                            username = user.getUsername();
-
-                            Log.d("Confirm", user.getUsername());
+                            // pass the retrieved User to updateUI to update the UI elements
+                            updateUI(user);
                         } else {
                             Log.d("FBerror1", "User doesn't exist or string is empty");
                         }
                     }
-
                     @Override
                     public void onCancelled(FirebaseError firebaseError) {
                         return;
@@ -122,35 +136,29 @@ public class ViewProfileActivity extends AppCompatActivity {
             } else {
                 Log.d(TAG, "onCreate: Username passed in is Null");
             }
-
-
         } else if (this.getIntent().hasExtra("User")){
             Log.d(TAG, "onCreate: USER");
-
             // if the entire user is passed in
+            // retrieve the User object from the intent and pass it to updateUI
             user = (User) this.getIntent().getExtras().getSerializable("User");
-            username = user.getUsername();
-            tvUsername.setText(user.getUsername());
-            tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
-            tvEmail.setText("EMAIL: " + user.getEmail());
-            ratingBar.setRating(user.getOverallRating());
-            ratingBar.setIsIndicator(true); // make it so the rating is non-changeable by the user
-            Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
-            Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
+            updateUI(user);
         } else {
             Log.d(TAG, "onCreate: NOTHING PASSED IN");
             // When nothing is passed in
             // TODO: show the logged in user's info?
         }
 
-        editProfileButton = findViewById(R.id.editProfileButton);
         if (currentUsername.equals(username)){
             // if profile we are viewing is the logged in user's
-            Log.d(TAG, "onCreate: logged in user");
+            Log.d(TAG, "onCreate: Viewing profile of currently logged in user");
             editProfileButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.VISIBLE);
         } else {
-            Log.d(TAG, "onCreate: not logged in user" + username + currentUsername);
+            Log.d(TAG, "onCreate: Viewing profile of not the currently logged in user." +
+                    " Passed in: " + username +
+                    " Current: " + currentUsername);
             editProfileButton.setVisibility(View.GONE);
+            signOutButton.setVisibility(View.GONE);
         }
 
     }
@@ -162,23 +170,60 @@ public class ViewProfileActivity extends AppCompatActivity {
         startActivityForResult(intent, 3);
     }
 
+
+    /**
+     * This function is called When a user hits the Sign Out button
+     * Removes the Shared Prefences username parameter and sends
+     * the user back to Main Activity
+     * @param v
+     */
+    public void SignOut(View v){
+        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+        editor.putString("username", null).apply();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
+    }
+
+    /**
+     * When we return from Edit Profile Activity
+     * @param requestCode int
+     * @param resultCode int
+     * @param intent Intent
+     */
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        Log.d(TAG, "onActivityResult: requestCode: " + requestCode + " resultCode: " + resultCode);
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == 3) {
-
             Log.d(TAG, "onCreate: USER");
-
-            // if the entire user is passed in
             user = (User) intent.getExtras().getSerializable("User");
-            username = user.getUsername();
-            tvUsername.setText(user.getUsername());
-            tvPhoneNum.setText("PHONE: " + user.getPhoneNum());
-            tvEmail.setText("EMAIL: " + user.getEmail());
-            Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
-            Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
-
+            updateUI(user);
         }
+    }
+
+    /**
+     * Used for updating the UI elements
+     * @param user
+     */
+    public void updateUI(User user){
+        Log.d(TAG, "in updateUI");
+        tvUsername.setText(user.getUsername());
+        String phoneNumber = user.getPhoneNum();
+        if (phoneNumber != null && phoneNumber.length() > 0) {
+            tvPhoneNum.setText("PHONE: " + phoneNumber);
+        } else {
+            tvPhoneNum.setText("Phone number not provided");
+        }
+        String email = user.getEmail();
+        if (email != null && email.length() > 0) {
+            tvEmail.setText("EMAIL: " + email);
+        } else {
+            tvEmail.setText("Email not provided");
+        }
+        ratingBar.setRating(user.getOverallRating());
+        ratingBar.setIsIndicator(true); // make it so the rating is non-changeable by the user
+        Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
+        Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
     }
 
 }

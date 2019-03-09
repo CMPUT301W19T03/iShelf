@@ -130,18 +130,6 @@ public class MainActivity extends AppCompatActivity {
                     new BorrowFragment()).commit();
         }
 
-
-
-        /**
-         * To Test viewing profile uncomment set the if statement to true
-         */
-//        if(false) {
-//            findViewById(R.id.button1).setVisibility(View.GONE);
-//            findViewById(R.id.button1).setVisibility(View.GONE);
-//            findViewById(R.id.button1).setVisibility(View.GONE);
-//        }
-
-
         //loadFragment(new myBooksFragment());
     }
 
@@ -246,35 +234,4 @@ public class MainActivity extends AppCompatActivity {
         intent.putExtra("Username", username);
         startActivity(intent);
     }
-
-//    public void button1(View v){
-//        User user1 = new User();
-//        user1.setUsername("User1_username");
-//        user1.setPhoneNum("809-888-1234");
-//        user1.setEmail("user1@test.com");
-//
-//        Intent intent = new Intent(this, ViewProfileActivity.class);
-//        intent.putExtra("User", user1);
-//        startActivity(intent);
-//    }
-//
-//    public void button2(View v){
-//        User user2 = new User();
-//        user2.setUsername("ABC");
-//        user2.setPhoneNum("222-222-2222");
-//        user2.setEmail("user2@t22est.com");
-//
-//        Intent intent = new Intent(this, ViewProfileActivity.class);
-//        intent.putExtra("User", user2);
-//        startActivity(intent);
-//    }
-//
-//    public void button3(View v){
-//        Intent intent = new Intent(this, ViewProfileActivity.class);
-//        //intent.putExtra("User", user3);
-//        intent.putExtra("Username",
-//                getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null));
-//        startActivity(intent);
-//
-//    }
 }
