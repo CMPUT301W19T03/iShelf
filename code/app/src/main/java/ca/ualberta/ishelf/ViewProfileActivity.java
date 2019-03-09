@@ -88,8 +88,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         tvEmail = (TextView) findViewById(R.id.tvEmail);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         editProfileButton = (Button) findViewById(R.id.editProfileButton);
-        //TODO why is this causing an error?
-        //signOutButton = (Button) findViewById(R.id.signOutButton);
+        signOutButton = (Button) findViewById(R.id.signOutButton);
 
 
         // Retrieve the signed-in user's username
