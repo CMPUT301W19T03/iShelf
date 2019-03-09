@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -31,13 +32,15 @@ public class BookProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_book_profile);
         final String TAG = "BookProfileActivity";
 
-
-
         Intent intent = getIntent();
         Book data = intent.getParcelableExtra("Book Data");
         Boolean vis = intent.getBooleanExtra("Button Visible", false);
 
-        if(vis){
+        // get the signed-in user's username
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        Boolean isOwner = (currentUsername.equals(data.getOwner()));
+
+        if(vis || isOwner){
 
             Button delButton = (Button) findViewById(R.id.del);
             Button editButton =(Button) findViewById(R.id.edit);
@@ -46,6 +49,8 @@ public class BookProfileActivity extends AppCompatActivity {
             editButton.setVisibility(View.VISIBLE);
 
         }
+
+
 
 
 
