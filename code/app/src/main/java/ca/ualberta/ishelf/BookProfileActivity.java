@@ -52,10 +52,6 @@ public class BookProfileActivity extends AppCompatActivity {
         }
 
 
-
-
-
-
         String title = passedBook.getName();
         String author = passedBook.getAuthor();
         String genre = passedBook.getGenre();
