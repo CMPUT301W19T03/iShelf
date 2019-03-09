@@ -2,6 +2,7 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -55,6 +56,8 @@ import java.util.ArrayList;
  * As a user, I want to be able to see a borrowers rating when viewing their profile.
  *      -> The rating of a borrower is displayed when viewing their profile as a score out of 5 stars
  *
+ * Allows User to sign out of their account
+ *
  *
  * TODO: add message to the screen if viewing the profile of no-one (aka nothing passed in)
  *
@@ -71,6 +74,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     private User user;
     private String username;
     private RatingBar ratingBar;
+    private Button signOutButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +88,7 @@ public class ViewProfileActivity extends AppCompatActivity {
         tvEmail = (TextView) findViewById(R.id.tvEmail);
         ratingBar = (RatingBar) findViewById(R.id.ratingBar);
         editProfileButton = (Button) findViewById(R.id.editProfileButton);
+        signOutButton = (Button) findViewById(R.id.signOutButton);
 
 
         // Retrieve the signed-in user's username
@@ -147,11 +152,13 @@ public class ViewProfileActivity extends AppCompatActivity {
             // if profile we are viewing is the logged in user's
             Log.d(TAG, "onCreate: Viewing profile of currently logged in user");
             editProfileButton.setVisibility(View.VISIBLE);
+            signOutButton.setVisibility(View.VISIBLE);
         } else {
             Log.d(TAG, "onCreate: Viewing profile of not the currently logged in user." +
                     " Passed in: " + username +
                     " Current: " + currentUsername);
             editProfileButton.setVisibility(View.GONE);
+            signOutButton.setVisibility(View.GONE);
         }
 
     }
@@ -161,6 +168,20 @@ public class ViewProfileActivity extends AppCompatActivity {
         // nothing needs to be sent in, since we are editing the logged-in user
         Intent intent = new Intent(this, EditProfileActivity.class);
         startActivityForResult(intent, 3);
+    }
+
+
+    /**
+     * This function is called When a user hits the Sign Out button
+     * Removes the Shared Prefences username parameter and sends
+     * the user back to Main Activity
+     * @param v
+     */
+    public void SignOut(View v){
+        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+        editor.putString("username", null).apply();
+        Intent intent = new Intent(this, MainActivity.class);
+        startActivity(intent);
     }
 
     /**
