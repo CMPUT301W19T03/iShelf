@@ -35,13 +35,6 @@ import static org.hamcrest.Matchers.allOf;
 @LargeTest
 public class ViewProfileTest {
 
-    @Test
-    public void useAppContext() {
-        Context appContext = InstrumentationRegistry.getTargetContext();
-
-        assertEquals("ca.ualberta.ishelf", appContext.getPackageName());
-    }
-
     // Start viewProfileActivity without launching so we can add in item to our intent
     @Rule
     public ActivityTestRule<ViewProfileActivity> viewProfileActivityActivityTestRule =
@@ -53,7 +46,7 @@ public class ViewProfileTest {
      */
 
     @Test
-    public void DisplayProfile() throws Exception {
+    public void DisplayProfile() {
         User user = new User();
         String name = "Test Name";
         String phoneNum = "123-456-0000";
