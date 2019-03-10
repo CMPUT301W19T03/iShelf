@@ -76,10 +76,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         //TODO remove
-        Intent myIntent = new Intent(this, ListOfRequestsActivity.class);
+        //Intent myIntent = new Intent(this, ListOfRequestsActivity.class);
         //myIntent.putExtra("key", value); //Optional parameters
-        this.startActivity(myIntent);
+        //this.startActivity(myIntent);
         //TODO remove
 
         SignIn();
