@@ -186,4 +186,8 @@ public class User implements Serializable {
         listofRequests.add(request);
     }
 
+    public void deleteRequest(Request request){
+        listofRequests.remove(request);
+    }
+
 }

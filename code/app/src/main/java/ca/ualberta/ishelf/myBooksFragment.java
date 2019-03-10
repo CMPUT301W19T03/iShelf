@@ -112,9 +112,8 @@ public class myBooksFragment extends Fragment {
         myAdapter.updateList(cleanList);
         myAdapter.notifyDataSetChanged();
 
-        // update list of books from firebase
+        // update list of books
         getUserBooks();
-
     }
 
     /**
@@ -126,7 +125,7 @@ public class myBooksFragment extends Fragment {
         // clear previous lists
         myOwnedBooks.clear();
         myBorrowedBooks.clear();
-
+        
         // get logged in user username
         final String currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
@@ -267,6 +266,9 @@ public class myBooksFragment extends Fragment {
 
         /** Adding new book */
         if(requestCode == 1){
+
+//            Book book = data.getParcelableExtra("Book Data");
+
             // clear myBooks listView
             ArrayList<Book> cleanList = new ArrayList<>();
             myAdapter.updateList(cleanList);
@@ -279,6 +281,11 @@ public class myBooksFragment extends Fragment {
 
         /** editing or deleting a book */
         if(requestCode == 1002){
+
+//            boolean check = data.getBooleanExtra("Check", true);
+//            Book book = data.getParcelableExtra("Data");
+//            int pos = data.getIntExtra("Pos", 0);
+
             // clear myBooks listView
             ArrayList<Book> cleanList = new ArrayList<>();
             myAdapter.updateList(cleanList);
