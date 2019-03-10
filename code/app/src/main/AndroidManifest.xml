@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ca.ualberta.ishelf">
-    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -9,30 +11,31 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".NotificationActivity"></activity>
+        <activity android:name=".ViewImageActivity"></activity>
+        <activity android:name=".GalleryActivity" />
+        <activity android:name=".NotificationActivity" />
         <activity
             android:name=".SignInActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".BookProfileActivity" />
         <activity
             android:name=".EditBookActivity"
-            android:windowSoftInputMode="adjustResize"></activity>
+            android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ViewProfileActivity" />
         <activity
             android:name=".EditProfileActivity"
-
             android:windowSoftInputMode="adjustResize"> <!-- makes the save button appear above the keyboard -->
         </activity>
-        <activity android:name=".ListOfRequestsActivity"/>
+        <activity android:name=".ListOfRequestsActivity" />
         <activity
             android:name=".MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
     </application>
 
 </manifest>

@@ -54,10 +54,23 @@ public class BookProfileActivity extends AppCompatActivity {
     private Book passedBook = null;
     final String TAG = "BookProfileActivity";
 
+    // to see a gallery of books
+    private Button galleryButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
+
+        galleryButton = (Button) findViewById(R.id.gallery_button);
+
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(view.getContext(), GalleryActivity.class);
+                startActivity(intent);
+            }
+        });
 
         // get the book object passed by intent
         Intent intent = getIntent();
