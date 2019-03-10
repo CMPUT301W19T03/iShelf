@@ -23,6 +23,31 @@ import org.w3c.dom.Text;
 import java.lang.reflect.Type;
 import java.util.UUID;
 
+/**
+ * ViewProfileActivity
+ * Send in either:
+ *                  key: "Book" - a Book object
+ *
+ * US 01.06.01
+ * s an owner, I want to view and edit a book description in my books.
+ *   if he enters it in by mistake or the book description is updated by the author
+ *
+ * this lets the user view the book in detail, also allows the user to go into the
+ * edit menu
+ *
+ * US 01.07.01
+ * As an owner, I want to delete a book in my books.
+ *   the owner loses a book or stops wanting to lend it out
+ *
+ * This activity allows the user to delete the book
+ *
+ *
+ *
+ *
+ *
+ * @author: Mehrab
+ */
+
 public class BookProfileActivity extends AppCompatActivity {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
@@ -52,7 +77,7 @@ public class BookProfileActivity extends AppCompatActivity {
             editButton.setVisibility(View.VISIBLE);
         }
 
-
+        //gets all the elements in the object
         String title = passedBook.getName();
         String author = passedBook.getAuthor();
         String genre = passedBook.getGenre();
@@ -61,7 +86,7 @@ public class BookProfileActivity extends AppCompatActivity {
         Long isbn = passedBook.getISBN();
         final String owner = passedBook.getOwner();
 
-
+        //sets them onto the text views of the activity
         TextView textView = findViewById(R.id.Title);
         textView.setText(title);
 
@@ -140,7 +165,7 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
-
+    //sends parcelable data into the edit book activity and goes the by intent
     public void edit(View v){
 
         Intent intent = getIntent();
@@ -157,7 +182,8 @@ public class BookProfileActivity extends AppCompatActivity {
         finish();
 
     }
-
+    //goes back to myBookFragment, sending with it the position of the book that needs to be
+    //deleted
     public  void delete(View view){
 
         // delete book from firebase
@@ -208,7 +234,7 @@ public class BookProfileActivity extends AppCompatActivity {
             }
         });
     }
-
+    //goes into viewProfile if the owner is clicked
     public void viewProfile(View view){
         Intent intent = getIntent();
         Book data = intent.getParcelableExtra("Book Data");

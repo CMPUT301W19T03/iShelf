@@ -31,6 +31,27 @@ import java.util.Date;
 
 import static android.support.constraint.Constraints.TAG;
 
+/**
+ * Requests Activity
+ *
+ * US 04.02.01 (2)
+ * As a borrower, I want to view a list of books I have requested, each book with its description, and owner username.
+ * the borrower wants to see which books they have requested, and the associated information
+ *
+ * This Activity shows all the requests, sorted by pending and accepted
+ *
+ *
+ * US 05.04.01
+ * As a borrower, I want to view a list of books I have requested that are accepted, each book with its description, and owner username.
+ * the borrower wants to see the list of books that have been accepted for his request to borrow
+ *
+ * This Acivity has a filter that can filter out all the accepted requests
+ *
+ *
+ *
+ * @author mehrab
+ */
+
 public class RequestFragment extends Fragment {
     private ArrayList<Request> requestPendingList = new ArrayList<Request>();
     private ArrayList<Request> requestAcceptedList = new ArrayList<Request>();
@@ -131,7 +152,7 @@ public class RequestFragment extends Fragment {
 
     public void Request_Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
 
-
+//filters between pending and accepted requests as wanted by the US
         if(filter.equals("Pending Requests")) {
 
             initRecyclerView(requestPendingList, this.getContext());
@@ -147,7 +168,8 @@ public class RequestFragment extends Fragment {
 
         }
     }
-
+    // Recycler view initialization
+    //This resets the recycler view to a new ArrayList everytime
     private void initRecyclerView( ArrayList list, Context context){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.request_recycler);
@@ -167,21 +189,21 @@ public class RequestFragment extends Fragment {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
+//test dummy
     public void createDummy() {
-        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author", false);
-        User testRequester = new User("ppl", "1234567", "someone@Email.com");
-        Rating rating = new Rating(3, "Okay");
-        testRequester.addRating(rating);
-        Request request1 = new Request(null, testRequester, testBook);
-        requestPendingList.add(request1);
-
-        Book test1Book = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author", false);
-        User test1Requester = new User("people", "1234567", "someone@Email.com");
-        Rating rating1 = new Rating(3, "Okay");
-        testRequester.addRating(rating1);
-        Request request2 = new Request(null, test1Requester, test1Book);
-        requestAcceptedList.add(request2);
+//        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author", false);
+//        User testRequester = new User("ppl", "1234567", "someone@Email.com");
+//        Rating rating = new Rating(3, "Okay");
+//        testRequester.addRating(rating);
+//        Request request1 = new Request(null, testRequester, testBook);
+//        requestPendingList.add(request1);
+//
+//        Book test1Book = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author", false);
+//        User test1Requester = new User("people", "1234567", "someone@Email.com");
+//        Rating rating1 = new Rating(3, "Okay");
+//        testRequester.addRating(rating1);
+//        Request request2 = new Request(null, test1Requester, test1Book);
+//        requestAcceptedList.add(request2);
 
 
 
