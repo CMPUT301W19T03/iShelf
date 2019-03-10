@@ -15,7 +15,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
+//adapter for the notification recycler view
+//works like all the other adapters in the project.
 class NotificationAdapter extends RecyclerView.Adapter<ViewHolder> {
     private ArrayList<Notification> notificationList = new ArrayList<Notification>();
 

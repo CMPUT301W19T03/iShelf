@@ -152,7 +152,7 @@ public class RequestFragment extends Fragment {
 
     public void Request_Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
 
-
+//filters between pending and accepted requests as wanted by the US
         if(filter.equals("Pending Requests")) {
 
             initRecyclerView(requestPendingList, this.getContext());
@@ -168,7 +168,8 @@ public class RequestFragment extends Fragment {
 
         }
     }
-
+    // Recycler view initialization
+    //This resets the recycler view to a new ArrayList everytime
     private void initRecyclerView( ArrayList list, Context context){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.request_recycler);
@@ -188,7 +189,7 @@ public class RequestFragment extends Fragment {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-
+//test dummy
     public void createDummy() {
 //        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author", false);
 //        User testRequester = new User("ppl", "1234567", "someone@Email.com");
