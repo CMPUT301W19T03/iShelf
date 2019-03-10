@@ -1,7 +1,9 @@
 package ca.ualberta.ishelf;
 
+import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
+import android.view.View;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -9,34 +11,54 @@ import org.junit.runner.RunWith;
 
 import java.util.UUID;
 
+import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.typeText;
+import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
+import static androidx.test.espresso.matcher.ViewMatchers.withId;
+import static androidx.test.espresso.matcher.ViewMatchers.withText;
+import static java.util.regex.Pattern.matches;
 
 @RunWith(androidx.test.runner.AndroidJUnit4.class)
 public class ListOfRequestsTest {
-    @Rule
-    public ActivityTestRule<ListOfRequestsActivity> activityRule =
-            new ActivityTestRule<ListOfRequestsActivity>(ListOfRequestsActivity.class);
+    //@Rule
+    //public ActivityTestRule<ListOfRequestsActivity> activityRule =
+    //        new ActivityTestRule<ListOfRequestsActivity>(ListOfRequestsActivity.class);
 
+    @Rule
+    // third parameter is set to false which means the activity is not started automatically
+    public ActivityTestRule<ListOfRequestsActivity> mActivityRule =
+            new ActivityTestRule<>(ListOfRequestsActivity.class, false, false);
 
     /**
      * View and then Accept a request
      */
     @Test
     public void acceptARequest(){
-        User u1 = new User();
-        u1.setUsername("testUsername1");
-        User t1 = new User();
-        u1.setUsername("testReq1");
-        User t2 = new User();
-        u1.setUsername("testReqr2");
+        // Create a request for a certain book id
+        UUID id = UUID.randomUUID();
+        Request request = new Request(id, "James");
         Book b1 = new Book();
-        b1.setName("bName2");
-        Book b2 = new Book();
-        b2.setName("bName2");
+        b1.setId(id);
+        b1.setName("testName1");
+        // Start the intent with the extraString
+        Intent i = new Intent();
+        i.putExtra("myBookId", id.toString());
+        mActivityRule.launchActivity(i);
+        //onView(withRecyclerView(R.id.recyclerView)
+        //.atPositionOnView(0), R.id.textView);
+        //onView(withId(R.id.recyclerView))
+        //      .check(matches(atPosition(0, withText("Test Text"))));
+        //onView(withId(R.id.recyclerView)) .check(matches(atPosition(0, hasDescendant(withText("James")))));
+        //View v = view.findViewById(id);
+        //v.performClick();
+        /*
+        onView(withId(R.id.listOfRequestsRecycler)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        .check(matches(atPosition(0, hasDescendent())));
+        onView(withId(R.id.scroll_view))
+                .perform(RecyclerViewActions.actionOnItemAtPosition(3, click()));
+                */
 
-        u1.addRequest(new Request(b1.getId(), "testReq1"));
-        u1.addRequest(new Request(b2.getId(), "testReq2"));
     }
 
     /**
