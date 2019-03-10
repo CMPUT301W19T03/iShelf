@@ -252,6 +252,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                         }.getType();
                         User reqUser = gson.fromJson(jUser, tokenType);
                         Log.d("Confirm", user.getUsername());
+                        //TODO I think there is an issue with the User class
                         mRatings.add(reqUser.getOverallRating());
                     } else {
                         Log.d("getRequestInformation User FBerror1", "jUser was null");
@@ -272,6 +273,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     }
                 }
                 safeNotify();
+                initRecyclerView();
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -409,14 +411,12 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
     public void safeNotify(View view) {
         initRecyclerView();
-        /*
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-            Log.d(TAG+" safeNotify", "successful update");
-        } else {
-            Log.d(TAG+" safeNotify", "adapter is null");
-        }
-        */
+        //if (adapter != null) {
+        //    adapter.notifyDataSetChanged();
+        //    Log.d(TAG+" safeNotify", "successful update");
+        //} else {
+        //    Log.d(TAG+" safeNotify", "adapter is null");
+        //}
         for (String x: mBookNames) {
             Log.d("current data", x);
         }
