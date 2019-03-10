@@ -53,7 +53,6 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         // Set the contents of each recycler view item
         holder.testText.setText(mImageNames.get(position));
         holder.bookName.setText(mBookNames.get(position));
-        //holder.bRating.setNumStars(bRatings.get(position));
         holder.bRating.setRating(bRatings.get(position));
 
 

@@ -41,6 +41,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
     User user;
+    UUID bookId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,14 +51,18 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Initialize firebase for use
         Firebase.setAndroidContext(this);
         ref = new Firebase(link);
-
-
-        //TODO when book request is accepted, add notification for other user
-        //TODO get ratings working
-        //TODO get buttons working
-        //TODO get requests from firebase
-        //TODO update UML for requests
-        //TODO add intent testing
+        /* Activity should be called in this format
+        Intent myIntent = new Intent(MainActivity.this, addMeasurementActivity.class);
+        myIntent.putExtra("myBookId", bookId);
+        startActivity(myIntent);
+         */
+        /* So that we can start this activity with
+        Intent myIntent = getIntent();
+        bookId = myIntent.getStringExtra("myPosition", "");
+         */
+        //TODO replace with actual code
+        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+        UUID bookId = UUID.fromString(stringBookId);
 
         // Add testUsername, since we should be signed in from here
         //TODO remove forced sharedPreference editing
@@ -161,9 +166,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                 user.getUsername() + " has accepted your request", "username");
         db.addNotification(notification);
         // Update user's Requests array, and update in database
-        //TODO is this what want to do with a accepted request?
         user.getListofRequests().get(position).accept();
         db.addUser(user);
+        //TODO move to Map activity so they can pick a geo location
     }
 
     /**
@@ -214,10 +219,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     Type tokenType = new TypeToken<User>(){}.getType();
                     user = gson.fromJson(jUser, tokenType);
                     Log.d("Confirm", user.getUsername());
-                    for(Request request: user.getListofRequests()) {
-                        Log.d("onDataChange getUser", request.getRequester());
-                        mNames.add(request.getRequester());
-                    }
                     // This call must be nested since we need
                     // the user object to access the requests data
                     //getRequesterRatings();
@@ -242,6 +243,11 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 Log.d(TAG+"in onDataChange", "Entered in data change");
                 for (Request request : user.getListofRequests()) {
+                    // If the request is not for the current book, don't add to array
+                    if (request.getBookId() != bookId) {
+                        continue;
+                    }
+                    mNames.add(request.getRequester());
                     String jUser = dataSnapshot.child("Users").
                             child(request.getRequester()).getValue(String.class);
                     if (jUser != null) {

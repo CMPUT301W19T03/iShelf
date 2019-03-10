@@ -37,9 +37,6 @@ public class ListOfRequestsTest {
 
         u1.addRequest(new Request(b1.getId(), "testReq1"));
         u1.addRequest(new Request(b2.getId(), "testReq2"));
-        // Open activity
-        // Add test stuff
-        // What am I asserting?
     }
 
     /**
