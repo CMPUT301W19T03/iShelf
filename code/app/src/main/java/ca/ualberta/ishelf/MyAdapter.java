@@ -26,18 +26,40 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 /*https://www.youtube.com/watch?v=Vyqz_-sJGFk
  */
+
+/**
+ * TODO get actual images instead of the 3 temp ones
+ * @author evan
+ * @edited rmnattas
+ */
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    private static final String TAG = "recyclerviewadapter";
-    private ArrayList<String> mImageName = new ArrayList<>();
-    private ArrayList<String> mImages = new ArrayList<>();
-    private  ArrayList<Book> mbookList =new ArrayList<>();
+    private static final String TAG = "MyAdapter";
+
+//    private ArrayList<String> mImageName = new ArrayList<>();
+//    private ArrayList<String> mImages = new ArrayList<>();
+
+    // one list that has the book objects no need
+    // for separate lists for names and images @rmnattas
+    private  ArrayList<Book> booksList;
+
     private Context mContext;
-    //private MyFilter filter;
-    public MyAdapter(ArrayList<String> mImageName, ArrayList<String> mImages,ArrayList<Book> mbookList, Context mContext) {
-        this.mImageName = mImageName;
-        this.mImages = mImages;
-        this.mbookList = mbookList;
+
+//    public MyAdapter(ArrayList<String> mImageName, ArrayList<String> mImages,ArrayList<Book> mbookList, Context mContext) {
+//        this.mImageName = mImageName;
+//        this.mImages = mImages;
+
+    public MyAdapter(ArrayList<Book> booksList, Context mContext) {
+        this.booksList = booksList;
         this.mContext = mContext;
+    }
+
+    /**
+     * update the list of books in the adadpter
+     * @param booksList new list of books
+     * @author rmnattas
+     */
+    public void updateList (ArrayList<Book> booksList){
+        this.booksList = booksList;
     }
 
     @NonNull
@@ -53,23 +75,25 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         //changes based on layout
         Log.d(TAG, "onbindviewHolder: called");
 
-        Glide.with(mContext).asBitmap().load(mImages.get(position)).into(holder.image);
-        holder.imageName.setText(mImageName.get(position));
+        // temp images
+        ArrayList<String> tempImgs = new ArrayList<>();
+        tempImgs.add("https://i.redd.it/0h2gm1ix6p501.jpg");
+        tempImgs.add("https://i.redd.it/j6myfqglup501.jpg");
+        tempImgs.add("https://i.redd.it/0h2gm1ix6p501.jpg");
+        int randomImg = position%tempImgs.size();
+
+        Glide.with(mContext).asBitmap().load(tempImgs.get(randomImg)).into(holder.image);
+        holder.imageName.setText(booksList.get(position).getName());
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent( mContext, BookProfileActivity.class);
-                Book book = mbookList.get(position);
+                Book book = booksList.get(position);
                 intent.putExtra("Book Data", book);
                 intent.putExtra("pos data", position);
                 intent.putExtra("Button Visible", true);
 
-
-
-                //intent.putExtra("Check Data", true);
-
                 ((Activity) mContext).startActivityForResult(intent,1002);
-
 
             }
         });
@@ -85,7 +109,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         // if 0, you would just get a blank screen
-        return mImageName.size();
+        return booksList.size();
     }
 
 
@@ -101,9 +125,5 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             parentLayout = itemView.findViewById(R.id.parent_layout);
 
         }
-    }
-    public void updateData() {
-
-        this.notifyDataSetChanged();
     }
 }

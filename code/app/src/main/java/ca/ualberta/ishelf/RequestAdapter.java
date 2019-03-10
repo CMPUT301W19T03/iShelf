@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-
+//adapter for the RequestFragment recycler view
 class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     private ArrayList<Request> requestList = new ArrayList<Request>();
     private Context requestContext;
@@ -24,7 +24,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         this.requestList = requestList;
         this.requestContext = requestContext;
     }
-
+//sets the objects in the recycler ite,
     public static class RequestViewHolder extends ViewHolder {
         public TextView title;
         public TextView userName;
@@ -39,7 +39,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
 //            requesterRatingBar = (RatingBar) view.findViewById(R.id.requesterRatingBar);
         }
     }
-    
+    //attacheds the item layout to the recycler view
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             View v = LayoutInflater.from(parent.getContext())
@@ -47,14 +47,14 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             RequestViewHolder vh = new RequestViewHolder(v);
             return vh;
     }
-
+    //deals with if an request is clicked
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
             RequestViewHolder requestHolder = (RequestViewHolder) holder;
 
             // Changing to fit my implementation of Request
-            //requestHolder.title.setText(requestList.get(position).getBook().getName());
-            //requestHolder.userName.setText(requestList.get(position).getRequester().getUsername());
+            requestHolder.title.setText(requestList.get(position).getBookId().toString());
+            requestHolder.userName.setText(requestList.get(position).getRequester());
             //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
 
 

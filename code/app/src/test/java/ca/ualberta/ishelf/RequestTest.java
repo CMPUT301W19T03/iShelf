@@ -24,7 +24,8 @@ public class RequestTest {
         } else {
             System.out.println("valid date");
         }
-        Request req = new Request(null,null);
+        Request req = new Request();
+        req.setTimeRequested(testDate);
 
         
 
