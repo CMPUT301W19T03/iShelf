@@ -25,8 +25,10 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private static final String TAG = "ListOfRequestsActivity";
     // List of strings that are displayed in requests
     private ArrayList<String> mNames = new ArrayList<>();
+    // List of book titles that are displayed in requests
+    private ArrayList<String> mBookNames = new ArrayList<>();
     // List of integers of user ratings
-    private ArrayList<Integer> mRatings = new ArrayList<>();
+    private ArrayList<Float> mRatings = new ArrayList<>();
     // Username for current user
     String username;
     // Array of requests for our users books
@@ -36,6 +38,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     LORRecyclerViewAdapter adapter;
     // firebase reference
     private Firebase ref;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +69,16 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         mNames.add("James");
         mNames.add("Danny");
         mNames.add("Jessica");
-        mRatings.add(2);
-        mRatings.add(3);
-        mRatings.add(5);
-        mRatings.add(4);
+        mBookNames.add("Moby Dick");
+        mBookNames.add("I, Robot");
+        mBookNames.add("In may we soar");
+        mBookNames.add("Hello, would you like to spend the day together and maybe fall in love");
+        //TODO add contrainsts to size of text, or maybe do that in the XML boxes
+        mRatings.add(2f);
+        mRatings.add(3f);
+        mRatings.add(5f);
+        mRatings.add(4f);
+
         Request r1 = new Request(UUID.randomUUID(), "james");
         Request r2 = new Request(UUID.randomUUID(), "jessica");
         Request r3 = new Request(UUID.randomUUID(), "shun");
@@ -80,31 +89,110 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         initRecyclerView();
     }
 
+    /**
+     * Initialize the recycler view
+     * This is when all the entires are set to their appropriate values
+     */
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.listOfRequestsRecycler);
-        LORRecyclerViewAdapter adapter = new LORRecyclerViewAdapter(this, mNames, mRatings);
+        LORRecyclerViewAdapter adapter = new LORRecyclerViewAdapter(this, mNames, mRatings, mBookNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
+
+    /**
+     * Accept a requesters request
+     * This method is called from LORRecyclerViewAdapter when the accept button is pressed
+     * This function updates the display, updates the users requests,
+     * and creates the appropriate notification
+     * @param position
+     */
     void acceptRequest(int position){
         Log.d(TAG+" acceptRequest", "Called with " + position);
+        // Create Database object that we will use
+        Database db = new Database(this);
+        // Delete rating and name entries and update display
+        mRatings.remove(position);
+        mNames.remove(position);
+        adapter.notifyDataSetChanged();
+        // Create the appropriate notification and add to firebase
+        Notification notification = new Notification(new Date(),
+                user.getUsername() + " has accepted your request", "username");
+        db.addNotification(notification);
+        // Update user's Requests array, and update in database
+        //TODO is this what want to do with a accepted request?
+        user.getListofRequests().get(position).accept();
+        db.addUser(user);
     }
+
+    /**
+     * Decline a requesters request
+     * This method is called from LORRecyclerViewAdapter when the accept button is pressed
+     * This function updates the display, updates the users requests,
+     * and creates the appropriate notification
+     * @param position
+     */
     void declineRequest(int position){
         Log.d(TAG+" declineRequest", "Called with " + position);
+        // Create Database object that we will use
+        Database db = new Database(this);
+        // Delete rating and name entries and update display
+        mRatings.remove(position);
+        mNames.remove(position);
+        adapter.notifyDataSetChanged();
+        // Create the appropriate notification and add to firebase
+        Notification notification = new Notification(new Date(),
+                user.getUsername() + " has declined your request", "username");
+        db.addNotification(notification);
+        //TODO do we want to delete the request when it is declined?
+        // Update user's Requests array, and update in database
+        user.getListofRequests().remove(position);
+        db.addUser(user);
     }
+
+
     // Get requests from user object (so also get user object)
+    // Get User object via the username
+    private void getUser() {
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Users").child(username);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>(){}.getType();
+                    user = gson.fromJson(jUser, tokenType);
+                    Log.d("Confirm", user.getUsername());
+                    // This call must be nested since we need
+                    // the user object to access the requests data
+                    getRequesterRatings();
+                    getBookNames();
+                    adapter.notifyDataSetChanged();
+                } else {
+                    Log.d("FBerror1", "User doesn't exist or string is empty");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
 
-    private void getUsers() {
-        /*
-
-        public User getUser(String username) {
+    private void getRequesterRatings(){
+        ArrayList<Request> requests = user.getListofRequests();
+        for (int i = 0; i < requests.size(); i++) {
             // get reference to specific entry
-            Firebase tempRef = ref.child("Users").child(username);
-            final ArrayList<User> userList = new ArrayList<User>();
-            Log.d("SizeBefore ", String.valueOf(userList.size()));
+            Firebase tempRef = ref.child("Users").child(requests.get(i).getRequester());
             // create a one time use listener to immediately access datasnapshot
+            final int finalI = i;
             tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -113,35 +201,51 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     if (jUser != null) {
                         // Get user object from Gson
                         Gson gson = new Gson();
-                        Type tokenType = new TypeToken<User>(){}.getType();
-                        User user = gson.fromJson(jUser, tokenType);
+                        Type tokenType = new TypeToken<User>() { }.getType();
+                        User reqUser = gson.fromJson(jUser, tokenType);
                         Log.d("Confirm", user.getUsername());
-                        userList.add(user);
+                        mRatings.set(finalI, reqUser.getOverallRating());
                     } else {
                         Log.d("FBerror1", "User doesn't exist or string is empty");
                     }
-                    Log.d("Size", String.valueOf(userList.size()));
                 }
-
                 @Override
                 public void onCancelled(FirebaseError firebaseError) {
                     return;
                 }
             });
-            // If User doesn't exist, or string is empty, return null
-            Log.d("next", "this is where code jumps to next");
-            Log.d("SizeAfter", String.valueOf(userList.size()));
-            try {
-                //Log.d("SizeLoop", String.valueOf(userList.size()));
-                return userList.get(0);
-            } catch (Exception e) {
-                Log.d("FBerror", "No user exists in firebase with that username");
-            }
-            return null;
         }
-
-        */
     }
 
+    private void getBookNames(){
+        ArrayList<Request> requests = user.getListofRequests();
+        for (int i = 0; i < requests.size(); i++) {
+            // get reference to specific entry
+            Firebase tempRef = ref.child("Books").child(requests.get(i).getBookId().toString());
+            // create a one time use listener to immediately access datasnapshot
+            final int finalI = i;
+            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String jBook = dataSnapshot.getValue(String.class);
+                    Log.d("jBook", jBook);
+                    if (jBook != null) {
+                        // Get user object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Book>() { }.getType();
+                        Book book = gson.fromJson(jBook, tokenType);
+                        Log.d("Confirm", user.getUsername());
+                        mBookNames.set(finalI, book.getName());
+                    } else {
+                        Log.d("FBerror1", "User doesn't exist or string is empty");
+                    }
+                }
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    return;
+                }
+            });
+        }
+    }
 
 }
