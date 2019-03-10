@@ -39,14 +39,28 @@ public class ViewProfileTest {
     }
     */
     @Rule
-    public ActivityTestRule<MainActivity> mainActivityActivityTestRule =
-            new ActivityTestRule<>(MainActivity.class);
-
-    /*
-    @Rule
     public ActivityTestRule<ViewProfileActivity> viewProfileActivityActivityTestRule =
             new ActivityTestRule<>(ViewProfileActivity.class);
-    */
+
+    /**
+     * 02.01.01
+     * As an owner or borrower, I want a profile with a unique username and my contact information.
+     */
+    @Rule
+    public void DisplayProfile() {
+        // Check if Username is displayed
+        onView(withId(R.id.tvUsername)).check(matches(isDisplayed()));
+        // Check if Phone is displayed
+        onView(withId(R.id.tvPhoneNum)).check(matches(isDisplayed()));
+        // Check if Email is displayed
+        onView(withId(R.id.tvEmail)).check(matches(isDisplayed()));
+    }
+
+
+/*
+    @Rule
+    public ActivityTestRule<MainActivity> mainActivityActivityTestRule =
+            new ActivityTestRule<>(MainActivity.class);
 
     @Test
     public void DisplayUsername() throws Exception{
