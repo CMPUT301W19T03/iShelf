@@ -7,6 +7,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.content.Context;
+import android.content.Intent;
+import android.support.test.InstrumentationRegistry;
 import android.support.test.filters.LargeTest;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
@@ -25,29 +28,43 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ViewProfileTest {
-    /*
+
     @Test
     public void useAppContext() {
         Context appContext = InstrumentationRegistry.getTargetContext();
 
         assertEquals("ca.ualberta.ishelf", appContext.getPackageName());
     }
-    */
+
+    // Start viewProfileActivity without launching so we can add in item to our intent
     @Rule
     public ActivityTestRule<ViewProfileActivity> viewProfileActivityActivityTestRule =
-            new ActivityTestRule<>(ViewProfileActivity.class);
+            new ActivityTestRule<>(ViewProfileActivity.class, false, false);
 
     /**
      * 02.01.01
      * As an owner or borrower, I want a profile with a unique username and my contact information.
      */
-    @Rule
-    public void DisplayProfile() {
+
+    @Test
+    public void DisplayProfile() throws Exception {
+        User user = new User();
+        String name = "Test Name";
+        String phoneNum = "123-456-0000";
+        String email = "test@email.com";
+        user.setUsername(name);
+        user.setPhoneNum(phoneNum);
+        user.setEmail(email);
+        Intent intent = new Intent();
+        intent.putExtra("User", user);
+        viewProfileActivityActivityTestRule.launchActivity(intent);
+
         // Check if Username is displayed
         onView(withId(R.id.tvUsername)).check(matches(isDisplayed()));
         // Check if Phone is displayed
