@@ -46,7 +46,15 @@ import java.util.ArrayList;
 
 /**
  * Notifications Activity
+ * US 04.03.01
+ *- As an owner, I want to be notified of a request.
+ * This Activity notifiesso owner can reply in a timely manner of a request
  *
+ * US 05.03.01
+ * As a borrower, I want to be notified of an accepted request.
+ * the borrower wants to know when his request of borrowing got accepted
+ *
+ * This activity notifies the borrower if his request has been accepted or not
  *
  * TODO get only the logged in user notifications from firebase
  * @author mehrab

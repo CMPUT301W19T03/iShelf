@@ -1,5 +1,10 @@
 package ca.ualberta.ishelf;
 
+/**
+ *THis is the borrow object which deals with the borrow transaction
+ * @author: Mehrab
+ */
+
 public class Borrow {
 
     private User lender;

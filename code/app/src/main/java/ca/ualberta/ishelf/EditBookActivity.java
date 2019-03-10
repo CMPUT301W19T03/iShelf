@@ -25,6 +25,28 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * ViewProfileActivity
+ * Send in either:
+ *                  key: "Book" - a Book object
+ *
+ * US 01.01.01
+ * As an owner, I want to add a book in my books, each denoted with a clear, suitable description (at least title, author, and ISBN).
+ * -the owner wants to be able to lend new books
+ *
+ * This activity allows the owner to add new books to his book list
+ *
+ * US 01.06.01
+ * s an owner, I want to view and edit a book description in my books.
+ *   if he enters it in by mistake or the book description is updated by the author
+ *
+ * this  also allows the user to
+ * edit the book info
+ *
+ * @author: Mehrab
+ */
+
+
 public class EditBookActivity extends AppCompatActivity {
 
     private EditText TitleText;
@@ -43,10 +65,10 @@ public class EditBookActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_book);
 
-
+        //if its an edit book then true otherwise false
         Intent intent = getIntent();
         Boolean check = intent.getBooleanExtra("Check Data", false );
-
+//assign all the edit texts to variables
         TitleText = (EditText) findViewById(R.id.editTitle);
         AuthorText = (EditText) findViewById(R.id.editAuthor);
         ISBNText = (EditText) findViewById(R.id.editISBN);
@@ -59,7 +81,7 @@ public class EditBookActivity extends AppCompatActivity {
         Button saveButton = (Button) findViewById(R.id.save);
 
         loadFromFile();
-
+//if its a book being edited set all text views to the preset data of the book object
         if(check){
             passedBook = intent.getParcelableExtra("Book Data");
 
@@ -83,7 +105,7 @@ public class EditBookActivity extends AppCompatActivity {
 
 
     }
-
+//when save button is clicked
     public void save(View v){
 
         String title = TitleText.getText().toString();
@@ -146,11 +168,12 @@ public class EditBookActivity extends AppCompatActivity {
                     db.addBook(book);
                 }
 
-
+                //check if new book or edited book, true if edited book
                 Intent intent = getIntent();
                 Boolean check = intent.getBooleanExtra("Check Data", false );
 
-
+                //if edited book send it back to the my book fragment along with its
+                // position data
                 if(check){
 
                     int pos = intent.getIntExtra("Pos Data", 0);
@@ -168,6 +191,7 @@ public class EditBookActivity extends AppCompatActivity {
 
 
                 }
+                //else add it to myBooks
                 else{
                     Intent newintent = new Intent(EditBookActivity.this, myBooksFragment.class);
                     newintent.putExtra("Book Data", book);
@@ -185,7 +209,7 @@ public class EditBookActivity extends AppCompatActivity {
         });
     }
 
-
+//load from json file
     private void loadFromFile() {
 
         try {
@@ -202,7 +226,7 @@ public class EditBookActivity extends AppCompatActivity {
         }
 
     }
-
+//save to json file
     private void saveInFile() {
         try {
             FileWriter out = new FileWriter(new File(getFilesDir(),FILENAME));

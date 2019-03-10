@@ -31,6 +31,27 @@ import java.util.Date;
 
 import static android.support.constraint.Constraints.TAG;
 
+/**
+ * Requests Activity
+ *
+ * US 04.02.01 (2)
+ * As a borrower, I want to view a list of books I have requested, each book with its description, and owner username.
+ * the borrower wants to see which books they have requested, and the associated information
+ *
+ * This Activity shows all the requests, sorted by pending and accepted
+ *
+ *
+ * US 05.04.01
+ * As a borrower, I want to view a list of books I have requested that are accepted, each book with its description, and owner username.
+ * the borrower wants to see the list of books that have been accepted for his request to borrow
+ *
+ * This Acivity has a filter that can filter out all the accepted requests
+ *
+ *
+ *
+ * @author mehrab
+ */
+
 public class RequestFragment extends Fragment {
     private ArrayList<Request> requestPendingList = new ArrayList<Request>();
     private ArrayList<Request> requestAcceptedList = new ArrayList<Request>();
