@@ -32,11 +32,12 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     // Username for current user
     String username;
     // Array of requests for our users books
-    ArrayList<Request> userRequests = new ArrayList<Request>();
+    //ArrayList<Request> userRequests = new ArrayList<Request>();
     // RecyclerView view and adapter
     RecyclerView recyclerView;
     LORRecyclerViewAdapter adapter;
     // firebase reference
+    private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
     User user;
 
@@ -45,6 +46,11 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_of_requests2);
         Log.d(TAG, "onCreate");
+        // Initialize firebase for use
+        Firebase.setAndroidContext(this);
+        ref = new Firebase(link);
+
+
         //TODO when book request is accepted, add notification for other user
         //TODO get ratings working
         //TODO get buttons working
@@ -54,8 +60,10 @@ public class ListOfRequestsActivity extends AppCompatActivity {
 
         // Add testUsername, since we should be signed in from here
         //TODO remove forced sharedPreference editing
+        username = "testUsername";
         SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
         editor.putString("username", "testUsername").apply();
+
         final String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
         Log.d(TAG+" getUser ", "User is " + username);
 
@@ -64,6 +72,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // set a LinearLayoutManager with default orientation
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
+
+        /*
+        // Add simple test entries for the display
         // Add entries to my mNames array
         mNames.add("Paul");
         mNames.add("James");
@@ -73,20 +84,50 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         mBookNames.add("I, Robot");
         mBookNames.add("In may we soar");
         mBookNames.add("Hello, would you like to spend the day together and maybe fall in love");
-        //TODO add contrainsts to size of text, or maybe do that in the XML boxes
         mRatings.add(2f);
         mRatings.add(3f);
         mRatings.add(5f);
         mRatings.add(4f);
+        */
+        initRecyclerView();
+        getUser();
 
+        /*
         Request r1 = new Request(UUID.randomUUID(), "james");
         Request r2 = new Request(UUID.randomUUID(), "jessica");
         Request r3 = new Request(UUID.randomUUID(), "shun");
         userRequests.add(r1);
         userRequests.add(r2);
         userRequests.add(r3);
+        */
 
-        initRecyclerView();
+        /*
+        // Add test data to database for use in this activity
+        User u1 = new User();
+        u1.setUsername("testUsername");
+        User t1 = new User();
+        t1.setUsername("testReq1");
+        t1.setRating(new Rating(4f,""));
+        User t2 = new User();
+        t2.setUsername("testReqr2");
+        t2.setRating(new Rating(3f, ""));
+        Book b1 = new Book();
+        b1.setName("bName1");
+        Book b2 = new Book();
+        b2.setName("bName2");
+        u1.addRequest(new Request(b1.getId(), "testReq1"));
+        u1.addRequest(new Request(b2.getId(), "testReq2"));
+        Database db = new Database(this);
+        db.addUser(u1);
+        db.addUser(t1);
+        db.addUser(t2);
+        db.addBook(b1);
+        db.addBook(b2);
+        */
+        // Expected output
+        // testReq1, 3 stars, book bName1
+        // testReq2, 4 stars, book bName1
+
     }
 
     /**
@@ -99,7 +140,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         LORRecyclerViewAdapter adapter = new LORRecyclerViewAdapter(this, mNames, mRatings, mBookNames);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
     }
 
     /**
@@ -111,12 +151,13 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     void acceptRequest(int position){
         Log.d(TAG+" acceptRequest", "Called with " + position);
+        // If the adapter has been initialized, run the appropriate code
         // Create Database object that we will use
         Database db = new Database(this);
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
-        adapter.notifyDataSetChanged();
+        //safeNotify();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has accepted your request", "username");
@@ -136,12 +177,13 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     void declineRequest(int position){
         Log.d(TAG+" declineRequest", "Called with " + position);
+        // If the adapter has been initialized, run the appropriate code
         // Create Database object that we will use
         Database db = new Database(this);
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
-        adapter.notifyDataSetChanged();
+        //safeNotify();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has declined your request", "username");
@@ -152,9 +194,12 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         db.addUser(user);
     }
 
-
-    // Get requests from user object (so also get user object)
-    // Get User object via the username
+    /**
+     * Get the User object representing the current user
+     * From there, make calls to getReqeusterRating and getBookNames
+     * We have to make these calls within onDataChange to avoid threading errors
+     * Since they depend on us having a User object that isn't null
+     */
     private void getUser() {
         // get reference to specific entry
         Firebase tempRef = ref.child("Users").child(username);
@@ -170,13 +215,17 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     Type tokenType = new TypeToken<User>(){}.getType();
                     user = gson.fromJson(jUser, tokenType);
                     Log.d("Confirm", user.getUsername());
+                    for(Request request: user.getListofRequests()) {
+                        mNames.add(request.getRequester());
+                    }
                     // This call must be nested since we need
                     // the user object to access the requests data
-                    getRequesterRatings();
-                    getBookNames();
-                    adapter.notifyDataSetChanged();
+                    //getRequesterRatings();
+                    //getBookNames();
+                    safeNotify();
+                    getRequestInformation();
                 } else {
-                    Log.d("FBerror1", "User doesn't exist or string is empty");
+                    Log.d("getUser FBerror1", "jUser was null");
                 }
             }
             @Override
@@ -186,8 +235,63 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         });
     }
 
+    private void getRequestInformation(){
+        for (Request request: user.getListofRequests()) {
+            // Firebase reference to get Users information (requesters)
+            Firebase tempRefU = ref.child("Users").child(request.getRequester());
+            // Firebase reference to get Books information (names)
+            Firebase tempRefB = ref.child("Books").child(request.getBookId().toString());
+            tempRefU.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String jUser = dataSnapshot.getValue(String.class);
+                    if (jUser != null) {
+                        Log.d("jUser", jUser);
+                        // Get user object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<User>() { }.getType();
+                        User reqUser = gson.fromJson(jUser, tokenType);
+                        Log.d("Confirm", user.getUsername());
+                        mRatings.add(reqUser.getOverallRating());
+                        safeNotify();
+                    } else {
+                        Log.d("getRequestInformation User FBerror1", "jUser was null");
+                    }
+                }
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    return;
+                }
+            });
+            tempRefB.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String jBook = dataSnapshot.getValue(String.class);
+                    Log.d("jBook", jBook);
+                    if (jBook != null) {
+                        // Get user object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Book>() { }.getType();
+                        Book book = gson.fromJson(jBook, tokenType);
+                        Log.d("Confirm", user.getUsername());
+                        mBookNames.add(book.getName());
+                        safeNotify();
+                    } else {
+                        Log.d("getRequestInformation Book FBerror1", "jBook was null");
+                    }
+                }
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+                    return;
+                }
+            });
+        }
+
+    }
+
     private void getRequesterRatings(){
         ArrayList<Request> requests = user.getListofRequests();
+        Log.d("size", "Size is " + requests.size());
         for (int i = 0; i < requests.size(); i++) {
             // get reference to specific entry
             Firebase tempRef = ref.child("Users").child(requests.get(i).getRequester());
@@ -205,6 +309,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                         User reqUser = gson.fromJson(jUser, tokenType);
                         Log.d("Confirm", user.getUsername());
                         mRatings.set(finalI, reqUser.getOverallRating());
+                        //adapter.notifyDataSetChanged();
                     } else {
                         Log.d("FBerror1", "User doesn't exist or string is empty");
                     }
@@ -236,6 +341,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                         Book book = gson.fromJson(jBook, tokenType);
                         Log.d("Confirm", user.getUsername());
                         mBookNames.set(finalI, book.getName());
+                        //adapter.notifyDataSetChanged();
                     } else {
                         Log.d("FBerror1", "User doesn't exist or string is empty");
                     }
@@ -245,6 +351,14 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     return;
                 }
             });
+        }
+    }
+
+    private void safeNotify() {
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+        } else {
+            Log.d(TAG+" safeNotify", "adapter is null");
         }
     }
 
