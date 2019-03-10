@@ -2,6 +2,7 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -163,8 +164,10 @@ public class EditBookActivity extends AppCompatActivity {
                 }
 
                 if (!found) {
+                    String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
                     // book not in firebase => add book to Firebase
                     Log.d("Book", "Add book to firebase");
+                    addBookToUser(currentUsername, book.getId());
                     db.addBook(book);
                 }
 
@@ -209,7 +212,41 @@ public class EditBookActivity extends AppCompatActivity {
         });
     }
 
-//load from json file
+
+    /**
+     * add the book to the user owned list and update firebase
+     * @author rmnattas
+     */
+    public void addBookToUser(final String username, final UUID bookId){
+        // get the user object from firebase
+        final Database db = new Database(this);
+        Firebase ref = db.connect(this);
+        Firebase tempRef = ref.child("Users").child(username);
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    user.addOwnedBook(bookId);
+                    db.editUser(username, user);
+                } else {
+                    Log.d("myBookFrag", "11321");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
+
+
     private void loadFromFile() {
 
         try {

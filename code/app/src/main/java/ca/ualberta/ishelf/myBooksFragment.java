@@ -27,43 +27,50 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.UUID;
 
 import static android.app.Activity.RESULT_OK;
 
 /**
  *
  * @author Evan
+ * @edited rmnattas
  */
 public class myBooksFragment extends Fragment {
     //    https://stackoverflow.com/questions/44777605/android-studio-how-to-add-filter-on-a-recyclerview-and-how-to-implement-it
-    private static final String TAG = "xxxmyBooksActivityxxx";
+    private static final String TAG = "MyBooksFragment";
     //String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
     //vars
-    private ArrayList<String> myBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
-    private ArrayList<String> myBookImage = new ArrayList<>();
-    private ArrayList<String> borrowBooksName = new ArrayList<>();
-    private ArrayList<String> borrowBooksImage = new ArrayList<>();//Should be a image string
-    private ArrayList<String> requestedBooksName = new ArrayList<>();
-    private ArrayList<String> requestedBooksImage = new ArrayList<>();
+
+    // no need for a bunch of list each has object,name,img lists @rmnattas
     private  ArrayList<Book> myOwnedBooks = new ArrayList<>();
-    private  ArrayList<Book> myBorrowBooks = new ArrayList<>();
-    private  ArrayList<Book> myRequestedBooks = new ArrayList<>();
     private  ArrayList<Book> myBorrowedBooks = new ArrayList<>();
-    private ArrayList<String> myBorrowedBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
-    private ArrayList<Image> myBorrowedBookImage = new ArrayList<>();
+
     private RatingBar ratingBar;
     private Spinner spinner; //drop-down filter: https://www.mkyong.com/android/android-spinner-drop-down-list-example/
     private RecyclerView recyclerView;
     private MyAdapter myAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.my_book, container, false);
     }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         Log.d(TAG, "OnCreate started");
+
+        // set recycler view events
         spinner = getActivity().findViewById(R.id.spinner);
         FloatingActionButton add = (FloatingActionButton) getActivity().findViewById(R.id.addButton); //sorry abdul
         add.setOnClickListener(new View.OnClickListener() {
@@ -83,52 +90,238 @@ public class myBooksFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        // set recycler view
         recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
-        myAdapter = new MyAdapter(myBookNames, myBookImage, myOwnedBooks, this.getContext()); //in the same order as the constructor in MyAdapter
+        // make  a list for recycler view
+        ArrayList<Book> allMyBooks = new ArrayList<>(); // both owned and borrowed
+        allMyBooks.addAll(myOwnedBooks);
+        allMyBooks.addAll(myBorrowedBooks);
+        myAdapter = new MyAdapter(allMyBooks, this.getContext());
         recyclerView.setAdapter(myAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-        initImage();
+
     }
 
-    public void Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
-        if(filter.equals("My Books")) {
-            initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
-        }else if (filter.equals(("Lent out"))){
-            initRecyclerView(borrowBooksName, borrowBooksImage,myBorrowBooks ,this.getContext()); // basically do nothing and go back to main page
-        }else if (filter.equals("Requested")){
-            initRecyclerView(requestedBooksName, requestedBooksImage,myRequestedBooks, this.getContext()); // basically do nothing and go back to main page
+    @Override
+    public void onResume() {
+        super.onResume();
 
-        }
-        else if(filter.equals("Borrowed Books")){
-            initRecyclerView(myBorrowedBookNames, myBorrowedBookImage, myBorrowedBooks, this.getContext());
+        // clear myBooks listView
+        ArrayList<Book> cleanList = new ArrayList<>();
+        myAdapter.updateList(cleanList);
+        myAdapter.notifyDataSetChanged();
 
+        // update list of books from firebase
+        getUserBooks();
 
-        }
     }
 
-
-    public void BorrowBook(Book book){
-        book.setBorrowedBook(true);
-        myBorrowedBookImage.add(book.getPhoto());
-        myBorrowedBookNames.add(book.getName());
-        myBorrowBooks.add(book);
-    }
-
-    /*
-     * ok wow addBook worked when it was an activity, im not sure what changed since i converted activity->fragment
-     * illegalStateException
+    /**
+     * Get the logged in user books from firebase
+     * @author rmnattas
      */
+    private void getUserBooks(){
 
+        // clear previous lists
+        myOwnedBooks.clear();
+        myBorrowedBooks.clear();
+
+        // get logged in user username
+        final String currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+        // get the user object from firebase
+        Firebase ref = new Database(getContext()).connect(getContext());
+        Firebase tempRef = ref.child("Users").child(currentUsername);
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    //get owned and borrowed books
+                    getBooks(user.getOwnedBooks(), user.getBorrowedBooks());
+                } else {
+                    Log.d("myBookFrag", "11321");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+
+    }
+
+
+    /**
+     * given a list of books ids get the book objects
+     * from firebase and add them to owned or borrowed
+     * books list accordingly
+     * @author rmnattas
+     * @param ownedBooksIds list of owned books ids
+     * @param borrowedBooksIds list of borrowed books ids
+     */
+    private void getBooks(final ArrayList<UUID> ownedBooksIds, final ArrayList<UUID> borrowedBooksIds){
+        Firebase ref = new Database(getContext()).connect(getContext());
+        Firebase childRef = ref.child("Books");
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jBook = d.getValue(String.class);
+                    //Log.d("jBook", jBook);
+                    if (jBook != null) {
+                        // Get book object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Book>() {}.getType();
+                        Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+                        if (ownedBooksIds.contains(book.getId())){
+                            myOwnedBooks.add(book);
+                        } else if (borrowedBooksIds.contains(book.getId())){
+                            myBorrowedBooks.add(book);
+                        }
+                    } else {
+                        Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
+                    }
+                }
+
+                // add owned and borrowed books to one list
+                ArrayList<Book> allMyBooks = new ArrayList<>(); // both owned and borrowed
+                allMyBooks.addAll(myOwnedBooks);
+                allMyBooks.addAll(myBorrowedBooks);
+
+                myAdapter.updateList(allMyBooks);
+                myAdapter.notifyDataSetChanged();
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
+    }
+
+    /**
+     * filter books by {all, own, lent-out, borrowed}
+     * @param filter filter name
+     * @author Evan
+     * @edited rmnattas
+     */
+    public void Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
+        if(filter.equals("All")) {
+            // add owned and borrowed books to one list
+            ArrayList<Book> allMyBooks = new ArrayList<>(); // both owned and borrowed
+            allMyBooks.addAll(myOwnedBooks);
+            allMyBooks.addAll(myBorrowedBooks);
+            myAdapter.updateList(allMyBooks);
+            myAdapter.notifyDataSetChanged();
+        } else if(filter.equals("My Books")) {
+            myAdapter.updateList(myOwnedBooks);
+            myAdapter.notifyDataSetChanged();
+        } else if (filter.equals(("Lent out"))){
+            ArrayList<Book> lentoutBooks = new ArrayList<>(); // both owned and borrowed
+            for (Book book : myOwnedBooks){
+                if (book.checkBorrowed()){
+                    lentoutBooks.add(book);
+                }
+            }
+            myAdapter.updateList(lentoutBooks);
+            myAdapter.notifyDataSetChanged();
+        } else if(filter.equals("Borrowed Books")){
+            myAdapter.updateList(myBorrowedBooks);
+            myAdapter.notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * called when add book is clicked
+     * @param view v
+     * @author Evan
+     */
     public void addBook(View view){ //so when you add a book, you immediately filter by status
-
-
         Intent intent = new Intent(view.getContext(), EditBookActivity.class);
         intent.putExtra("Check Data",false);
         startActivityForResult(intent, 1);
-
     }
 
-    private void initImage(){
+
+    /**
+     * called when get back from an activity with result
+     * @param requestCode
+     * @param resultCode
+     * @param data
+     * @author Evan/Mehrab ?
+     * @edited rmnattas
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        myAdapter.onActivityResult(requestCode, resultCode, data);
+
+        /** Adding new book */
+        if(requestCode == 1){
+            // clear myBooks listView
+            ArrayList<Book> cleanList = new ArrayList<>();
+            myAdapter.updateList(cleanList);
+            myAdapter.notifyDataSetChanged();
+            // get updated my books from firebase
+            getUserBooks();
+
+            if(resultCode == RESULT_OK){ }
+        }
+
+        /** editing or deleting a book */
+        if(requestCode == 1002){
+            // clear myBooks listView
+            ArrayList<Book> cleanList = new ArrayList<>();
+            myAdapter.updateList(cleanList);
+            myAdapter.notifyDataSetChanged();
+            // get updated my books from firebase
+            getUserBooks();
+
+            if(resultCode == RESULT_OK){ }
+        }
+    }
+}
+
+
+// commented code by @rmnattas
+/*
+
+    private ArrayList<String> myBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
+    private ArrayList<String> myBookImage = new ArrayList<>();
+    private ArrayList<String> borrowBooksName = new ArrayList<>();
+    private ArrayList<String> borrowBooksImage = new ArrayList<>();//Should be a image string
+    private ArrayList<String> requestedBooksName = new ArrayList<>();
+    private ArrayList<String> requestedBooksImage = new ArrayList<>();
+    private  ArrayList<Book> myOwnedBooks = new ArrayList<>();
+    private  ArrayList<Book> myBorrowBooks = new ArrayList<>();
+    private  ArrayList<Book> myRequestedBooks = new ArrayList<>();
+    private  ArrayList<Book> myBorrowedBooks = new ArrayList<>();
+    private ArrayList<String> myBorrowedBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
+    private ArrayList<Image> myBorrowedBookImage = new ArrayList<>();
+
+    private void enteredAlert(String msg) {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+        alertDialogBuilder.setMessage((CharSequence) msg);
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface arg0, int arg1) {
+                // TODO Auto-generated catch block
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    private void initDummy(){
         Log.d(TAG, "init works");
 
         Book book = new Book("Havana oh na-na", "Description", 1234L, "Year", "Genre", "author", false);
@@ -153,100 +346,20 @@ public class myBooksFragment extends Fragment {
 
         initRecyclerView(myBookNames, myBookImage,myOwnedBooks, this.getContext());
     }
-    /*
-    getActivity() is bad practice but not sure how else to code it
-     */
 
-    private void initRecyclerView(ArrayList name, ArrayList image, ArrayList list, Context context){
+    public void BorrowBook(Book book){
+        book.setBorrowedBook(true);
+        myBorrowedBookImage.add(book.getPhoto());
+        myBorrowedBookNames.add(book.getName());
+        myBorrowBooks.add(book);
+    }
+
+    private void initRecyclerView(ArrayList<Book> list, Context context){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
-        MyAdapter adapter = new MyAdapter(name, image, list, this.getContext()); //in the same order as the constructor in MyAdapter
+        MyAdapter adapter = new MyAdapter(list, this.getContext()); //in the same order as the constructor in MyAdapter
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
     }
-    private void enteredAlert(String msg) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
-        alertDialogBuilder.setMessage((CharSequence) msg);
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                // TODO Auto-generated catch block
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        myAdapter.onActivityResult(requestCode, resultCode, data);
-
-        if(requestCode == 1){
-            if(resultCode == RESULT_OK){
-                Book book = data.getParcelableExtra("Book Data");
-
-                ratingBar = getActivity().findViewById(R.id.ratingBar);
-                Rating rating = new Rating();
-                book.addRating(rating);
-                this.ratingBar.setRating(4); // this should work but does not work, idk why
-                myOwnedBooks.add(book);
-                myBookImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                //font see any constructors for image in Book class yet
-                myBookNames.add(book.getName());
-                //myAdapter.updateData(); //this doesn't work for some reason
-                book.setStatus(0);
-                if (book.getStatus() == 0){ //available to borrow
-                    borrowBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                    borrowBooksName.add(book.getName());
-                }
-                if(book.getStatus() == 2){ //should be lent if there is such a status
-                    requestedBooksImage.add("https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                    requestedBooksName.add(book.getName());
-                }
-                initRecyclerView(myBookNames, myBookImage,myOwnedBooks, this.getContext());
-            }
-        }
-
-        if(requestCode == 1002){
-            if(resultCode == RESULT_OK){
-                boolean check = data.getBooleanExtra("Check", true);
-                if(check) {
-
-
-                    Book book = data.getParcelableExtra("Data");
-                    int pos = data.getIntExtra("Pos", 0);
-
-                    ratingBar = getActivity().findViewById(R.id.ratingBar);
-                    Rating rating = new Rating();
-                    book.addRating(rating);
-                    this.ratingBar.setRating(4); // this should work but does not work, idk why
-                    myOwnedBooks.set(pos, book);
-                    myBookImage.set(pos, "https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                    //font see any constructors for image in Book class yet
-                    myBookNames.set(pos, book.getName());
-                    //myAdapter.updateData(); //this doesn't work for some reason
-                    book.setStatus(1);
-                    if (book.getStatus() == 0) { //available to borrow
-                        borrowBooksImage.set(pos,"https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                        borrowBooksName.set(pos,book.getName());
-                    }
-                    if (book.getStatus() == 2) { //should be lent if there is such a status
-                        requestedBooksImage.set(pos, "https://m.media-amazon.com/images/M/MV5BMTQ3MTg3MzY4OV5BMl5BanBnXkFtZTgwNTI4MzM1NzE@._V1_UY1200_CR90,0,630,1200_AL_.jpg");
-                        requestedBooksName.set(pos, book.getName());
-                    }
-                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
-                }
-                else{
-                    int pos = data.getIntExtra("Pos", 1);
-                    myOwnedBooks.remove(pos);
-                    myBookNames.remove(pos);
-                    myBookImage.remove(pos);
-                    myAdapter.notifyDataSetChanged();
-
-                    initRecyclerView(myBookNames, myBookImage, myOwnedBooks, this.getContext());
-
-                }
-            }
-        }
-    }
-}
+ */
