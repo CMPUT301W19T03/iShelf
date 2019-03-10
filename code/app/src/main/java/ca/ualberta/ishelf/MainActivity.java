@@ -76,6 +76,11 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //TODO remove
+        //Intent myIntent = new Intent(this, ListOfRequestsActivity.class);
+        //myIntent.putExtra("key", value); //Optional parameters
+        //this.startActivity(myIntent);
+        //TODO remove
 
         SignIn();
 
@@ -236,6 +241,11 @@ public class MainActivity extends AppCompatActivity {
         String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
         Log.d(TAG, "onOptionsItemSelected: Username:" + username);
         intent.putExtra("Username", username);
+        startActivity(intent);
+    }
+
+    public void ViewNotification(View v){
+        Intent intent = new Intent(v.getContext(), NotificationActivity.class);
         startActivity(intent);
     }
 }
