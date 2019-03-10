@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -73,22 +74,21 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
 
-        /*
         // Add simple test entries for the display
         // Add entries to my mNames array
         mNames.add("Paul");
-        mNames.add("James");
-        mNames.add("Danny");
-        mNames.add("Jessica");
+       // mNames.add("James");
+       // mNames.add("Danny");
+       // mNames.add("Jessica");
         mBookNames.add("Moby Dick");
-        mBookNames.add("I, Robot");
-        mBookNames.add("In may we soar");
-        mBookNames.add("Hello, would you like to spend the day together and maybe fall in love");
+       // mBookNames.add("I, Robot");
+       // mBookNames.add("In may we soar");
+       // mBookNames.add("Hello, would you like to spend the day together and maybe fall in love");
         mRatings.add(2f);
-        mRatings.add(3f);
-        mRatings.add(5f);
-        mRatings.add(4f);
-        */
+       // mRatings.add(3f);
+       // mRatings.add(5f);
+       // mRatings.add(4f);
+
         initRecyclerView();
         getUser();
 
@@ -101,7 +101,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         userRequests.add(r3);
         */
 
-        /*
         // Add test data to database for use in this activity
         User u1 = new User();
         u1.setUsername("testUsername");
@@ -109,7 +108,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         t1.setUsername("testReq1");
         t1.setRating(new Rating(4f,""));
         User t2 = new User();
-        t2.setUsername("testReqr2");
+        t2.setUsername("testReq2");
         t2.setRating(new Rating(3f, ""));
         Book b1 = new Book();
         b1.setName("bName1");
@@ -123,7 +122,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         db.addUser(t2);
         db.addBook(b1);
         db.addBook(b2);
-        */
         // Expected output
         // testReq1, 3 stars, book bName1
         // testReq2, 4 stars, book bName1
@@ -157,7 +155,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
-        //safeNotify();
+        safeNotify();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has accepted your request", "username");
@@ -183,7 +181,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
-        //safeNotify();
+        safeNotify();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has declined your request", "username");
@@ -201,6 +199,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * Since they depend on us having a User object that isn't null
      */
     private void getUser() {
+        Log.d(TAG+" getUser", "get user has been called");
         // get reference to specific entry
         Firebase tempRef = ref.child("Users").child(username);
         // create a one time use listener to immediately access datasnapshot
@@ -216,6 +215,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     user = gson.fromJson(jUser, tokenType);
                     Log.d("Confirm", user.getUsername());
                     for(Request request: user.getListofRequests()) {
+                        Log.d("onDataChange getUser", request.getRequester());
                         mNames.add(request.getRequester());
                     }
                     // This call must be nested since we need
@@ -223,7 +223,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     //getRequesterRatings();
                     //getBookNames();
                     safeNotify();
-                    getRequestInformation();
+                    getRequestInformation2();
                 } else {
                     Log.d("getUser FBerror1", "jUser was null");
                 }
@@ -231,6 +231,51 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             @Override
             public void onCancelled(FirebaseError firebaseError) {
                 return;
+            }
+        });
+    }
+
+    private void getRequestInformation2() {
+        Log.d(TAG+" getRequestInformation2", "getReqeustInformation2 has been called");
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Log.d(TAG+"in onDataChange", "Entered in data change");
+                for (Request request : user.getListofRequests()) {
+                    String jUser = dataSnapshot.child("Users").
+                            child(request.getRequester()).getValue(String.class);
+                    if (jUser != null) {
+                        Log.d("jUser", jUser);
+                        // Get user object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<User>() {
+                        }.getType();
+                        User reqUser = gson.fromJson(jUser, tokenType);
+                        Log.d("Confirm", user.getUsername());
+                        mRatings.add(reqUser.getOverallRating());
+                    } else {
+                        Log.d("getRequestInformation User FBerror1", "jUser was null");
+                    }
+                    String jBook = dataSnapshot.child("Books").
+                            child(request.getBookId().toString()).getValue(String.class);
+                    if (jBook != null) {
+                        Log.d("jBook", jBook);
+                        // Get user object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Book>() {
+                        }.getType();
+                        Book book = gson.fromJson(jBook, tokenType);
+                        Log.d("Confirm", user.getUsername());
+                        mBookNames.add(book.getName());
+                    } else {
+                        Log.d("getRequestInformation Book FBerror1", "jBook was null");
+                    }
+                }
+                safeNotify();
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+
             }
         });
     }
@@ -357,9 +402,29 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private void safeNotify() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
+            Log.d(TAG+" safeNotify", "successful update");
         } else {
             Log.d(TAG+" safeNotify", "adapter is null");
         }
     }
-
+    public void safeNotify(View view) {
+        initRecyclerView();
+        /*
+        if (adapter != null) {
+            adapter.notifyDataSetChanged();
+            Log.d(TAG+" safeNotify", "successful update");
+        } else {
+            Log.d(TAG+" safeNotify", "adapter is null");
+        }
+        */
+        for (String x: mBookNames) {
+            Log.d("current data", x);
+        }
+        for (String x: mNames) {
+            Log.d("current data", x);
+        }
+        for (float x: mRatings) {
+            Log.d("current data", Float.toString(x));
+        }
+    }
 }
