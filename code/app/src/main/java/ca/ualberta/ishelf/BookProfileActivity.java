@@ -21,6 +21,32 @@ import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.util.UUID;
+
+/**
+ * ViewProfileActivity
+ * Send in either:
+ *                  key: "Book" - a Book object
+ *
+ * US 01.06.01
+ * s an owner, I want to view and edit a book description in my books.
+ *   if he enters it in by mistake or the book description is updated by the author
+ *
+ * this lets the user view the book in detail, also allows the user to go into the
+ * edit menu
+ *
+ * US 01.07.01
+ * As an owner, I want to delete a book in my books.
+ *   the owner loses a book or stops wanting to lend it out
+ *
+ * This activity allows the user to delete the book
+ *
+ *
+ *
+ *
+ *
+ * @author: Mehrab
+ */
 
 public class BookProfileActivity extends AppCompatActivity {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
@@ -51,7 +77,7 @@ public class BookProfileActivity extends AppCompatActivity {
             editButton.setVisibility(View.VISIBLE);
         }
 
-
+        //gets all the elements in the object
         String title = passedBook.getName();
         String author = passedBook.getAuthor();
         String genre = passedBook.getGenre();
@@ -60,7 +86,7 @@ public class BookProfileActivity extends AppCompatActivity {
         Long isbn = passedBook.getISBN();
         final String owner = passedBook.getOwner();
 
-
+        //sets them onto the text views of the activity
         TextView textView = findViewById(R.id.Title);
         textView.setText(title);
 
@@ -139,7 +165,7 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
-
+    //sends parcelable data into the edit book activity and goes the by intent
     public void edit(View v){
 
         Intent intent = getIntent();
@@ -156,26 +182,59 @@ public class BookProfileActivity extends AppCompatActivity {
         finish();
 
     }
-
+    //goes back to myBookFragment, sending with it the position of the book that needs to be
+    //deleted
     public  void delete(View view){
-        Intent intent = getIntent();
-        int pos = intent.getIntExtra("pos data", 0);
 
-        Intent newintent;
-        newintent = new Intent(BookProfileActivity.this, MyAdapter.class);
+        // delete book from firebase
+        final Database db = new Database(this);
+        db.deleteBook(passedBook.getId());
 
+        // get logged in user username
+        final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        DeleteBookFromUser(currentUsername, passedBook.getId());
 
-        System.out.print("Here:");
-        System.out.print(pos);
-        newintent.putExtra("Pos", pos );
-
-        newintent.putExtra("Check Data", false);
-
-
-        setResult(RESULT_OK,newintent);
+        Intent intent = new Intent();
+        intent.putExtra("edit", false);
+        intent.putExtra("Book", passedBook);
+        setResult(RESULT_OK, intent);
         finish();
+
     }
 
+    /**
+     * add the book to the user owned list and update firebase
+     * @author rmnattas
+     */
+    public void DeleteBookFromUser(final String username, final UUID bookId){
+        // get the user object from firebase
+        final Database db = new Database(this);
+        Firebase ref = db.connect(this);
+        Firebase tempRef = ref.child("Users").child(username);
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    user.deleteOwnedBook(bookId);
+                    db.editUser(username, user);
+                } else {
+                    Log.d("myBookFrag", "11321");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
+    //goes into viewProfile if the owner is clicked
     public void viewProfile(View view){
         Intent intent = getIntent();
         Book data = intent.getParcelableExtra("Book Data");

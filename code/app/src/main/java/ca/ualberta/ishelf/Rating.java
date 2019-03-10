@@ -1,5 +1,13 @@
 package ca.ualberta.ishelf;
 
+/**
+ *THis is the Wow factor rating object, which deals with the star rating
+ * of an User or Book object. The rating is stored as a float, which is the
+ * number of staes it has. There is also a comment stored with a persons rating
+ *
+ * @author: Mehrab
+ */
+
 public class Rating {
     private float rating;
     private String comment;
@@ -24,7 +32,7 @@ public class Rating {
     public float getRating() {
         return rating;
     }
-
+//setting a rating, rating is a float ranging from 0 to 5.
     public void setRating(float rating) {
         if(rating>=0 && rating <=5) {
             this.rating = rating;
