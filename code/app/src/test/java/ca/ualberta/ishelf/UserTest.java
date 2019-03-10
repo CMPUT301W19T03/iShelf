@@ -30,7 +30,7 @@ public class UserTest {
         Evan.setState("borrower");
         Rating utterGarbage = new Rating();
         Evan.addRating(utterGarbage);
-        assertTrue(Evan.getBorrowerRatings().contains(utterGarbage));
+        assertEquals(Evan.getOverallRating(),utterGarbage);
     }
 
 }
