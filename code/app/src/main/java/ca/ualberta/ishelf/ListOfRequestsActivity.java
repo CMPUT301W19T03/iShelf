@@ -18,6 +18,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 public class ListOfRequestsActivity extends AppCompatActivity {
     // For debugging
@@ -42,9 +43,19 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list_of_requests2);
         Log.d(TAG, "onCreate");
         //TODO when book request is accepted, add notification for other user
-        //TODO get proper username
-        final String username = "testUsername";
-        // String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+        //TODO get ratings working
+        //TODO get buttons working
+        //TODO get requests from firebase
+        //TODO update UML for requests
+        //TODO add intent testing
+
+        // Add testUsername, since we should be signed in from here
+        //TODO remove forced sharedPreference editing
+        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+        editor.putString("username", "testUsername").apply();
+        final String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+        Log.d(TAG+" getUser ", "User is " + username);
+
         // get the reference of RecyclerView
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listOfRequestsRecycler);
         // set a LinearLayoutManager with default orientation
@@ -58,21 +69,15 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         mRatings.add(2);
         mRatings.add(3);
         mRatings.add(5);
-        mRatings.add(1);
-        //Request r1 = new Request("testUsername", "james", "moby dick", 4 );
-        //Request r2 = new Request("testUsername", "jessica", "I, Robot", 3 );
-        //Request r3 = new Request("testUsername", "shun", "Romeo and Juliet", 5 );
-        //userRequests.add(r1);
-        //mNames.add(r1.toString());
-        //userRequests.add(r2);
-        //mNames.add(r2.toString());
-        //userRequests.add(r3);
-        //mNames.add(r3.toString());
+        mRatings.add(4);
+        Request r1 = new Request(UUID.randomUUID(), "james");
+        Request r2 = new Request(UUID.randomUUID(), "jessica");
+        Request r3 = new Request(UUID.randomUUID(), "shun");
+        userRequests.add(r1);
+        userRequests.add(r2);
+        userRequests.add(r3);
 
         initRecyclerView();
-
-        // getRequests();
-        // Add request borrowers to mNames array
     }
 
     private void initRecyclerView(){
@@ -83,9 +88,11 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
-    private void acceptRequest(int position){
+    void acceptRequest(int position){
+        Log.d(TAG+" acceptRequest", "Called with " + position);
     }
-    private void declineRequest(int position){
+    void declineRequest(int position){
+        Log.d(TAG+" declineRequest", "Called with " + position);
     }
     // Get requests from user object (so also get user object)
 

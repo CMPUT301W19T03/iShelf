@@ -49,7 +49,8 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         Log.d(TAG, "onBindViewHolder: called");
         // Set the contents of each recycler view item
         holder.testText.setText(mImageNames.get(position));
-        holder.bRating.setNumStars(bRatings.get(position));
+        //holder.bRating.setNumStars(bRatings.get(position));
+        holder.bRating.setRating((float)bRatings.get(position));
 
 
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
@@ -63,12 +64,14 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick acceptButton: clicked on: " + fposition);
+                ((ListOfRequestsActivity) mContext).acceptRequest(fposition);
             }
         });
         holder.declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Log.d(TAG, "onClick declineButton: clicked on: " + fposition);
+                ((ListOfRequestsActivity) mContext).declineRequest(fposition);
             }
         });
         // I think I need to add the button stuff here
