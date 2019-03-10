@@ -9,9 +9,9 @@
     <RatingBar
         android:id="@+id/ratingBar2"
         style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="89dp"
+        android:layout_width="79dp"
         android:layout_height="30dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,14 +21,14 @@
         android:layout_width="168dp"
         android:layout_height="33dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="testText"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="testText" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/AButton"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -38,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/ratingBar2" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/DButton"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -51,10 +51,10 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
-        android:text="Rating"
+        android:text="Requester Rating"
         app:layout_constraintEnd_toStartOf="@+id/ratingBar2"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Rating" />
+        tools:text="Requester Rating" />
 </android.support.constraint.ConstraintLayout>

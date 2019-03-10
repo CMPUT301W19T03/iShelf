@@ -24,7 +24,7 @@ public class RequestTest {
         } else {
             System.out.println("valid date");
         }
-        Request req = new Request(testDate);
+        Request req = new Request(null,null);
 
         
 

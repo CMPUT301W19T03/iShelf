@@ -176,15 +176,15 @@ public class Database extends Application {
      * Given a request object, adds that object to the firebase real-time database
      * @param request request to add to firebase
      */
-    public void addRequest(Request request) {
-        // Save request to Firebase
-        Firebase requestChild = ref.child("Requests").child(request.getId().toString());
-        // Convert to Gson
-        Gson gson = new Gson();
-        String jRequest = gson.toJson(request);
-        // Save to firebase
-        requestChild.setValue(jRequest);
-    }
+    //public void addRequest(Request request) {
+    //    // Save request to Firebase
+    //    Firebase requestChild = ref.child("Requests").child(request.getId().toString());
+    //    // Convert to Gson
+    //    Gson gson = new Gson();
+    //    String jRequest = gson.toJson(request);
+    //    // Save to firebase
+    //    requestChild.setValue(jRequest);
+    //}
 
     /**
      * Given the UUID of a request, finds that request in the Firebase real-time database
@@ -201,10 +201,10 @@ public class Database extends Application {
      * Given a book object, finds that object in the database and replaces it
      * @param request request object to edit
      */
-    public void editRequest(Request request) {
-        deleteRequest(request.getId().toString());
-        addRequest(request);
-    }
+    //public void editRequest(Request request) {
+    //    deleteRequest(request.getId().toString());
+    //    addRequest(request);
+    //}
 
 
     /**

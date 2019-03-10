@@ -24,6 +24,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private static final String TAG = "ListOfRequestsActivity";
     // List of strings that are displayed in requests
     private ArrayList<String> mNames = new ArrayList<>();
+    // List of integers of user ratings
+    private ArrayList<Integer> mRatings = new ArrayList<>();
     // Username for current user
     String username;
     // Array of requests for our users books
@@ -53,7 +55,10 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         mNames.add("James");
         mNames.add("Danny");
         mNames.add("Jessica");
-        // THESE NEED TO BE USER AND BOOK OBJECTS
+        mRatings.add(2);
+        mRatings.add(3);
+        mRatings.add(5);
+        mRatings.add(1);
         //Request r1 = new Request("testUsername", "james", "moby dick", 4 );
         //Request r2 = new Request("testUsername", "jessica", "I, Robot", 3 );
         //Request r3 = new Request("testUsername", "shun", "Romeo and Juliet", 5 );
@@ -73,11 +78,17 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.listOfRequestsRecycler);
-        LORRecyclerViewAdapter adapter = new LORRecyclerViewAdapter(this, mNames);
+        LORRecyclerViewAdapter adapter = new LORRecyclerViewAdapter(this, mNames, mRatings);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
     }
+    private void acceptRequest(int position){
+    }
+    private void declineRequest(int position){
+    }
+    // Get requests from user object (so also get user object)
+
     private void getUsers() {
         /*
 
@@ -125,45 +136,5 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         */
     }
 
-    private void getRequests() {
-        // Get reference to Requests child
-        final Firebase tempRef = ref.child("Requests");
-        // Remove all entries from mNames so we can update them
-        mNames.clear();
-        // create a one time use listener to immediately access datasnapshot
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Type tokenType = new TypeToken<Book>(){}.getType();
-                Request tempRequest;
-                String tempString;
-
-                for(DataSnapshot d: dataSnapshot.getChildren()) {
-                    tempString = d.getValue(String.class);
-                    if (tempString != null) {
-                        // Get user object from Gson
-                        Gson gson = new Gson();
-                        tempRequest = gson.fromJson(tempString, tokenType);
-                        //TODO get user and their rating
-                        if (tempRequest.getRequester().equals(username)) {
-                            // Add to array of requests
-                            userRequests.add(tempRequest);
-                            // Add to array of dispalyed strings
-                            mNames.add(tempRequest.toString());
-                        }
-                    } else {
-                        Log.d("Firebase Retrieval Error", "Notification doesn't exist or string is empty");
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-
-            }
-        });
-        adapter.notifyDataSetChanged();
-
-    }
 
 }
