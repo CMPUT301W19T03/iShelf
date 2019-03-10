@@ -53,8 +53,8 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             RequestViewHolder requestHolder = (RequestViewHolder) holder;
 
             // Changing to fit my implementation of Request
-            requestHolder.title.setText(requestList.get(position).getBook().getName());
-            requestHolder.userName.setText(requestList.get(position).getRequester().getUsername());
+            requestHolder.title.setText(requestList.get(position).getBookId().toString());
+            requestHolder.userName.setText(requestList.get(position).getRequester());
             //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
 
 

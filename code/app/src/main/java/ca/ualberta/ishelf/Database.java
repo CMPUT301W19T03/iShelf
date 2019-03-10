@@ -178,7 +178,7 @@ public class Database extends Application {
      */
     public void addRequest(Request request) {
         // Save request to Firebase
-        Firebase requestChild = ref.child("Requests").child(request.getId().toString());
+        Firebase requestChild = ref.child("Requests").child(request.getBookId().toString());
         // Convert to Gson
         Gson gson = new Gson();
         String jRequest = gson.toJson(request);
@@ -202,7 +202,7 @@ public class Database extends Application {
      * @param request request object to edit
      */
     public void editRequest(Request request) {
-        deleteRequest(request.getId().toString());
+        deleteRequest(request.getBookId().toString());
         addRequest(request);
     }
 
