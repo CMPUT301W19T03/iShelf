@@ -28,22 +28,42 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-/*
-This is the adapter for the recycler view in the BorrowFragment
 
+/**
+ * BorrowAdapter
+ * Send in either:
+ *
+ * Allows for searching of firebase (description)
+ *
+ * @author: Faisal
  */
-
 class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
     private ArrayList<Book> filterList = new ArrayList<Book>();
     private ArrayList<Book> originalList = new ArrayList<Book>();
     private Context bookContext;
 
+    /**
+     * Constructor
+     *
+     * @author: Faisal
+     * @param: filterList - after search
+     * @param: originalList - before search
+     */
     public BorrowAdapter(Context bookContext, ArrayList<Book> filterList, ArrayList<Book> originalList) {
         this.filterList = filterList;
         this.originalList = originalList;
         this.bookContext = bookContext;
     }
 
+    /**
+     * BorrowViewHolder
+     *
+     * holds information about a book (name, description, user, rating)
+     * and is clickable
+     *
+     * @author: Faisal
+     *
+     */
     public static class BorrowViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public ConstraintLayout borrowBody;
@@ -55,6 +75,15 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
         }
     }
 
+
+    /**
+     * onCreateViewHolder
+     *
+     * A regular ViewHolder
+     *
+     * @author: Faisal
+     *
+     */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent,
                                                              int viewType) {
@@ -64,6 +93,16 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             return vh;
     }
 
+
+    /**
+     * onBindViewHolder
+     *
+     * Allows for clicking on a book (takes you to Book Profile)
+     * and connecting Book information to the TextViews.
+     *
+     * @author: Faisal
+     *
+     */
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
             BorrowViewHolder borrowHolder = (BorrowViewHolder) holder;
@@ -83,15 +122,38 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             });
         }
 
+    /**
+     * getItemCount
+     *
+     * Gets the size of filterList (RecyclerView uses this for displaying the list)
+     *
+     * @author: Faisal
+     *
+     */
     @Override
     public int getItemCount() {
         return filterList.size();
     }
 
+
+    /**
+     * getFilter
+     *
+     * Based on this:
+     * https://stackoverflow.com/questions/11619874/how-to-implement-getfilter-on-a-baseadapter
+     * User: Omar Abdan
+     *
+     * https://stackoverflow.com/questions/30398247/how-to-filter-a-recyclerview-with-a-searchview
+     * User: sagits
+     *
+     * Implements Filter
+     *
+     * @author: Faisal
+     *
+     */
     @Override
     public Filter getFilter() {
         return new Filter() {
-            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraint, FilterResults results) {
                 filterList = (ArrayList<Book>) results.values;
@@ -115,6 +177,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
         };
     }
 
+
     protected List<Book> getFilteredResults(String constraint) {
         List<Book> results = new ArrayList<>();
 
@@ -123,16 +186,13 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                 results.add(item);
             }
         }
-        Log.d("test","trst");
         return results;
     }
 
     public void updateList(ArrayList<Book> list){
         originalList = list;
         filterList = list;
-
     }
-
 }
 
 

@@ -41,6 +41,10 @@ import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.containsString;
 
+/**
+ * @author Jeremy
+ * works for jeremy but not for the rest of group
+ */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class ViewProfileTest {

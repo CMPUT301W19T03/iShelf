@@ -27,11 +27,21 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * GalleryActivity
+ *
+ * Allows a user to see the associated images of a book
+ * Allows for you to see an expanded view of the image if yyou click on the image
+ * Allows for oyui to add a new image
+ *
+ * @author: Faisal
+ */
+
 public class GalleryActivity extends AppCompatActivity {
 
 
     private int colomn_number = 2;
-    private final int PICK_PHOTO_FOR_AVATAR = 36;
+    private final int PICK_IMAGE_FOR_GALLERYY = 36;
     private final int DELETE_IMAGE = 37;
     private ArrayList<Bitmap> imageList = new ArrayList<Bitmap>();
     private Book passedBook;
@@ -41,6 +51,14 @@ public class GalleryActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager galleryLayoutManager;
 
     private Button addButton;
+
+    /**
+     * OnCreate
+     *
+     * Initializes recyclerView and button
+     *
+     * @author: Faisal
+     */
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,24 +90,37 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
 
-    // https://stackoverflow.com/questions/35028251/android-how-to-select-an-image-from-a-file-manager-after-clicking-on-a-button
+    /**
+     * pickImage
+     *
+     * pick Image from Google folder
+     *
+     * Based on: Android: How to select an Image from a file manager after clicking on a Button?
+     * https://stackoverflow.com/questions/35028251/android-how-to-select-an-image-from-a-file-manager-after-clicking-on-a-button
+     * User: Ahsan Kamal
+     *
+     * And based on documentation:
+     * https://developer.android.com/training/camera/photobasics
+     * @author: Faisal (based on Ahsan Kamal)
+     */
     public void pickImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_PHOTO_FOR_AVATAR);
+        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
     }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_PHOTO_FOR_AVATAR && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_IMAGE_FOR_GALLERYY && resultCode == Activity.RESULT_OK) {
             if (data == null) {
-                //Display an error
                 return;
             }
             try {
                 InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
                 Bitmap addedImage = BitmapFactory.decodeStream(inputStream);
+                // reduces the size of the Bitmap
                 addedImage = Bitmap.createScaledBitmap(addedImage, 320, 320, true);
                 imageList.add(addedImage);
                 Database db = new Database(this);
@@ -114,6 +145,13 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * getBook
+     *
+     * matches a book to get the list of images
+     *
+     * @author: Faisal, Abdul
+     */
     public void getBook(UUID bookId){
         // Retrive the user's info from Firebase
         Database db = new Database(this);
@@ -150,6 +188,14 @@ public class GalleryActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * gotBook
+     *
+     * handles getting the list of images
+     *
+     * @author: Faisal
+     */
+
     public void gotBook(Book book){
         ArrayList<String> stringList = book.getGalleryImages();
         for (String s : stringList){
@@ -164,6 +210,18 @@ public class GalleryActivity extends AppCompatActivity {
     }
 
 
+
+    /**
+     * BitMapToString
+     *
+     * How many ways to convert bitmap to string and vice-versa?
+     * https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+     * User: sachin10
+     *
+     * Allows for conversion between Bitmap and String (Bitmap -> String)
+     * @author: Faisal (copied from sachin10)
+     */
+
     public static String BitMapToString(Bitmap bitmap){
         ByteArrayOutputStream baos=new  ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.PNG,100, baos);
@@ -172,6 +230,16 @@ public class GalleryActivity extends AppCompatActivity {
         return temp;
     }
 
+    /**
+     * StringToBitMap
+     *
+     * How many ways to convert bitmap to string and vice-versa?
+     * https://stackoverflow.com/questions/13562429/how-many-ways-to-convert-bitmap-to-string-and-vice-versa
+     * User: sachin10
+     *
+     * Allows for conversion between Bitmap and String (String -> Bitmap)
+     * @author: Faisal (copied from sachin10)
+     */
     public static Bitmap StringToBitMap(String encodedString){
         try {
             byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);

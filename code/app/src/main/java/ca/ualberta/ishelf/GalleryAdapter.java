@@ -16,6 +16,14 @@ import android.widget.ImageView;
 
 import java.util.ArrayList;
 
+
+/**
+ * GalleryAdapter
+ *
+ * This is just a normal adapter, but for GalleryActivity (and associated recyclerView)
+ *
+ * @author: Faisal
+ */
 class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Bitmap> originalList = new ArrayList<Bitmap>();
     private Context galleryContext;
@@ -73,24 +81,6 @@ class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         return originalList.size();
     }
-
-//    //https://stackoverflow.com/questions/36513854/how-to-get-a-bitmap-from-vectordrawable
-//    public Bitmap convertToBitMap(VectorDrawable drawable) {
-//        try {
-//            Bitmap bitmap;
-//
-//            bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-//
-//            Canvas canvas = new Canvas(bitmap);
-//            drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight());
-//            drawable.draw(canvas);
-//
-//            return bitmap;
-//        } catch (OutOfMemoryError e) {
-//            // Handle the error
-//            return null;
-//        }
-//    }
 
     public void updateList(ArrayList<Bitmap> list){
         originalList = list;
