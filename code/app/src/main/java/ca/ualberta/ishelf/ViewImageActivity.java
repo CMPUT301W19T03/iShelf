@@ -8,6 +8,17 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 
+
+/**
+ * VIewImageActivity
+ *
+ * Shows an expanded view of the image
+ * Allows for ther user to delete the image
+ *
+ * TODO_: Implement with TouchImageView for allow for dynamic image manipulation
+ *
+ * @author: Faisal
+ */
 public class ViewImageActivity extends AppCompatActivity {
 
     private ImageView fullImage;

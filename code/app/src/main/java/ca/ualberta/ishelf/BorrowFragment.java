@@ -1,6 +1,8 @@
 package ca.ualberta.ishelf;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -70,6 +72,13 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
 
     private SearchView searchView;
+
+    /**
+     * onCreateView
+     *
+     * Initializes recyclerview and search for borrow books
+     * @author: Faisal
+     */
 
     @Nullable
     @Override
@@ -153,6 +162,13 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
     }
 
+    /**
+     * onRefresh
+     *
+     * Allows for pull to refresh (by calling to firebase)
+     *
+     * @author: Faisal
+     */
     @Override
     public void onRefresh(){
         bookList.clear();
