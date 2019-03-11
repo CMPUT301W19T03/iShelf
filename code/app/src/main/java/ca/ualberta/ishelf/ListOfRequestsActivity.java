@@ -184,7 +184,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
+        mBookNames.remove(position);
         safeNotify();
+        initRecyclerView();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has accepted your request", "username");
@@ -210,7 +212,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
+        mBookNames.remove(position);
         safeNotify();
+        initRecyclerView();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has declined your request", "username");
