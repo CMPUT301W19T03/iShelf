@@ -3,6 +3,11 @@ package ca.ualberta.ishelf;
 import org.junit.Assert;
 import org.junit.Test;
 
+/**
+ * @author Evan
+ * @edited Evan
+ * borrow unit test
+ */
 public class BorrowTest {
     @Test
     public void setLendertest(){

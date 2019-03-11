@@ -7,6 +7,10 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
+ * @author Evan
+ * book unit test
+ */
+/**
  *
  * Send in either:
  *                  key: "Book" - a Book object
