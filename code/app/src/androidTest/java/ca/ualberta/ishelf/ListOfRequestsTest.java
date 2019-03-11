@@ -3,6 +3,7 @@ package ca.ualberta.ishelf;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.test.espresso.contrib.RecyclerViewActions;
 
 import com.firebase.client.Firebase;
 import com.google.gson.Gson;
@@ -15,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import java.util.UUID;
 
+import androidx.test.espresso.ViewAction;
 import androidx.test.rule.ActivityTestRule;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -100,8 +102,8 @@ public class ListOfRequestsTest {
 
         // Click accept button on first item, since we should only have the one
         //TODO These two lines should be uncommented, but I can't get RecyclerViewActions to work
-        //onView(withId(R.id.listOfRequestsRecycler)).perform(
-        //      RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.AButton)));
+        onView(withId(R.id.listOfRequestsRecycler)).perform(
+                (ViewAction) RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.AButton)));
 
         // Now check firebase to see if the reqeust has been accepted
 
@@ -149,8 +151,8 @@ public class ListOfRequestsTest {
 
         // Click accept button on first item, since we should only have the one
         //TODO These two lines should be uncommented, but I can't get RecyclerViewActions to work
-        //onView(withId(R.id.listOfRequestsRecycler)).perform(
-        //      RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.DButton)));
+        onView(withId(R.id.listOfRequestsRecycler)).perform(
+                (ViewAction) RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.DButton)));
 
         // Now check firebase to see if the reqeust has been accepted
 
