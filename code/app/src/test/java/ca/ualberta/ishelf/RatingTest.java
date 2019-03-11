@@ -5,6 +5,12 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 
+/**
+ * rating unit test
+ * @author Mehrab
+ * @Edited Evan
+ * rating unit test
+ */
 public class RatingTest {
     @Test
     public void setRatingtest(){

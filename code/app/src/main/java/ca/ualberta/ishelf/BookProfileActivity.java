@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 /**
- * ViewProfileActivity
+ * BookProfileActivity
  * Send in either:
  *                  key: "Book" - a Book object
  *
@@ -292,18 +292,14 @@ public class BookProfileActivity extends AppCompatActivity {
 
         Intent intent2 = new Intent(BookProfileActivity.this, ListOfRequestsActivity.class);
 
-        Request request = new Request();
-        request.setBookId(passedBook.getId());
-        // set requester username
-        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        request.setRequester(currentUsername);
-        // set request time
-        request.setTimeRequested(Calendar.getInstance().getTime());
-
+        String bookID = passedBook.getId().toString();
         // add the request to the book owner listOfRequests
 
 
-        intent2.putExtra("request",request);
+
+
+
+        intent2.putExtra("ID",bookID);
         startActivity(intent2);
         finish();
     }

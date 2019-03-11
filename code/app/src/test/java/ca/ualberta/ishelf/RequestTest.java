@@ -7,6 +7,12 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * request unit test
+ * @author Evan
+ * @edited Evan
+ *
+ */
 public class RequestTest {
 
     @Test

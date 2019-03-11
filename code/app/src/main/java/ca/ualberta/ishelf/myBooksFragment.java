@@ -42,8 +42,21 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  *
+ * US 01.04.01
+ * As an owner, I want to view a list of all my books, and their descriptions, statuses, and current borrowers.
+ * the owner wants to see their book library
+ * US 01.05.01
+ * As an owner, I want to view a list of all my books, filtered by status.
+ * the owner wants to have a filter view of his books
+ *
+ * This activity shows the books you own, they can be filtered by status. You can click the book to get all of its details
+ * view it, edit it and delete it. You can add new book to the list by pressing the floating add button
+ *
  * @author Evan
  * @edited rmnattas
+ *
+ * -a lot of this code is going to change once i change myAdapter to match the one from borrow books, the tests will change too
+ * -right now the way it's displayed will largely be changed in the next sprint - Evan
  */
 public class myBooksFragment extends Fragment {
     //    https://stackoverflow.com/questions/44777605/android-studio-how-to-add-filter-on-a-recyclerview-and-how-to-implement-it
@@ -134,7 +147,7 @@ public class myBooksFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
+//                Log.d("jUser", jUser);
                 if (jUser != null) {
                     // Get user object from Gson
                     Gson gson = new Gson();
@@ -144,7 +157,7 @@ public class myBooksFragment extends Fragment {
                     //get owned and borrowed books
                     getBooks(user.getOwnedBooks(), user.getBorrowedBooks());
                 } else {
-                    Log.d("myBookFrag", "11321");
+                    Log.d(TAG, "11321");
                 }
             }
             @Override
@@ -255,7 +268,7 @@ public class myBooksFragment extends Fragment {
      * @param requestCode
      * @param resultCode
      * @param data
-     * @author Evan/Mehrab ?
+     * @author Evan/Mehrab
      * @edited rmnattas
      */
     @Override

@@ -132,7 +132,7 @@ public class RequestFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
+//                Log.d("jUser", jUser);
                 if (jUser != null) {
                     // Get user object from Gson
                     Gson gson = new Gson();
@@ -177,7 +177,6 @@ public class RequestFragment extends Fragment {
                             if (r.getBookId().equals(book.getId())) {
                                 requestBooks.add(book);
                                 Log.d("j!!!Book", jBook);
-                                break;
                             }
                         }
                     } else {
@@ -225,10 +224,7 @@ public class RequestFragment extends Fragment {
     //This resets the recycler view to a new ArrayList everytime
     private void initRecyclerView(Context context){
         Log.d("j!!!init", "initRecyclerView: init recyclerview.");
-//        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.request_recycler);
-//        RequestAdapter adapter = new RequestAdapter( this.getContext()); //in the same order as the constructor in MyAdapter
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
     }
 
     private void enteredAlert(String msg) {
@@ -244,16 +240,6 @@ public class RequestFragment extends Fragment {
         alertDialog.show();
     }
 
-//test dummy
-    public void createDummy() {
-        Request request1 = new Request(UUID.fromString("0464dd2b-9b32-4d9f-a894-5a72dc39d1c7"), "rmnattas");
-        Request request2 = new Request(UUID.fromString("2aa139b0-4799-4a99-acf2-23393a00ed6b"), "jeremy");
-        requestPendingList.add(request1);
-        requestAcceptedList.add(request2);
-
-
-
-    }
 
 
 }

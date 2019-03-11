@@ -6,6 +6,12 @@ import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 
+/**
+ *  * notifications unit test
+ * @author Evan
+ * @edited Evan
+ * notifications unit test
+ */
 public class NotificationTest {
 
         @Test
