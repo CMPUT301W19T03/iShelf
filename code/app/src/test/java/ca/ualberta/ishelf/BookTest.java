@@ -6,6 +6,20 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ *
+ * Send in either:
+ *                  key: "Book" - a Book object
+ *
+ * .
+ *
+ *This is the Unit test for the The Book object
+ *
+ *
+ * @author: Mehrab
+ */
+
+
 public class BookTest {
 
     // Tests for the Getters and Setters

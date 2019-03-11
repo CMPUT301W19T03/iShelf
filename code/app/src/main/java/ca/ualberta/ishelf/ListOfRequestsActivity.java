@@ -70,6 +70,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Initialize firebase for use
         Firebase.setAndroidContext(this);
         ref = new Firebase(link);
+
+
         /* Activity should be called in this format
         Intent myIntent = new Intent(MainActivity.this, addMeasurementActivity.class);
         myIntent.putExtra("myBookId", bookId);
@@ -77,22 +79,26 @@ public class ListOfRequestsActivity extends AppCompatActivity {
          */
 
         Intent intent = getIntent();
-       Request request  = intent.getParcelableExtra("request");
+        String bookID  = intent.getStringExtra("ID");
+
+
         //TODO replace with actual code
 //        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
-        UUID bookId = request.getBookId();
+
+
+        bookId = UUID.fromString(bookID);
 
 
 
         // Add testUsername, since we should be signed in from here
         //TODO remove forced sharedPreference editing
 //        username = "testUsername";
-        username = request.getRequester();
-        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-        editor.putString("username", "testUsername").apply();
+
+//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+//        editor.putString("username", "testUsername").apply();
 
         // Get the current user's username from shared preferences
-        final String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+        username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
         Log.d(TAG+" getUser ", "User is " + username);
 
         // get the reference of RecyclerView

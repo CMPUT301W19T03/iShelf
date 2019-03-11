@@ -243,16 +243,6 @@ public class RequestFragment extends Fragment {
         alertDialog.show();
     }
 
-//test dummy
-    public void createDummy() {
-        Request request1 = new Request(UUID.fromString("0464dd2b-9b32-4d9f-a894-5a72dc39d1c7"), "rmnattas");
-        Request request2 = new Request(UUID.fromString("2aa139b0-4799-4a99-acf2-23393a00ed6b"), "jeremy");
-        requestPendingList.add(request1);
-        requestAcceptedList.add(request2);
-
-
-
-    }
 
 
 }
