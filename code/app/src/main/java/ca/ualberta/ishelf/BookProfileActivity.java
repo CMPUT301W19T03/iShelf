@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -21,6 +22,7 @@ import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.UUID;
 
 /**
@@ -76,6 +78,12 @@ public class BookProfileActivity extends AppCompatActivity {
             delButton.setVisibility(View.VISIBLE);
             editButton.setVisibility(View.VISIBLE);
         }
+
+        if (!isOwner && !passedBook.checkBorrowed()){
+            Button requestButton = findViewById(R.id.req);
+            requestButton.setVisibility(View.VISIBLE);
+        }
+
 
         //gets all the elements in the object
         String title = passedBook.getName();
@@ -242,4 +250,29 @@ public class BookProfileActivity extends AppCompatActivity {
         newIntent.putExtra("Username", data.getOwner());
         startActivity(newIntent);
     }
+
+    /**
+     * called when the request button is clicked
+     * @param v
+     * @author rmnattas
+     */
+    public void requestClicked(View v){
+        // set a request object
+        Request request = new Request();
+        request.setBookId(passedBook.getId());
+        // set requester username
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        request.setRequester(currentUsername);
+        // set request time
+        request.setTimeRequested(Calendar.getInstance().getTime());
+
+        // add the request to the book owner listOfRequests
+        Database db = new Database(this);
+        db.addRequest(passedBook.getOwner(), request);
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "Book Requested",
+                Toast.LENGTH_LONG);
+        toast.show();
+    }
+
 }
