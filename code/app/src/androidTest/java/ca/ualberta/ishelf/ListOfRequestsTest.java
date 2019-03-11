@@ -4,9 +4,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.test.espresso.contrib.RecyclerViewActions;
+import android.util.Log;
 
+import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import org.junit.After;
 import org.junit.Before;
@@ -14,6 +19,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.lang.reflect.Type;
 import java.util.UUID;
 
 import androidx.test.espresso.ViewAction;
@@ -101,11 +107,34 @@ public class ListOfRequestsTest {
         mActivityRule.launchActivity(i);
 
         // Click accept button on first item, since we should only have the one
-        //TODO These two lines should be uncommented, but I can't get RecyclerViewActions to work
         onView(withId(R.id.listOfRequestsRecycler)).perform(
                 (ViewAction) RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.AButton)));
 
         // Now check firebase to see if the reqeust has been accepted
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Users").child(username);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>(){}.getType();
+                    User returnedUser = gson.fromJson(jUser, tokenType);
+                    Request request = returnedUser.getListofRequests().get(0);
+                    assert(request.getStatus() == 1);
+                } else {
+                    Log.d("getUser FBerror1", "jUser was null");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
 
         // restore shared preferences before ending
         restoreSharedPrefs();
@@ -150,11 +179,33 @@ public class ListOfRequestsTest {
         mActivityRule.launchActivity(i);
 
         // Click accept button on first item, since we should only have the one
-        //TODO These two lines should be uncommented, but I can't get RecyclerViewActions to work
         onView(withId(R.id.listOfRequestsRecycler)).perform(
                 (ViewAction) RecyclerViewActions.actionOnItemAtPosition(0, MyViewAction.clickChildViewWithId(R.id.DButton)));
 
         // Now check firebase to see if the reqeust has been accepted
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Users").child(username);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>(){}.getType();
+                    User returnedUser = gson.fromJson(jUser, tokenType);
+                    assert(returnedUser.getListofRequests().isEmpty());
+                } else {
+                    Log.d("getUser FBerror1", "jUser was null");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
 
         // restore shared preferences before ending
         restoreSharedPrefs();
