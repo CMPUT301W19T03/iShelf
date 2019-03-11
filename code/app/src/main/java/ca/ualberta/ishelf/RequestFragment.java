@@ -224,10 +224,7 @@ public class RequestFragment extends Fragment {
     //This resets the recycler view to a new ArrayList everytime
     private void initRecyclerView(Context context){
         Log.d("j!!!init", "initRecyclerView: init recyclerview.");
-//        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.request_recycler);
-//        RequestAdapter adapter = new RequestAdapter( this.getContext()); //in the same order as the constructor in MyAdapter
-//        recyclerView.setAdapter(adapter);
-//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
     }
 
     private void enteredAlert(String msg) {
