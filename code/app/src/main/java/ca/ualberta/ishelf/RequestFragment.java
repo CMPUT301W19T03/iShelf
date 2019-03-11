@@ -177,7 +177,6 @@ public class RequestFragment extends Fragment {
                             if (r.getBookId().equals(book.getId())) {
                                 requestBooks.add(book);
                                 Log.d("j!!!Book", jBook);
-                                break;
                             }
                         }
                     } else {
