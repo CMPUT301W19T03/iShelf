@@ -191,6 +191,9 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             if (item.getDescription().toLowerCase().contains(constraint)) {
                 results.add(item);
             }
+            if (item.getName().toLowerCase().contains(constraint)) {
+                results.add(item);
+            }
         }
         return results;
     }
