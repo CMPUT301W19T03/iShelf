@@ -1,5 +1,8 @@
 package ca.ualberta.ishelf;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -11,7 +14,7 @@ import java.util.UUID;
  * if no action has been taken yet
  * Since these objects are not directly stored in firebase, they don't need a unique id
  */
-public class Request {
+public class Request implements Parcelable {
     // id of book to be borrowed
     private UUID bookId;
     // username of requester
@@ -41,6 +44,34 @@ public class Request {
         this.requester = requester;
         this.timeRequested = new Date();
     }
+
+    protected Request(Parcel in) {
+        requester = in.readString();
+        status = in.readInt();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(requester);
+        dest.writeInt(status);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Request> CREATOR = new Creator<Request>() {
+        @Override
+        public Request createFromParcel(Parcel in) {
+            return new Request(in);
+        }
+
+        @Override
+        public Request[] newArray(int size) {
+            return new Request[size];
+        }
+    };
 
     /**
      * get the id of the book to be borrowed

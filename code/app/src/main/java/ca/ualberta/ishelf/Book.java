@@ -1,6 +1,5 @@
 package ca.ualberta.ishelf;
 
-
 import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -21,6 +20,7 @@ public class Book implements Parcelable{
     private int status; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
     private Boolean borrowedBook = false;
     private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
+    private ArrayList<String> galleryImages = new ArrayList<String>();
     private UUID id; // changed from int to UUID
     private Image photo;
     private String year;
@@ -28,6 +28,7 @@ public class Book implements Parcelable{
     private String author;
 
     public  Book(){
+        this.status = 1;
         this.id = UUID.randomUUID();
     }
 
@@ -147,6 +148,10 @@ public class Book implements Parcelable{
         return status;
     }
 
+    /**
+     * @deprecated
+     * use setBorrowed() or setAvailable() instead
+     */
     public void setStatus(int status) {
         this.status = status;
     }
@@ -174,16 +179,16 @@ public class Book implements Parcelable{
      * setBorrowed() sets the status of the book to borrowed, so that others can't borrow it
      */
     public void setBorrowed(){
-        // TODO: implement logic
-        this.setStatus(0);
+        //this.setStatus(0);
+        this.status = 0;
     }
 
     /**
      * setAvailable() sets the status of the book to available, so that others can borrow it
      */
     public void setAvailable(){
-        // TODO: implement logic
-        this.setStatus(1);
+        //this.setStatus(1);
+        this.status = 1;
     }
 
     /**
@@ -194,9 +199,6 @@ public class Book implements Parcelable{
             return true;
         }
         return false;
-
-        // TODO: implement logic
-
     }
 
 
@@ -212,6 +214,22 @@ public class Book implements Parcelable{
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public ArrayList<String> getGalleryImages() {
+        return galleryImages;
+    }
+
+    public void setGalleryImages(ArrayList<String> galleryImages) {
+        this.galleryImages = galleryImages;
+    }
+
+    public void addImage(String image) {
+        this.galleryImages.add(image);
+    }
+
+    public void removeImage(int position) {
+        this.galleryImages.remove(position);
     }
 
     @Override

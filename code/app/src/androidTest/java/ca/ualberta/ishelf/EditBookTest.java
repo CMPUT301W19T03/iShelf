@@ -31,19 +31,55 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
+/**
+ *
+ * Send in either:
+ *                  key: "Book" - a Book object
+ *
+ * .
+ *
+ *This is the Intent test for the EditBookActivity
+ *
+ *
+ * @author: Mehrab
+ */
+
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class EditBookTest {
+    @Rule
+    public ActivityTestRule<EditBookActivity> EditBookActivityActivityTestRule =
+            new ActivityTestRule<EditBookActivity>(EditBookActivity.class, false, false);
 
-    public ActivityTestRule<EditBookActivity> BookProfileActivityActivityTestRule =
-            new ActivityTestRule<EditBookActivity>(EditBookActivity.class){
-                @Override
-                protected Intent getActivityIntent() {
-                    Intent intent = new Intent(InstrumentationRegistry.getContext(),EditBookActivity.class);
-                    intent.putExtra("Key","Value");
-                    return intent;
-                }
-            };
 
+
+    @Test
+    public void EditBook() throws Exception{
+
+        Intent intent= new Intent();
+
+        EditBookActivityActivityTestRule.launchActivity(intent);
+
+        onView(withId(R.id.editTitle)).perform(clearText(),typeText("HP"));
+        onView(withId(R.id.editTitle)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.editAuthor)).perform(clearText(),typeText("Mehrab"));
+        onView(withId(R.id.editAuthor)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.editISBN)).perform(clearText(),typeText("123454"));
+        onView(withId(R.id.editISBN)).check(matches(isDisplayed()));
+
+
+        onView(withId(R.id.editYear)).perform(clearText(),typeText("1998"));
+        onView(withId(R.id.editYear)).check(matches(isDisplayed()));
+//
+        onView(withId(R.id.editGenre)).perform(clearText(),typeText("Fantasy"));
+        onView(withId(R.id.editGenre)).check(matches(isDisplayed()));
+
+        onView(withId(R.id.editDes)).perform(clearText(),typeText("kdasdkjaldask"));
+        onView(withId(R.id.editDes)).check(matches(isDisplayed()));
+
+    }
 
 }

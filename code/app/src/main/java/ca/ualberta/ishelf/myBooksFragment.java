@@ -42,14 +42,22 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  *
+ * US 01.04.01
+ * As an owner, I want to view a list of all my books, and their descriptions, statuses, and current borrowers.
+ * the owner wants to see their book library
+ * US 01.05.01
+ * As an owner, I want to view a list of all my books, filtered by status.
+ * the owner wants to have a filter view of his books
+ *
+ * This activity shows the books you own, they can be filtered by status. You can click the book to get all of its details
+ * view it, edit it and delete it. You can add new book to the list by pressing the floating add button
+ *
  * @author Evan
  * @edited rmnattas
  */
 public class myBooksFragment extends Fragment {
     //    https://stackoverflow.com/questions/44777605/android-studio-how-to-add-filter-on-a-recyclerview-and-how-to-implement-it
     private static final String TAG = "MyBooksFragment";
-    //String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
-    //vars
 
     // no need for a bunch of list each has object,name,img lists @rmnattas
     private  ArrayList<Book> myOwnedBooks = new ArrayList<>();
@@ -136,7 +144,7 @@ public class myBooksFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
+//                Log.d("jUser", jUser);
                 if (jUser != null) {
                     // Get user object from Gson
                     Gson gson = new Gson();
@@ -300,21 +308,8 @@ public class myBooksFragment extends Fragment {
 
 
 // commented code by @rmnattas
+//deleted a bunch of comments i dont think we'll need @Evan
 /*
-
-    private ArrayList<String> myBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
-    private ArrayList<String> myBookImage = new ArrayList<>();
-    private ArrayList<String> borrowBooksName = new ArrayList<>();
-    private ArrayList<String> borrowBooksImage = new ArrayList<>();//Should be a image string
-    private ArrayList<String> requestedBooksName = new ArrayList<>();
-    private ArrayList<String> requestedBooksImage = new ArrayList<>();
-    private  ArrayList<Book> myOwnedBooks = new ArrayList<>();
-    private  ArrayList<Book> myBorrowBooks = new ArrayList<>();
-    private  ArrayList<Book> myRequestedBooks = new ArrayList<>();
-    private  ArrayList<Book> myBorrowedBooks = new ArrayList<>();
-    private ArrayList<String> myBorrowedBookNames = new ArrayList<>(); // the default, every book for a user will be in myBooks i think
-    private ArrayList<Image> myBorrowedBookImage = new ArrayList<>();
-
     private void enteredAlert(String msg) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
         alertDialogBuilder.setMessage((CharSequence) msg);
@@ -326,39 +321,6 @@ public class myBooksFragment extends Fragment {
         });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-    }
-
-    private void initDummy(){
-        Log.d(TAG, "init works");
-
-        Book book = new Book("Havana oh na-na", "Description", 1234L, "Year", "Genre", "author", false);
-
-        myBookImage.add("https://i.redd.it/qn7f9oqu7o501.jpg");
-        myBookNames.add("Havana oh na-na");
-        myOwnedBooks.add(book);
-
-
-
-        Book book1 = new Book("Oh, but my heart is in Havana", "Description", 1234L, "Year", "Genre", "author", false);
-        myBookImage.add("https://i.redd.it/j6myfqglup501.jpg");
-        myBookNames.add("Oh, but my heart is in Havana");
-        book1.setOwner("abcdef");
-        myOwnedBooks.add(book1);
-
-        Book book2= new Book("There's somethin' 'bout his manners", "Description", 1234L, "Year", "Genre", "author", false);
-        myBookImage.add("https://i.redd.it/0h2gm1ix6p501.jpg");
-        myBookNames.add("There's somethin' 'bout his manners");
-        myOwnedBooks.add(book2);
-        //myAdapter.updateData();   -- need to work on adding objects and not just strings, i just used strings to test - Evan
-
-        initRecyclerView(myBookNames, myBookImage,myOwnedBooks, this.getContext());
-    }
-
-    public void BorrowBook(Book book){
-        book.setBorrowedBook(true);
-        myBorrowedBookImage.add(book.getPhoto());
-        myBorrowedBookNames.add(book.getName());
-        myBorrowBooks.add(book);
     }
 
     private void initRecyclerView(ArrayList<Book> list, Context context){
