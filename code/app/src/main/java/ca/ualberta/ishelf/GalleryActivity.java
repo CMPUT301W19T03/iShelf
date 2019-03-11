@@ -92,7 +92,6 @@ public class GalleryActivity extends AppCompatActivity {
                 Bitmap addedImage = BitmapFactory.decodeStream(inputStream);
                 addedImage = Bitmap.createScaledBitmap(addedImage, 320, 320, true);
                 imageList.add(addedImage);
-
                 Database db = new Database(this);
                 db.connect(this);
                 passedBook.addImage(BitMapToString(addedImage));
@@ -105,7 +104,11 @@ public class GalleryActivity extends AppCompatActivity {
 
         if (requestCode == DELETE_IMAGE && resultCode == Activity.RESULT_OK) {
             int position = data.getIntExtra("position", -1 );
+            Database db = new Database(this);
+            db.connect(this);
+            passedBook.removeImage(position);
             imageList.remove(position);
+            db.editBook(passedBook);
             galleryAdapter.notifyItemRemoved(position);
             galleryAdapter.notifyItemRangeChanged(position, imageList.size());
         }

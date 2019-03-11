@@ -228,6 +228,10 @@ public class Book implements Parcelable{
         this.galleryImages.add(image);
     }
 
+    public void removeImage(int position) {
+        this.galleryImages.remove(position);
+    }
+
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(owner);
