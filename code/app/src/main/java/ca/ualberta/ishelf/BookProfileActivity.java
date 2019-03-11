@@ -292,19 +292,14 @@ public class BookProfileActivity extends AppCompatActivity {
 
         Intent intent2 = new Intent(BookProfileActivity.this, ListOfRequestsActivity.class);
 
-        Request request = new Request();
-        request.setBookId(passedBook.getId());
-        // set requester username
-        //TODO requester shouldn't be the current user
-        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        request.setRequester(currentUsername);
-        // set request time
-        request.setTimeRequested(Calendar.getInstance().getTime());
-
+        String bookID = passedBook.getId().toString();
         // add the request to the book owner listOfRequests
 
 
-        intent2.putExtra("request",request);
+
+
+
+        intent2.putExtra("ID",bookID);
         startActivity(intent2);
         finish();
     }

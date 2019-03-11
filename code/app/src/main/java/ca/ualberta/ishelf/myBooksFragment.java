@@ -54,6 +54,9 @@ import static android.app.Activity.RESULT_OK;
  *
  * @author Evan
  * @edited rmnattas
+ *
+ * -a lot of this code is going to change once i change myAdapter to match the one from borrow books, the tests will change too
+ * -right now the way it's displayed will largely be changed in the next sprint - Evan
  */
 public class myBooksFragment extends Fragment {
     //    https://stackoverflow.com/questions/44777605/android-studio-how-to-add-filter-on-a-recyclerview-and-how-to-implement-it
@@ -154,7 +157,7 @@ public class myBooksFragment extends Fragment {
                     //get owned and borrowed books
                     getBooks(user.getOwnedBooks(), user.getBorrowedBooks());
                 } else {
-                    Log.d("myBookFrag", "11321");
+                    Log.d(TAG, "11321");
                 }
             }
             @Override
@@ -265,7 +268,7 @@ public class myBooksFragment extends Fragment {
      * @param requestCode
      * @param resultCode
      * @param data
-     * @author Evan/Mehrab ?
+     * @author Evan/Mehrab
      * @edited rmnattas
      */
     @Override

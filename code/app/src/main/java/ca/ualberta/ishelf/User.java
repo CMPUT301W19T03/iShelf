@@ -6,6 +6,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 /**
+ * @author Evan
  * deleted "state" and rearranged some code, need to get ratings working - Evan
  */
 public class User implements Serializable {
@@ -17,7 +18,7 @@ public class User implements Serializable {
     private ArrayList<Request> listofRequests = new ArrayList<>();
     private String phoneNum;
     private String email;
-    private String TAG = "User";
+    private static final String TAG = "User";
 
     public  User(){}
 
@@ -94,6 +95,7 @@ public class User implements Serializable {
      * delete the book UUID from the list of user owned books
      * @param bookId
      * @author rmnattas
+     * @edited Evan
      */
     public void addOwnedBook(UUID bookId){
         ownedBooks.add(bookId);

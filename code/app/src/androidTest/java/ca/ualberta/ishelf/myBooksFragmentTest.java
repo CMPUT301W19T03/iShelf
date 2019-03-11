@@ -19,6 +19,7 @@ import static org.junit.Assert.assertEquals;
 
 /**
  * @author Evan
+ * ignore this test, myBooksFragment is going ot be changed to match the borrowBooks view that Faisal made so this intent test should match his intent test
  */
 @RunWith(AndroidJUnit4.class)
 

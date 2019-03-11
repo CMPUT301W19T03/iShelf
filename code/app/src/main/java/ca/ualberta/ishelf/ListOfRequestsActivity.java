@@ -71,16 +71,31 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         Firebase.setAndroidContext(this);
         ref = new Firebase(link);
 
+
+        /* Activity should be called in this format
+        Intent myIntent = new Intent(MainActivity.this, addMeasurementActivity.class);
+        myIntent.putExtra("myBookId", bookId);
+        startActivity(myIntent);
+         */
+
         Intent intent = getIntent();
-        Request request  = intent.getParcelableExtra("request");
-        //String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
-        bookId = request.getBookId();
+        String bookID  = intent.getStringExtra("ID");
+
+
+        //TODO replace with actual code
+//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+
+
+        bookId = UUID.fromString(bookID);
 
 
 
-        //username = request.getRequester();
-        //SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-        //editor.putString("username", "testUsername").apply();
+        // Add testUsername, since we should be signed in from here
+        //TODO remove forced sharedPreference editing
+//        username = "testUsername";
+
+//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+//        editor.putString("username", "testUsername").apply();
 
         // Get the current user's username from shared preferences
         username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
@@ -221,7 +236,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jUser = dataSnapshot.getValue(String.class);
-                //Log.d("jUser", jUser);
+                Log.d("jUser", jUser);
                 if (jUser != null) {
                     // Get user object from Gson
                     Gson gson = new Gson();
@@ -258,7 +273,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                 Log.d(TAG+"in onDataChange", "Entered in data change");
                 for (Request request : user.getListofRequests()) {
                     // If the request is not for the current book, don't add to array
-                    if (!request.getBookId().equals(bookId)) {
+                    if (request.getBookId() != bookId) {
                         continue;
                     }
                     mNames.add(request.getRequester());
