@@ -43,7 +43,13 @@ import java.util.UUID;
  *
  * This activity allows the user to delete the book
  *
+ *US 01.03.01
+ * As an owner or borrower, I want a book to have a status of one of: available, requested, accepted, or borrowed.
+ * the user wants to see if books are available and its current status
  *
+ * US 01.02.01
+ * As an owner, I want the book description by scanning it off the book (at least the ISBN).
+ * the owner wants to be able to easily add his new books(Not done yet)
  *
  *
  *
@@ -64,40 +70,40 @@ public class BookProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
 
-        // get the book object passed by intent
-        Intent intent = getIntent();
-        passedBook = intent.getParcelableExtra("Book Data");
-        Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
-
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle extras = new Bundle();
-                extras.putParcelable("sent_book", passedBook);
                 Intent intent = new Intent(view.getContext(), GalleryActivity.class);
-                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
+
+        // get the book object passed by intent
+        Intent intent = getIntent();
+        passedBook = intent.getParcelableExtra("Book Data");
+        Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
 
 
-        if(canEdit || isOwner){
+        if(canEdit){
             // show the edit and delete book buttons
             Button delButton = findViewById(R.id.del);
             Button editButton = findViewById(R.id.edit);
+            Button reqButton = findViewById(R.id.req);
+
             delButton.setVisibility(View.VISIBLE);
             editButton.setVisibility(View.VISIBLE);
+            reqButton.setVisibility(View.VISIBLE);
         }
 
         if (!isOwner && !passedBook.checkBorrowed()){
-            Button requestButton = findViewById(R.id.req);
-            requestButton.setVisibility(View.VISIBLE);
+            Button bkingButton = findViewById(R.id.bking);
+            bkingButton.setVisibility(View.VISIBLE);
         }
 
 
@@ -206,6 +212,11 @@ public class BookProfileActivity extends AppCompatActivity {
         finish();
 
     }
+
+    public void request(View v){
+
+
+    }
     //goes back to myBookFragment, sending with it the position of the book that needs to be
     //deleted
     public  void delete(View view){
@@ -274,6 +285,28 @@ public class BookProfileActivity extends AppCompatActivity {
      */
     public void requestClicked(View v){
         // set a request object
+
+
+        Intent intent2 = new Intent(BookProfileActivity.this, ListOfRequestsActivity.class);
+
+        Request request = new Request();
+        request.setBookId(passedBook.getId());
+        // set requester username
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        request.setRequester(currentUsername);
+        // set request time
+        request.setTimeRequested(Calendar.getInstance().getTime());
+
+        // add the request to the book owner listOfRequests
+
+
+        intent2.putExtra("request",request);
+        startActivity(intent2);
+        finish();
+    }
+
+    public void Booking(View v){
+
         Request request = new Request();
         request.setBookId(passedBook.getId());
         // set requester username
@@ -289,6 +322,7 @@ public class BookProfileActivity extends AppCompatActivity {
                 "Book Requested",
                 Toast.LENGTH_LONG);
         toast.show();
+
     }
 
 }
