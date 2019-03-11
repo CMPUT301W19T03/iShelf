@@ -64,20 +64,23 @@ public class BookProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
 
+        // get the book object passed by intent
+        Intent intent = getIntent();
+        passedBook = intent.getParcelableExtra("Book Data");
+        Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
+
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle extras = new Bundle();
+                extras.putParcelable("sent_book", passedBook);
                 Intent intent = new Intent(view.getContext(), GalleryActivity.class);
+                intent.putExtras(extras);
                 startActivity(intent);
             }
         });
-
-        // get the book object passed by intent
-        Intent intent = getIntent();
-        passedBook = intent.getParcelableExtra("Book Data");
-        Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
