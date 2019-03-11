@@ -3,6 +3,9 @@ package ca.ualberta.ishelf;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * display notifications
+ */
 public class Notification {
     private Date date;
     private String text;

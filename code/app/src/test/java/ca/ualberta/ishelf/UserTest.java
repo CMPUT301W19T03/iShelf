@@ -5,11 +5,13 @@ import org.junit.Assert;
 import java.util.UUID;
 
 import static org.junit.Assert.*;
+/**
+ * changed tests to match altered user
+ * @author Evan
+ *
+ */
 public class UserTest {
-    /**
-     * @author Evan
-     * changed tests to match altered user
-     */
+
     @Test
     public void addOwnedBookTest() {
         User Evan = new User();

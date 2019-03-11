@@ -6,8 +6,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 /**
- * @author Evan
  * deleted "state" and rearranged some code, need to get ratings working - Evan
+ * @author Evan
+ *
  */
 public class User implements Serializable {
     private String username;

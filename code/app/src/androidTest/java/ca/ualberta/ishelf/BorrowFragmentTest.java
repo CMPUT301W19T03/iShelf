@@ -56,8 +56,9 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 /**
- * @author Evan
+ *
  * tests borrow fragment
+ * @author Evan
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest
