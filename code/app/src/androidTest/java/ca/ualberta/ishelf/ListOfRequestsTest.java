@@ -28,6 +28,18 @@ import androidx.test.rule.ActivityTestRule;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentation;
+/**
+ *
+ * Send in either:
+ *                  key: "Book" - a Book object
+ *
+ * .
+ *
+ *This is the Intent test for the ListofRequestsActivity
+ *
+ *
+ * @author: Randal
+ */
 
 
 @RunWith(androidx.test.runner.AndroidJUnit4.class)

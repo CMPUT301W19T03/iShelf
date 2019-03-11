@@ -26,7 +26,7 @@ import java.util.Calendar;
 import java.util.UUID;
 
 /**
- * ViewProfileActivity
+ * BookProfileActivity
  * Send in either:
  *                  key: "Book" - a Book object
  *

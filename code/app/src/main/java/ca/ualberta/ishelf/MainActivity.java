@@ -33,7 +33,11 @@ import java.util.UUID;
 /**
  * MainActivity
  *
- * - mehrab edit
+ * This activity directs to the sign in activity when called
+ * holds the navigations that goes to the different fragments
+ * Holds the app bar which directs to different functionalities
+ *
+ * @author : Mehrab
  */
 
 public class MainActivity extends AppCompatActivity {

@@ -30,6 +30,19 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
+/**
+ *
+ * Send in either:
+ *                  key: "Book" - a Book object
+ *
+ * .
+ *
+ *This is the Intent test for the BookProfileActivity
+ *
+ *
+ * @author: Mehrab
+ */
+
 @RunWith(AndroidJUnit4.class)
 @LargeTest
 public class BookProfileTest {
