@@ -15,10 +15,9 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 /*
-THis is the adapter for the List of requests recycler view
-
+* This is the adapter for the ,ist of requests for the recycler view
+* @author : Randal
  */
-
 public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.ViewHolder>{
     private static final String TAG = "LORRecyclerViewAdapter";
     // Array holding request information (User wants to borrow this book)
