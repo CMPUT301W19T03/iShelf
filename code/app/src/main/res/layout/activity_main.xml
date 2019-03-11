@@ -15,7 +15,6 @@
         ></include>
 
 
-
     <android.support.constraint.ConstraintLayout
         android:id="@+id/recycler_fragment"
         android:layout_width="match_parent"
