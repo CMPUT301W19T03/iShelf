@@ -6,6 +6,7 @@
 package ca.ualberta.ishelf;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -72,13 +73,19 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         myIntent.putExtra("myBookId", bookId);
         startActivity(myIntent);
          */
+
+        Intent intent = getIntent();
+       Request request  = intent.getParcelableExtra("request");
         //TODO replace with actual code
-        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
-        UUID bookId = UUID.fromString(stringBookId);
+//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+        UUID bookId = request.getBookId();
+
+
 
         // Add testUsername, since we should be signed in from here
         //TODO remove forced sharedPreference editing
-        username = "testUsername";
+//        username = "testUsername";
+        username = request.getRequester();
         SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
         editor.putString("username", "testUsername").apply();
 
