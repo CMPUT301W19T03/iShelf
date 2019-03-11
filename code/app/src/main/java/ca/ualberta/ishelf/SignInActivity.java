@@ -120,7 +120,10 @@ public class SignInActivity extends AppCompatActivity {
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
-
+                Toast toast = Toast.makeText(getApplicationContext(),
+                        "No internet connection!!!",
+                        Toast.LENGTH_LONG);
+                toast.show();
             }
         });
     }
