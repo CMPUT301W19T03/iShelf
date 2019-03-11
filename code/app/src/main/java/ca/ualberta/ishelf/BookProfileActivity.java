@@ -295,6 +295,7 @@ public class BookProfileActivity extends AppCompatActivity {
         Request request = new Request();
         request.setBookId(passedBook.getId());
         // set requester username
+        //TODO requester shouldn't be the current user
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         request.setRequester(currentUsername);
         // set request time
