@@ -6,6 +6,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.UUID;
 
+/**
+ * @author Evan
+ * book unit test
+ */
 public class BookTest {
 
     // Tests for the Getters and Setters
