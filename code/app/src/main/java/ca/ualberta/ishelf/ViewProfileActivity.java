@@ -145,7 +145,6 @@ public class ViewProfileActivity extends AppCompatActivity {
         } else {
             Log.d(TAG, "onCreate: NOTHING PASSED IN");
             // When nothing is passed in
-            // TODO: show the logged in user's info?
         }
 
         if (currentUsername.equals(username)){
@@ -163,6 +162,10 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * This function is called when the Edit button is pressed
+     * @param v
+     */
     public void EditProfile(View v){
         // when "Edit" button is clicked - "Edit" button is only viewable for the logged-in user
         // nothing needs to be sent in, since we are editing the logged-in user
