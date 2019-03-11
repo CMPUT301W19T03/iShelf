@@ -1,3 +1,9 @@
+/**
+ * LORRecyclerViewAdapter
+ * Version 1
+ * March 10, 2019
+ * @author : Randal Kimpinski
+ */
 package ca.ualberta.ishelf;
 
 import android.content.Context;
@@ -14,9 +20,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-/*
-* This is the adapter for the ,ist of requests for the recycler view
-* @author : Randal
+/**
+* This is the adapter for the List of requests for the recycler view
+ * @author : Randal Kimpinski
  */
 public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.ViewHolder>{
     private static final String TAG = "LORRecyclerViewAdapter";
@@ -29,6 +35,15 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
     // potentially add new array list here
     private Context mContext;
 
+    /**
+     * Assigns the arrays that we pass in to variables so that they can
+     * later be assigned to their appropriate views
+     * @param context
+     * @param imageNames
+     * @param myRatings
+     * @param bookNames
+     * @author : Randal Kimpinski
+     */
     public LORRecyclerViewAdapter(Context context, ArrayList<String> imageNames,
                                   ArrayList<Float> myRatings, ArrayList<String> bookNames) {
         mContext = context;
@@ -42,6 +57,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
      * @param parent
      * @param i
      * @return
+     * @author : Randal Kimpinski
      */
     @NonNull
     @Override
@@ -59,6 +75,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
      * rating bar and a textView
      * @param holder
      * @param position
+     * @author : Randal Kimpinski
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
@@ -72,6 +89,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
 
         /**
          * This is called when anywhere in the recyclerView item is pressed
+         * @author : Randal Kimpinski
          */
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -82,6 +100,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         });
         /**
          * This is called when the accept button is pressed
+         * @author : Randal Kimpinski
          */
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +111,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         });
         /**
          * This is called when the decline button is pressed
+         * @author : Randal Kimpinski
          */
         holder.declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -106,6 +126,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
     /**
      * How we decide how long the recyclerView is
      * @return
+     * @author : Randal Kimpinski
      */
     @Override
     public int getItemCount() {
@@ -113,6 +134,11 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         return mImageNames.size();
     }
 
+    /**
+     * This viewholder is for each individual entry in our recycler view
+     * Must contain all the appropriate view items
+     * @author : Randal Kimpinski
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
         TextView testText;
         TextView bookName;
@@ -122,6 +148,11 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         ConstraintLayout parentLayout;
         //RelativeLayout parentLayout;
 
+        /**
+         * sets the variables in our viewholder to the appropriate view items
+         * @param itemView
+         * @author : Randal Kimpinski
+         */
         public ViewHolder(View itemView) {
             super(itemView);
             testText = itemView.findViewById(R.id.textView);

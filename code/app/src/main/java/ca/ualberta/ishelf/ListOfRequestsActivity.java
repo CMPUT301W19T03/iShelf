@@ -2,6 +2,7 @@
  * ListOfRequestsActivity
  * Version 1
  * March 10, 2019
+ * @author : Randal Kimpinski
  */
 package ca.ualberta.ishelf;
 
@@ -61,6 +62,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * current User's username. It also queries Firebase to take the requests under User
      * and get the additional information we need (bookNames, Requester rating)
      * @param savedInstanceState
+     * @author : Randal Kimpinski
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,6 +162,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * Initialize the recycler view
      * This is when all the entries are set to their appropriate values
      * This method is called again later to simplify updating the data
+     * @author : Randal Kimpinski
      */
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
@@ -175,6 +178,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * This function updates the display, updates the users requests,
      * and creates the appropriate notification
      * @param position
+     * @author : Randal Kimpinski
      */
     void acceptRequest(int position){
         Log.d(TAG+" acceptRequest", "Called with " + position);
@@ -184,7 +188,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
+        mBookNames.remove(position);
         safeNotify();
+        initRecyclerView();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has accepted your request", "username");
@@ -201,6 +207,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * This function updates the display, updates the users requests,
      * and creates the appropriate notification
      * @param position
+     * @author : Randal Kimpinski
      */
     void declineRequest(int position){
         Log.d(TAG+" declineRequest", "Called with " + position);
@@ -210,7 +217,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
+        mBookNames.remove(position);
         safeNotify();
+        initRecyclerView();
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
                 user.getUsername() + " has declined your request", "username");
@@ -226,6 +235,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * From there, make calls to getReqeusterRating and getBookNames
      * We have to make these calls within onDataChange to avoid threading errors
      * Since they depend on us having a User object that isn't null
+     * @author : Randal Kimpinski
      */
     private void getUser() {
         Log.d(TAG+" getUser", "get user has been called");
@@ -264,6 +274,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * Get the information associated and required for each of our requests
      * This information is the rating of the requester, aswell as the
      * name of the book
+     * @author : Randal Kimpinski
      */
     private void getRequestInformation2() {
         Log.d(TAG+" getRequestInformation2", "getReqeustInformation2 has been called");
@@ -320,6 +331,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     /**
      * Depreciated version of getRequestInformation
      * This version has replaced with one that better syncs up our arrays
+     * @deprecated
+     * @author : Randal Kimpinski
      */
     private void getRequestInformation(){
         for (Request request: user.getListofRequests()) {
@@ -378,6 +391,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     /**
      * Try to update the adapter's data
      * If our adapter is null, instead of crashing, we just print a Log message
+     * @author : Randal Kimpinski
      */
     private void safeNotify() {
         if (adapter != null) {
@@ -394,6 +408,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * Also prints extensive error messages detailing the current state of all the
      * relevent information. This is because there were many errors getting to this point
      * @param view
+     * @author : Randal Kimpinski
      */
     public void safeNotify(View view) {
         initRecyclerView();
