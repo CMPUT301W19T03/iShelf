@@ -34,9 +34,12 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         mBookNames = bookNames;
     }
 
-
-
-    // Inflates the view
+    /**
+     * Inflates the view so that we can display our recyclerView
+     * @param parent
+     * @param i
+     * @return
+     */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
@@ -46,6 +49,14 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
     }
 
     // Changes based on layouts and what we want them to look like
+
+    /**
+     * We define the functions that are called when the buttons are pressed in
+     * our recycler view. We have the accept and decline button, aswell as a
+     * rating bar and a textView
+     * @param holder
+     * @param position
+     */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final int fposition = position;
@@ -56,6 +67,9 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         holder.bRating.setRating(bRatings.get(position));
 
 
+        /**
+         * This is called when anywhere in the recyclerView item is pressed
+         */
         holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -63,6 +77,9 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
                 Toast.makeText(mContext, mImageNames.get(fposition), Toast.LENGTH_SHORT).show();
             }
         });
+        /**
+         * This is called when the accept button is pressed
+         */
         holder.acceptButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -70,6 +87,9 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
                 ((ListOfRequestsActivity) mContext).acceptRequest(fposition);
             }
         });
+        /**
+         * This is called when the decline button is pressed
+         */
         holder.declineButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -80,6 +100,10 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         // I think I need to add the button stuff here
     }
 
+    /**
+     * How we decide how long the recyclerView is
+     * @return
+     */
     @Override
     public int getItemCount() {
         // necassary to actually display items
