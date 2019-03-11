@@ -28,6 +28,7 @@ public class Book implements Parcelable{
     private String author;
 
     public  Book(){
+        this.status = 1;
         this.id = UUID.randomUUID();
     }
 
@@ -147,6 +148,10 @@ public class Book implements Parcelable{
         return status;
     }
 
+    /**
+     * @deprecated
+     * use setBorrowed() or setAvailable() instead
+     */
     public void setStatus(int status) {
         this.status = status;
     }
@@ -174,16 +179,16 @@ public class Book implements Parcelable{
      * setBorrowed() sets the status of the book to borrowed, so that others can't borrow it
      */
     public void setBorrowed(){
-        // TODO: implement logic
-        this.setStatus(0);
+        //this.setStatus(0);
+        this.status = 0;
     }
 
     /**
      * setAvailable() sets the status of the book to available, so that others can borrow it
      */
     public void setAvailable(){
-        // TODO: implement logic
-        this.setStatus(1);
+        //this.setStatus(1);
+        this.status = 1;
     }
 
     /**
@@ -194,9 +199,6 @@ public class Book implements Parcelable{
             return true;
         }
         return false;
-
-        // TODO: implement logic
-
     }
 
 
