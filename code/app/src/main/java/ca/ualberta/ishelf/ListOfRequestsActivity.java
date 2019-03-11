@@ -273,7 +273,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                 Log.d(TAG+"in onDataChange", "Entered in data change");
                 for (Request request : user.getListofRequests()) {
                     // If the request is not for the current book, don't add to array
-                    if (request.getBookId() != bookId) {
+                    if (!request.getBookId().equals(bookId)) {
                         continue;
                     }
                     mNames.add(request.getRequester());
