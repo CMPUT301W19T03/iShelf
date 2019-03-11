@@ -28,6 +28,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+/*
+This is the adapter for the recycler view in the BorrowFragment
+
+ */
 
 class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
     private ArrayList<Book> filterList = new ArrayList<Book>();
@@ -72,6 +76,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                     Intent intent = new Intent((Activity) bookContext, BookProfileActivity.class);
                     Book book = filterList.get(position);
                     intent.putExtra("Book Data", book);
+
                     Activity bookActivity = (Activity) bookContext;
                     bookActivity.startActivity(intent);
                 }

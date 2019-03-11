@@ -27,7 +27,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 /**
- * ViewProfileActivity
+ * EditBookActivity
  * Send in either:
  *                  key: "Book" - a Book object
  *

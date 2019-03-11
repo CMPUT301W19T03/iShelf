@@ -22,13 +22,22 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+
 import java.util.UUID;
 
 
 /**
  * MainActivity
  *
- * - mehrab edit
+ * This activity directs to the sign in activity when called
+ * holds the navigations that goes to the different fragments
+ * Holds the app bar which directs to different functionalities
+ *
+ * @author : Mehrab
  */
 
 public class MainActivity extends AppCompatActivity {
@@ -222,11 +231,49 @@ public class MainActivity extends AppCompatActivity {
 //        editor.putString("username", null).apply();
 
         // Check if logged-in
-        String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        final String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         if (username == null) {     // user is not logged-in
             Intent intent = new Intent(this, SignInActivity.class);
             startActivityForResult(intent, 1);
+        } else {
+            // connect to firebase
+            final Database db = new Database(this);
+            final Firebase ref = db.connect(this);
+
+            Firebase tempRef = ref.child("Users");
+            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    Boolean found = false;  // true if user found in firebase
+
+                    // look for user in firebase
+                    for (DataSnapshot d : dataSnapshot.getChildren()) {
+                        if (d.getKey().equals(username)) {    // user found
+                            Log.d("User", "User found");
+
+                            found = true;
+                            break;
+
+                        }
+                    }
+
+                    if (!found) {
+                        // logged in user not in firebase, clear user prefrences and go to signInActivity
+                        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+                        editor.putString("username", null).apply();
+                        Intent intent = new Intent(getBaseContext(), SignInActivity.class);
+                        startActivityForResult(intent, 1);
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(FirebaseError firebaseError) {
+
+                }
+            });
         }
+
     }
 
 

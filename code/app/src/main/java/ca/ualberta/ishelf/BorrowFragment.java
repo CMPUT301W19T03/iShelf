@@ -41,7 +41,25 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-
+/**
+ * BorrowFragment
+ * Send in either:
+ *                  key: "Book" - a Book object
+ * US 03.01.01
+ * As a borrower, I want to specify a set of keywords, and search for all books that are not currently accepted or borrowed whose description contains all the keywords.
+ * needs to be able to search by genre or keyword according to user tastes
+ *
+ *
+ * US 03.02.01
+ * As a borrower, I want search results to show each book not currently accepted or borrowed with its description, owner username, and status.
+ * screen should show a list of all currently available books to browse from
+ *
+ * This shows all the books that you can borrow,
+ * This activity loads all available dbooks from firebase
+ *
+ *
+ * @author: Faisal
+ */
 public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private ArrayList<Book> bookList = new ArrayList<Book>();
 
@@ -85,11 +103,10 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             @Override
             public boolean onQueryTextChange(String text) {
-                ((BorrowAdapter) bookAdapter).getFilter().filter(text);
+                bookAdapter.getFilter().filter(text);
                 return true;
             }
         });
-
 
         return view;
     }

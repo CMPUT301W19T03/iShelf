@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -21,10 +22,11 @@ import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.util.Calendar;
 import java.util.UUID;
 
 /**
- * ViewProfileActivity
+ * BookProfileActivity
  * Send in either:
  *                  key: "Book" - a Book object
  *
@@ -41,7 +43,13 @@ import java.util.UUID;
  *
  * This activity allows the user to delete the book
  *
+ *US 01.03.01
+ * As an owner or borrower, I want a book to have a status of one of: available, requested, accepted, or borrowed.
+ * the user wants to see if books are available and its current status
  *
+ * US 01.02.01
+ * As an owner, I want the book description by scanning it off the book (at least the ISBN).
+ * the owner wants to be able to easily add his new books(Not done yet)
  *
  *
  *
@@ -54,10 +62,26 @@ public class BookProfileActivity extends AppCompatActivity {
     private Book passedBook = null;
     final String TAG = "BookProfileActivity";
 
+    // to see a gallery of books
+    private Button galleryButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
+
+        galleryButton = (Button) findViewById(R.id.gallery_button);
+
+        galleryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle extras = new Bundle();
+                extras.putParcelable("sent_book", passedBook);
+                Intent intent = new Intent(view.getContext(), GalleryActivity.class);
+                intent.putExtras(extras);
+                startActivity(intent);
+            }
+        });
 
         // get the book object passed by intent
         Intent intent = getIntent();
@@ -69,13 +93,22 @@ public class BookProfileActivity extends AppCompatActivity {
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
 
 
-        if(canEdit || isOwner){
+        if(canEdit){
             // show the edit and delete book buttons
             Button delButton = findViewById(R.id.del);
             Button editButton = findViewById(R.id.edit);
+            Button reqButton = findViewById(R.id.req);
+
             delButton.setVisibility(View.VISIBLE);
             editButton.setVisibility(View.VISIBLE);
+            reqButton.setVisibility(View.VISIBLE);
         }
+
+        if (!isOwner && !passedBook.checkBorrowed()){
+            Button bkingButton = findViewById(R.id.bking);
+            bkingButton.setVisibility(View.VISIBLE);
+        }
+
 
         //gets all the elements in the object
         String title = passedBook.getName();
@@ -182,6 +215,11 @@ public class BookProfileActivity extends AppCompatActivity {
         finish();
 
     }
+
+    public void request(View v){
+
+
+    }
     //goes back to myBookFragment, sending with it the position of the book that needs to be
     //deleted
     public  void delete(View view){
@@ -242,4 +280,48 @@ public class BookProfileActivity extends AppCompatActivity {
         newIntent.putExtra("Username", data.getOwner());
         startActivity(newIntent);
     }
+
+    /**
+     * called when the request button is clicked
+     * @param v
+     * @author rmnattas
+     */
+    public void requestClicked(View v){
+        // set a request object
+
+
+        Intent intent2 = new Intent(BookProfileActivity.this, ListOfRequestsActivity.class);
+
+        String bookID = passedBook.getId().toString();
+        // add the request to the book owner listOfRequests
+
+
+
+
+
+        intent2.putExtra("ID",bookID);
+        startActivity(intent2);
+        finish();
+    }
+
+    public void Booking(View v){
+
+        Request request = new Request();
+        request.setBookId(passedBook.getId());
+        // set requester username
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        request.setRequester(currentUsername);
+        // set request time
+        request.setTimeRequested(Calendar.getInstance().getTime());
+
+        // add the request to the book owner listOfRequests
+        Database db = new Database(this);
+        db.addRequest(passedBook.getOwner(), request);
+        Toast toast = Toast.makeText(getApplicationContext(),
+                "Book Requested",
+                Toast.LENGTH_LONG);
+        toast.show();
+
+    }
+
 }

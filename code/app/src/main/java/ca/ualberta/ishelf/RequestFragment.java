@@ -28,6 +28,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.UUID;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -57,7 +58,7 @@ public class RequestFragment extends Fragment {
     private ArrayList<Request> requestAcceptedList = new ArrayList<Request>();
     private Spinner spinner;
     private RecyclerView requestRecyclerView;
-    private RecyclerView.Adapter requestAdapter;
+    private RequestAdapter requestAdapter;
     private RecyclerView.LayoutManager requestLayoutManager;
 
 
@@ -94,7 +95,7 @@ public class RequestFragment extends Fragment {
         requestRecyclerView = (RecyclerView) getActivity().findViewById((R.id.request_recycler));
         requestLayoutManager = new LinearLayoutManager(this.getContext());
         requestRecyclerView.setLayoutManager(requestLayoutManager);
-        requestAdapter = new RequestAdapter(this.getContext(), requestPendingList);
+        requestAdapter = new RequestAdapter(this.getContext());
         requestRecyclerView.setAdapter(requestAdapter);
 
         // creates a line between each individual record in the list
@@ -102,7 +103,7 @@ public class RequestFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requestRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL);
         requestRecyclerView.addItemDecoration(dividerItemDecoration);
-        createDummy();
+        //createDummy();
 
         getRequests();
 
@@ -113,6 +114,8 @@ public class RequestFragment extends Fragment {
      * get list requests for the logged in user and update list
      */
     public void getRequests(){
+
+        requestPendingList.clear();
 
         // get logged in username
         String username = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -136,10 +139,59 @@ public class RequestFragment extends Fragment {
                     Type tokenType = new TypeToken<User>(){}.getType();
                     User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
                     requestPendingList.addAll(user.getListofRequests());
-                    requestAdapter.notifyDataSetChanged();
+                    getBooks(requestPendingList);
                 } else {
                     Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
                 }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
+    }
+
+    private void getBooks(final ArrayList<Request> requests){
+
+        final ArrayList<Book> requestBooks = new ArrayList<>();
+
+        //connect to firebase
+        Database db = new Database(getContext());
+        Firebase fb = db.connect(getContext());
+        Firebase childRef = fb.child("Books");
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jBook = d.getValue(String.class);
+                    Log.d("jBook", jBook);
+                    if (jBook != null) {
+                        // Get book object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Book>() {}.getType();
+                        Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+                        for (Request r : requests){
+                            if (r.getBookId().equals(book.getId())) {
+                                requestBooks.add(book);
+                                Log.d("j!!!Book", jBook);
+                            }
+                        }
+                    } else {
+                        Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
+                    }
+                }
+
+                assert (requestBooks.size() == requests.size());
+
+                Log.d("j!!!Book", Integer.toString(requestBooks.size()));
+                Log.d("j!!!Book2", Integer.toString(requests.size()));
+
+                requestAdapter.updateList(requests, requestBooks);
+                requestAdapter.notifyDataSetChanged();
+
             }
 
             @Override
@@ -155,13 +207,13 @@ public class RequestFragment extends Fragment {
 //filters between pending and accepted requests as wanted by the US
         if(filter.equals("Pending Requests")) {
 
-            initRecyclerView(requestPendingList, this.getContext());
+            initRecyclerView(this.getContext());
 
 
 
         }else if (filter.equals(("Accepted Requests"))){
 
-            initRecyclerView(requestAcceptedList, this.getContext());
+            initRecyclerView(this.getContext());
              // basically do nothing and go back to main page
 
 
@@ -170,13 +222,11 @@ public class RequestFragment extends Fragment {
     }
     // Recycler view initialization
     //This resets the recycler view to a new ArrayList everytime
-    private void initRecyclerView( ArrayList list, Context context){
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.request_recycler);
-        RequestAdapter adapter = new RequestAdapter( this.getContext(),list); //in the same order as the constructor in MyAdapter
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+    private void initRecyclerView(Context context){
+        Log.d("j!!!init", "initRecyclerView: init recyclerview.");
+
     }
+
     private void enteredAlert(String msg) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
         alertDialogBuilder.setMessage((CharSequence) msg);
@@ -189,25 +239,7 @@ public class RequestFragment extends Fragment {
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
     }
-//test dummy
-    public void createDummy() {
-//        Book testBook = new Book("Book 1", "Description", 1234L, "Year", "Genre", "author", false);
-//        User testRequester = new User("ppl", "1234567", "someone@Email.com");
-//        Rating rating = new Rating(3, "Okay");
-//        testRequester.addRating(rating);
-//        Request request1 = new Request(null, testRequester, testBook);
-//        requestPendingList.add(request1);
-//
-//        Book test1Book = new Book("Book 3", "Description", 1234L, "Year", "Genre", "author", false);
-//        User test1Requester = new User("people", "1234567", "someone@Email.com");
-//        Rating rating1 = new Rating(3, "Okay");
-//        testRequester.addRating(rating1);
-//        Request request2 = new Request(null, test1Requester, test1Book);
-//        requestAcceptedList.add(request2);
 
-
-
-    }
 
 
 }

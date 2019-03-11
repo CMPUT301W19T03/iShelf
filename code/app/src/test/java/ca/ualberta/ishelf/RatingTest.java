@@ -14,21 +14,21 @@ public class RatingTest {
     @Test
     public void setRatingtest(){
         Rating rate = new Rating();
-        rate.setRating(4);
+        rate.setRating((float)4);
 
-        int rate1=4;
+        float rate1=4;
 
-        Assert.assertEquals(rate1,rate.getRating());
+        Assert.assertEquals(rate1,rate.getRating(),0.0002);
 
     }
     @Test
     public void getRatingtest(){
         Rating rate = new Rating();
-        rate.setRating(15);
+        rate.setRating((float)15);
 
-        int rate1=-1;
+        float rate1=-1;
 
-        Assert.assertEquals(rate1,rate.getRating());
+        Assert.assertEquals(rate1,rate.getRating(), 0.0002);
 
     }
 

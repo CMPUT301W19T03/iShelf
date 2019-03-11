@@ -42,6 +42,16 @@ import static android.app.Activity.RESULT_OK;
 
 /**
  *
+ * US 01.04.01
+ * As an owner, I want to view a list of all my books, and their descriptions, statuses, and current borrowers.
+ * the owner wants to see their book library
+ * US 01.05.01
+ * As an owner, I want to view a list of all my books, filtered by status.
+ * the owner wants to have a filter view of his books
+ *
+ * This activity shows the books you own, they can be filtered by status. You can click the book to get all of its details
+ * view it, edit it and delete it. You can add new book to the list by pressing the floating add button
+ *
  * @author Evan
  * @edited rmnattas
  *

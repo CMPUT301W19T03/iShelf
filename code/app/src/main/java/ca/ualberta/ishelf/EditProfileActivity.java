@@ -23,6 +23,17 @@ import java.util.ArrayList;
 /**
  * EditProfileActivity
  *
+ * US 02.02.01 (2)
+ * As an owner or borrower, I want to edit the contact information in my profile.
+ *
+ * Users arrive at this activity either by hitting the Edit Button on their
+ * profile or when they first register for an account
+ *
+ * To indicate that we are signing up for a new account, rather than editing
+ * an existing profile, add "Registering" true boolean extra to the intent
+ *
+ * Updates to the account is saved to Firebase
+ *
  * author: Jeremy
  */
 public class EditProfileActivity extends AppCompatActivity {
@@ -46,17 +57,21 @@ public class EditProfileActivity extends AppCompatActivity {
         editEmail = findViewById(R.id.editEmail);
         editPhone = findViewById(R.id.editPhone);
 
+        // If new registering for new account, set a flag so we know later on when it matters
         if (getIntent().hasExtra("Registering")) {
             registering = getIntent().getExtras().getBoolean("Registering");
         }
 
         if (registering){
+            // Don't retrieve data of the user from Firebase
             Log.d(TAG, "onCreate: Registering");
         } else {
+            // Retrieve data of user from Firebase
             Log.d(TAG, "onCreate: Signed-in User, Retrieving from Firebase");
+
+            // Retrieve the signed in user's username from Shared Preferences
             username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
-            // Retrive the user's info from Firebase
             Firebase.setAndroidContext(this);
             ref = new Firebase(link);
 
@@ -98,8 +113,14 @@ public class EditProfileActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * saveButton is called when the user hits the Save button
+     * Saves the inputted information to Firebase
+     * TODO: ensure all fields are filled out?
+     * @param v
+     */
     public void saveButton(View v){
-        // when the "Save" button gets hit
+        // Retrieve the inputted data
         String newUsername = editName.getText().toString();
         String newEmail = editEmail.getText().toString();
         String newPhone = editPhone.getText().toString();
@@ -115,6 +136,7 @@ public class EditProfileActivity extends AppCompatActivity {
         user.setEmail(newEmail);
         user.setPhoneNum(newPhone);
 
+        // Update the Shared Preferences username stored to reflect a possible change in name
         SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
         editor.putString("username", newUsername).apply();
 
@@ -125,6 +147,7 @@ public class EditProfileActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         } else {
+            // edit user by providing the old username and the new User object
             database.editUser(oldUsername, user);
 
             // add result for viewProfile

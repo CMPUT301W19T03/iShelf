@@ -1,6 +1,12 @@
+/**
+ * ListOfRequestsActivity
+ * Version 1
+ * March 10, 2019
+ */
 package ca.ualberta.ishelf;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,8 +27,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * This class deals with accepting requests that other users have made for one of our books
+ * The book object in question is passed in through the intent.putExtra, and current user is in
+ * Shared Preferences
+ * Everything else is accessed via queries to firebase
+ *
+ * @author : Randal
+ */
 public class ListOfRequestsActivity extends AppCompatActivity {
-    // For debugging
+    // tag For debugging
     private static final String TAG = "ListOfRequestsActivity";
     // List of strings that are displayed in requests
     private ArrayList<String> mNames = new ArrayList<>();
@@ -32,17 +46,22 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private ArrayList<Float> mRatings = new ArrayList<>();
     // Username for current user
     String username;
-    // Array of requests for our users books
-    //ArrayList<Request> userRequests = new ArrayList<Request>();
     // RecyclerView view and adapter
-    RecyclerView recyclerView;
+    public RecyclerView recyclerView;
+    // RecylerView adapter
     LORRecyclerViewAdapter adapter;
-    // firebase reference
-    private final String link = "https://ishelf-bb4e7.firebaseio.com";
-    private Firebase ref;
     User user;
     UUID bookId;
+    // Firebase reference stuff
+    private final String link = "https://ishelf-bb4e7.firebaseio.com";
+    private Firebase ref;
 
+    /**
+     * The onCreate method initializes Firebase, gets the User object associated with the
+     * current User's username. It also queries Firebase to take the requests under User
+     * and get the additional information we need (bookNames, Requester rating)
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,26 +70,35 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Initialize firebase for use
         Firebase.setAndroidContext(this);
         ref = new Firebase(link);
+
+
         /* Activity should be called in this format
         Intent myIntent = new Intent(MainActivity.this, addMeasurementActivity.class);
         myIntent.putExtra("myBookId", bookId);
         startActivity(myIntent);
          */
-        /* So that we can start this activity with
-        Intent myIntent = getIntent();
-        bookId = myIntent.getStringExtra("myPosition", "");
-         */
+
+        Intent intent = getIntent();
+        String bookID  = intent.getStringExtra("ID");
+
+
         //TODO replace with actual code
-        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
-        UUID bookId = UUID.fromString(stringBookId);
+//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+
+
+        bookId = UUID.fromString(bookID);
+
+
 
         // Add testUsername, since we should be signed in from here
         //TODO remove forced sharedPreference editing
-        username = "testUsername";
-        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-        editor.putString("username", "testUsername").apply();
+//        username = "testUsername";
 
-        final String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
+//        editor.putString("username", "testUsername").apply();
+
+        // Get the current user's username from shared preferences
+        username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
         Log.d(TAG+" getUser ", "User is " + username);
 
         // get the reference of RecyclerView
@@ -81,32 +109,27 @@ public class ListOfRequestsActivity extends AppCompatActivity {
 
         // Add simple test entries for the display
         // Add entries to my mNames array
-        mNames.add("Paul");
-       // mNames.add("James");
-       // mNames.add("Danny");
-       // mNames.add("Jessica");
-        mBookNames.add("Moby Dick");
-       // mBookNames.add("I, Robot");
-       // mBookNames.add("In may we soar");
-       // mBookNames.add("Hello, would you like to spend the day together and maybe fall in love");
-        mRatings.add(2f);
-       // mRatings.add(3f);
-       // mRatings.add(5f);
-       // mRatings.add(4f);
+        // mNames.add("Paul");
+        // mNames.add("James");
+        // mNames.add("Danny");
+        // mNames.add("Jessica");
+        // mBookNames.add("Moby Dick");
+        // mBookNames.add("I, Robot");
+        // mBookNames.add("In may we soar");
+        // mBookNames.add("Hello, would you like to spend the day together and maybe fall in love");
+        // mRatings.add(2f);
+        // mRatings.add(3f);
+        // mRatings.add(5f);
+        // mRatings.add(4f);
 
+        // Initialize the recyclerView
         initRecyclerView();
+        // Run the code that gets our user object, and subsequently gets requests
+        // and the relevent information
         getUser();
 
-        /*
-        Request r1 = new Request(UUID.randomUUID(), "james");
-        Request r2 = new Request(UUID.randomUUID(), "jessica");
-        Request r3 = new Request(UUID.randomUUID(), "shun");
-        userRequests.add(r1);
-        userRequests.add(r2);
-        userRequests.add(r3);
-        */
-
         // Add test data to database for use in this activity
+        /*
         User u1 = new User();
         u1.setUsername("testUsername");
         User t1 = new User();
@@ -127,15 +150,16 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         db.addUser(t2);
         db.addBook(b1);
         db.addBook(b2);
+        */
         // Expected output
         // testReq1, 3 stars, book bName1
         // testReq2, 4 stars, book bName1
-
     }
 
     /**
      * Initialize the recycler view
-     * This is when all the entires are set to their appropriate values
+     * This is when all the entries are set to their appropriate values
+     * This method is called again later to simplify updating the data
      */
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
@@ -236,6 +260,11 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Get the information associated and required for each of our requests
+     * This information is the rating of the requester, aswell as the
+     * name of the book
+     */
     private void getRequestInformation2() {
         Log.d(TAG+" getRequestInformation2", "getReqeustInformation2 has been called");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -288,6 +317,10 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Depreciated version of getRequestInformation
+     * This version has replaced with one that better syncs up our arrays
+     */
     private void getRequestInformation(){
         for (Request request: user.getListofRequests()) {
             // Firebase reference to get Users information (requesters)
@@ -342,71 +375,10 @@ public class ListOfRequestsActivity extends AppCompatActivity {
 
     }
 
-    private void getRequesterRatings(){
-        ArrayList<Request> requests = user.getListofRequests();
-        Log.d("size", "Size is " + requests.size());
-        for (int i = 0; i < requests.size(); i++) {
-            // get reference to specific entry
-            Firebase tempRef = ref.child("Users").child(requests.get(i).getRequester());
-            // create a one time use listener to immediately access datasnapshot
-            final int finalI = i;
-            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String jUser = dataSnapshot.getValue(String.class);
-                    Log.d("jUser", jUser);
-                    if (jUser != null) {
-                        // Get user object from Gson
-                        Gson gson = new Gson();
-                        Type tokenType = new TypeToken<User>() { }.getType();
-                        User reqUser = gson.fromJson(jUser, tokenType);
-                        Log.d("Confirm", user.getUsername());
-                        mRatings.set(finalI, reqUser.getOverallRating());
-                        //adapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("FBerror1", "User doesn't exist or string is empty");
-                    }
-                }
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    return;
-                }
-            });
-        }
-    }
-
-    private void getBookNames(){
-        ArrayList<Request> requests = user.getListofRequests();
-        for (int i = 0; i < requests.size(); i++) {
-            // get reference to specific entry
-            Firebase tempRef = ref.child("Books").child(requests.get(i).getBookId().toString());
-            // create a one time use listener to immediately access datasnapshot
-            final int finalI = i;
-            tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String jBook = dataSnapshot.getValue(String.class);
-                    Log.d("jBook", jBook);
-                    if (jBook != null) {
-                        // Get user object from Gson
-                        Gson gson = new Gson();
-                        Type tokenType = new TypeToken<Book>() { }.getType();
-                        Book book = gson.fromJson(jBook, tokenType);
-                        Log.d("Confirm", user.getUsername());
-                        mBookNames.set(finalI, book.getName());
-                        //adapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("FBerror1", "User doesn't exist or string is empty");
-                    }
-                }
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    return;
-                }
-            });
-        }
-    }
-
+    /**
+     * Try to update the adapter's data
+     * If our adapter is null, instead of crashing, we just print a Log message
+     */
     private void safeNotify() {
         if (adapter != null) {
             adapter.notifyDataSetChanged();
@@ -415,14 +387,17 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             Log.d(TAG+" safeNotify", "adapter is null");
         }
     }
+
+    /**
+     * version of safeNotify that is called from the XML onClick() method connector
+     * Calls recycler view to easily update the data
+     * Also prints extensive error messages detailing the current state of all the
+     * relevent information. This is because there were many errors getting to this point
+     * @param view
+     */
     public void safeNotify(View view) {
         initRecyclerView();
-        //if (adapter != null) {
-        //    adapter.notifyDataSetChanged();
-        //    Log.d(TAG+" safeNotify", "successful update");
-        //} else {
-        //    Log.d(TAG+" safeNotify", "adapter is null");
-        //}
+        // Print out a bunch of error messages
         for (String x: mBookNames) {
             Log.d("current data", x);
         }
