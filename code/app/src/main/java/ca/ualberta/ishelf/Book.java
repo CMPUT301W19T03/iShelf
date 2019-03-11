@@ -1,6 +1,5 @@
 package ca.ualberta.ishelf;
 
-
 import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -21,6 +20,7 @@ public class Book implements Parcelable{
     private int status; // 1 = Available To Borrow / 0 = Borrowed / -1 = Not Available
     private Boolean borrowedBook = false;
     private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
+    private ArrayList<String> galleryImages = new ArrayList<String>();
     private UUID id; // changed from int to UUID
     private Image photo;
     private String year;
@@ -214,6 +214,18 @@ public class Book implements Parcelable{
     @Override
     public int describeContents() {
         return 0;
+    }
+
+    public ArrayList<String> getGalleryImages() {
+        return galleryImages;
+    }
+
+    public void setGalleryImages(ArrayList<String> galleryImages) {
+        this.galleryImages = galleryImages;
+    }
+
+    public void addImage(String image) {
+        this.galleryImages.add(image);
     }
 
     @Override

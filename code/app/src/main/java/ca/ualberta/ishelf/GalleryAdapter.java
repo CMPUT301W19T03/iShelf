@@ -91,4 +91,8 @@ class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 //            return null;
 //        }
 //    }
+
+    public void updateList(ArrayList<Bitmap> list){
+        originalList = list;
+    }
 }
