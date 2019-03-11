@@ -129,7 +129,7 @@ public class RequestFragment extends Fragment {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
+//                Log.d("jUser", jUser);
                 if (jUser != null) {
                     // Get user object from Gson
                     Gson gson = new Gson();
