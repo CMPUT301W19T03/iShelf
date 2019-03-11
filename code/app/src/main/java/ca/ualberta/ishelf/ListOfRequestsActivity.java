@@ -32,6 +32,8 @@ import java.util.UUID;
  * The book object in question is passed in through the intent.putExtra, and current user is in
  * Shared Preferences
  * Everything else is accessed via queries to firebase
+ *
+ * @author : Randal
  */
 public class ListOfRequestsActivity extends AppCompatActivity {
     // tag For debugging

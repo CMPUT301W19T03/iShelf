@@ -28,6 +28,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 
 /**
+ *
+ * THis is the adapter for the myBooks fragmesnt
  * TODO get actual images instead of the 3 temp ones
  * @author evan
  * @edited rmnattas

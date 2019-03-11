@@ -14,6 +14,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+/*
+THis is the adapter for the List of requests recycler view
+
+ */
 
 public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.ViewHolder>{
     private static final String TAG = "LORRecyclerViewAdapter";
