@@ -114,6 +114,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         getUser();
 
         // Add test data to database for use in this activity
+        /*
         User u1 = new User();
         u1.setUsername("testUsername");
         User t1 = new User();
@@ -134,6 +135,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         db.addUser(t2);
         db.addBook(b1);
         db.addBook(b2);
+        */
         // Expected output
         // testReq1, 3 stars, book bName1
         // testReq2, 4 stars, book bName1
