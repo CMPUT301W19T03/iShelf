@@ -40,8 +40,9 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.Matchers.not;
 
 /**
- * @author Evan
  * tests to see if you see lists of books
+ * @author Faisal
+ *
  */
 @RunWith(AndroidJUnit4.class)
 @LargeTest

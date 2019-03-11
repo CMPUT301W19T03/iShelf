@@ -24,7 +24,9 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-//adapter for the RequestFragment recycler view
+/**
+ * adapter for the RequestFragment recycler view
+ */
 class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     private ArrayList<Request> requestList;
     private ArrayList<Book> requestBooks;

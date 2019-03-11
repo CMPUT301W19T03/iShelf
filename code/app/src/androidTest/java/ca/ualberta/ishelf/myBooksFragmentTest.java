@@ -18,6 +18,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static org.junit.Assert.assertEquals;
 
 /**
+ *  * ignore this test, myBooksFragment is going ot be changed to match the borrowBooks view that Faisal made so this intent test should match his intent test
  * @author Evan
  * ignore this test, myBooksFragment is going ot be changed to match the borrowBooks view that Faisal made so this intent test should match his intent test
  */
