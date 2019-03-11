@@ -85,11 +85,10 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
             @Override
             public boolean onQueryTextChange(String text) {
-                ((BorrowAdapter) bookAdapter).getFilter().filter(text);
+                bookAdapter.getFilter().filter(text);
                 return true;
             }
         });
-
 
         return view;
     }
