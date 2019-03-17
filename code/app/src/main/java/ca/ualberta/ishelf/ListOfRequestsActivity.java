@@ -100,8 +100,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         getUser();
         // Add test data to test getRequestInformation
         addTestData();
-        getRequests();
-        getRequestInformation();
+        //getRequests();
+        //getRequestInformation();
     }
 
     /**
@@ -373,12 +373,14 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     public void addTestData() {
         // Create test Request objects that refer to real Firebase items
         UUID id;
-        id = UUID.fromString("0c400b50-c259-4f60-863a-cae58c1fd0a1");
+        id = UUID.fromString("e1afab89-77e9-49d6-afdd-ab98e4e245d4");
         Request r1 = new Request(id, "Evan", username);
-        id = UUID.fromString("5325dfaa-1fd4-4b40-9626-5789197b4dfc");
         Request r2 = new Request(id, "aalattas", username);
-        id = UUID.fromString("765011ae-ec7b-4864-8ca7-319701c7ac8b");
         Request r3 = new Request(id, "jsgray1", username);
         // Add requests to Firebase
+        Database db = new Database(this);
+        db.addRequest(r1);
+        db.addRequest(r2);
+        db.addRequest(r3);
     }
 }
