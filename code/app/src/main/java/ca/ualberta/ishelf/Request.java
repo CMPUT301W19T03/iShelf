@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -26,7 +27,7 @@ public class Request implements Parcelable {
     // when the book was requested
     private Date timeRequested;
     // Location set for meeting
-
+    private Location location;
     // Status of the request
     private int status;
     // 1: accepted
@@ -165,6 +166,35 @@ public class Request implements Parcelable {
      */
     public void setTimeRequested(Date timeRequested) {
         this.timeRequested = timeRequested;
+    }
+
+    /**
+     * get the location that the owner designated to meet at
+     * @return
+     */
+    public Location getLocation() {
+        return location;
+    }
+
+    /**
+     * set the location for that owner and requester to meet at
+     * set the location using a location object
+     * @param location
+     */
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    /**
+     * set the location for that owner and requester to meet at
+     * set the location using doubles representing latitude and longitude
+     * @param latitude
+     * @param longitude
+     */
+    public void setLocation(double latitude, double longitude) {
+        this.location = new Location("");
+        this.location.setLatitude(latitude);
+        this.location.setLongitude(longitude);
     }
 
     /**

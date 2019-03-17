@@ -127,31 +127,47 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * @author : Randal Kimpinski
      */
     void acceptRequest(int position){
-        //TODO decline all other requests on this bbok
-        //set sate
-        //find book and change status to in transition in firebase
-        //Jump to geo location, passing request object
-
-
-
         Log.d(TAG+" acceptRequest", "Called with " + position);
-        // If the adapter has been initialized, run the appropriate code
         // Create Database object that we will use
         Database db = new Database(this);
-        // Delete rating and name entries and update display
-        mRatings.remove(position);
-        mNames.remove(position);
-        mBookNames.remove(position);
-        safeNotify();
-        initRecyclerView();
+        // The specific request object
+        Request selectedRequest = requests.get(position);
+        // Decline all other requests
+        for (int i = 0; i < requests.size(); i++) {
+            if (i != position) {
+                Request tempRequest = requests.get(i);
+                tempRequest.decline();
+                db.addRequest(tempRequest);
+                Notification notification = new Notification(new Date(),
+                        username + " has declined your request for "+ mBookNames.get(i), tempRequest.getOwner());
+                db.addNotification(notification);
+            }
+        }
+        // Accept Request
+        selectedRequest.accept();
+        db.addRequest(selectedRequest);
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
-                user.getUsername() + " has accepted your request", "username");
+                username + " has accepted your request", selectedRequest.getOwner());
         db.addNotification(notification);
-        // Update user's Requests array, and update in database
-        user.getListofRequests().get(position).accept();
-        db.addUser(user);
-        //TODO move to Map activity so they can pick a geo location
+
+        // Remove appropriate array items
+        //TODO make this CLEAR then readd our request (so save all the values)
+        //TODO or iterate over it backwards, and remove all except position
+        //mRatings.remove(position);
+        //mNames.remove(position);
+        //mBookNames.remove(position);
+
+        // Call locationActivity and pass request UUID as an extra string
+        /*
+        Intent myIntent = new Intent(this, LocationActivity.class);
+        String requestId = selectedReqeust.getId().toString();
+        myIntent.puExtra("RequestId", requestId);
+        startActivity(myIntent);
+         */
+
+        // Update display
+        safeNotify();
     }
 
     /**
@@ -163,31 +179,33 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * @author : Randal Kimpinski
      */
     void declineRequest(int position){
-        //TODO delete the request and notify the requester
-        //TODO also delete request in firebase
         Log.d(TAG+" declineRequest", "Called with " + position);
-        // If the adapter has been initialized, run the appropriate code
         // Create Database object that we will use
         Database db = new Database(this);
-        // Delete rating and name entries and update display
+        // The specific request object
+        Request selectedRequest = requests.get(position);
+        // Decline this request
+        selectedRequest.decline();
+        // Create the appropriate notification and add to firebase
+        Notification notification = new Notification(new Date(),
+                username + " has declined your request for "+ mBookNames.get(position),
+                username);
+        db.addNotification(notification);
+        // Delete the request in firebase
+        db.deleteRequest(selectedRequest.getId().toString());
+        // Remove appropriate array items
         mRatings.remove(position);
         mNames.remove(position);
         mBookNames.remove(position);
+        requests.remove(position);
+
+        // Update display
         safeNotify();
-        initRecyclerView();
-        // Create the appropriate notification and add to firebase
-        Notification notification = new Notification(new Date(),
-                user.getUsername() + " has declined your request", "username");
-        db.addNotification(notification);
-        // Update user's Requests array, and update in database
-        user.getListofRequests().remove(position);
-        db.addUser(user);
     }
 
     /**
      * Get the User object representing the current user
-     * From there, make calls to getReqeusterRating and getBookNames
-     * We have to make these calls within onDataChange to avoid threading errors
+     * From there, make calls to getReqeusterRating and getBookNames * We have to make these calls within onDataChange to avoid threading errors
      * Since they depend on us having a User object that isn't null
      * @author : Randal Kimpinski
      */
@@ -223,7 +241,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     /**
      * Get all the requests for a specific book and specific user
      * In this case, the book is provided by the previous activity,
-     * and the useris the user currently using the app
+     * and the user is the user currently using the app
      * @author : Randal Kimpinski
      */
     private void getRequests() {
@@ -346,8 +364,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
 
     /**
-     * Add test Request objects to requests
-     * Request objects must have valid keys for firebase entries
+     * Add test Request objects to firebase
+     * Request attributes must be valid keys for other firebase entries
+     * Primary purpose is to test
      * Useful for just testing getRequestInformation
      * @author Randal Kimpinski
      */
@@ -360,9 +379,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         Request r2 = new Request(id, "aalattas", username);
         id = UUID.fromString("765011ae-ec7b-4864-8ca7-319701c7ac8b");
         Request r3 = new Request(id, "jsgray1", username);
-        // Add new requests to requests array
-        requests.add(r1);
-        requests.add(r2);
-        requests.add(r3);
+        // Add requests to Firebase
     }
 }
