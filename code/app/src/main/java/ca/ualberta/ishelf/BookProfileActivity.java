@@ -96,12 +96,14 @@ public class BookProfileActivity extends AppCompatActivity {
         Boolean isRequester =true;
         if(isOwner && passedBook.getTransition()==1){
             Button lendButton =findViewById(R.id.lend);
+            canEdit=false;
             lendButton.setVisibility(View.VISIBLE);
 
         }
 
         if(!isOwner &&isRequester&& passedBook.getTransition()==2){
             Button acptButton =findViewById(R.id.acpt);
+            canEdit=false;
             acptButton.setVisibility(View.VISIBLE);
         }
 

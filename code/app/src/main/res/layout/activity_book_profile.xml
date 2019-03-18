@@ -105,6 +105,7 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="ACCEPT"
+        android:onClick="accept"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/ret"
         app:layout_constraintHorizontal_bias="0.492"
