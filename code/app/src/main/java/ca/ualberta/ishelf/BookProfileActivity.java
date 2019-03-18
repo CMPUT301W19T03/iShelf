@@ -101,7 +101,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
         }
 
-        if(!isOwner &&isRequester&& passedBook.getTransition()==2){
+        if(!isOwner &&isRequester&& (passedBook.getTransition()==2||passedBook.getTransition()==4)){
             Button acptButton =findViewById(R.id.acpt);
             canEdit=false;
             acptButton.setVisibility(View.VISIBLE);
@@ -240,6 +240,22 @@ public class BookProfileActivity extends AppCompatActivity {
             Database db =new Database(this );
             db.editBook(passedBook);
         }
+        if(passedBook.getTransition()==4){
+            passedBook.setBorrowedBook(true);
+            passedBook.setBorrowed();
+            passedBook.setTransition(0);
+            final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+            passedBook.setOwner(currentUsername);
+            Database db =new Database(this );
+            db.editBook(passedBook);
+        }
+
+    }
+
+    public void ret(View v){
+        passedBook.setTransition(4);
+        Database db =new Database(this );
+        db.editBook(passedBook);
 
     }
 
