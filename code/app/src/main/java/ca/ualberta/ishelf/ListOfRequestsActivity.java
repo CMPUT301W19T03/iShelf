@@ -185,6 +185,25 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // If the adapter has been initialized, run the appropriate code
         // Create Database object that we will use
         Database db = new Database(this);
+
+        Intent intent = getIntent();
+        String bookID  = intent.getStringExtra("ID");
+
+
+        //TODO replace with actual code
+//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+
+
+        bookId = UUID.fromString(bookID);
+
+        Book book = new Book();
+        book = intent.getParcelableExtra("book");
+
+        book.setTransition(1);
+
+        db.editBook(book);
+
+
         // Delete rating and name entries and update display
         mRatings.remove(position);
         mNames.remove(position);
@@ -201,7 +220,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         //TODO move to Map activity so they can pick a geo location
     }
 
-    /**
+
+            /**
      * Decline a requesters request
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
