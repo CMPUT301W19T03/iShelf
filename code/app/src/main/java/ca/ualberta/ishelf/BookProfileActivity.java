@@ -70,6 +70,12 @@ public class BookProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
 
+
+
+        // get the book object passed by intent
+        Intent intent = getIntent();
+        passedBook = intent.getParcelableExtra("Book Data");
+
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
@@ -82,27 +88,28 @@ public class BookProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        // get the book object passed by intent
-        Intent intent = getIntent();
-        passedBook = intent.getParcelableExtra("Book Data");
         Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
+        Boolean isRequester =true;
+        if(isOwner && passedBook.getTransition()==1){
+            Button lendButton =findViewById(R.id.lend);
+            lendButton.setVisibility(View.VISIBLE);
 
-        //int test = passedBook.getTransition();
-//        if(isOwner && passedBook.getTransition()==1){
-//            //Button lendButton =findViewById(R.id.lend);
-//            //lendButton.setVisibility(View.VISIBLE);
-//
-//        }
+        }
 
-//        if(!isOwner && passedBook.getTransition()==2){
-//            Button acptButton =findViewById(R.id.acpt);
-//            acptButton.setVisibility(View.VISIBLE);
-//        }
+        if(!isOwner &&isRequester&& passedBook.getTransition()==2){
+            Button acptButton =findViewById(R.id.acpt);
+            acptButton.setVisibility(View.VISIBLE);
+        }
+
+        if(isOwner && passedBook.getTransition()==3){
+            Button retButton =findViewById(R.id.ret);
+            retButton.setVisibility(View.VISIBLE);
+
+        }
 
 
 
