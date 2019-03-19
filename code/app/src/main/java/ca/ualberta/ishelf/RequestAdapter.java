@@ -3,6 +3,7 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
  * adapter for the RequestFragment recycler view
  */
 class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
+    private final String TAG = "RequestAdapter";
     private ArrayList<Request> requestList;
     private ArrayList<Book> requestBooks;
     private Context requestContext;
@@ -42,15 +44,19 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     public static class RequestViewHolder extends ViewHolder {
         public TextView title;
         public TextView userName;
+        public TextView state;
+        public TextView type;
         public ConstraintLayout requestBody;
 
 
         public RequestViewHolder(View view) {
             super(view);
-            title = (TextView) view.findViewById(R.id.title1);
-            userName = (TextView) view.findViewById(R.id.user_name);
-            requestBody = (ConstraintLayout) view.findViewById(R.id.request_body);
-//            requesterRatingBar = (RatingBar) view.findViewById(R.id.requesterRatingBar);
+            title = view.findViewById(R.id.title1);
+            userName = view.findViewById(R.id.user_name);
+            requestBody = view.findViewById(R.id.request_body);
+            state = view.findViewById(R.id.request_state);
+            type = view.findViewById(R.id.request_type);
+//            requesterRatingBar = view.findViewById(R.id.requesterRatingBar);
         }
     }
 
@@ -58,7 +64,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     //attacheds the item layout to the recycler view
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        Log.d("j!!!Book2222", "test");
+        Log.d(TAG, "onCreateViewHolder");
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.request_book_item, parent, false);
             RequestViewHolder vh = new RequestViewHolder(v);
@@ -69,38 +75,59 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void updateList(ArrayList<Request> requests, ArrayList<Book> books){
         this.requestList = requests;
         this.requestBooks = books;
+        this.notifyDataSetChanged();
     }
 
 
     //deals with if an request is clicked
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-            RequestViewHolder requestHolder = (RequestViewHolder) holder;
+        RequestViewHolder requestHolder = (RequestViewHolder) holder;
 
-        Log.d("j!!!Book", "test");
+        Log.d(TAG, "onBindViewHolder");
 
-            // Changing to fit my implementation of Request
-            requestHolder.title.setText(requestBooks.get(position).getName());
-            requestHolder.userName.setText(requestList.get(position).getRequester());
-            //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
+        // Changing to fit my implementation of Request
+        requestHolder.title.setText(requestBooks.get(position).getName());
+        requestHolder.userName.setText(requestList.get(position).getRequester());
+        //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
+
+        // set state TextView
+        if (requestList.get(position).getStatus() == 1) {
+            // accepted
+            requestHolder.state.setText("Accepted");
+            requestHolder.state.setTextColor(Color.GREEN);
+        } else if (requestList.get(position).getStatus() == -1) {
+            // declined
+            requestHolder.state.setText("Declined");
+            requestHolder.state.setTextColor(Color.RED);
+        } else {
+            // pending
+            requestHolder.state.setText("Pending");
+        }
+
+        final String username = requestContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        if (requestList.get(position).getRequester().equals(username)){
+            requestHolder.type.setText("Requested");
+        }else{
+            requestHolder.type.setText("Received");
+        }
+
+        requestHolder.requestBody.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(requestContext, BookProfileActivity.class);
+                intent.putExtra("Book Data", requestBooks.get(position));
+                requestContext.startActivity(intent);
+            }
+        });
 
 
-//            requestHolder.requestBody.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    Intent intent = new Intent((Activity) requestContext, BookProfileActivity.class);
-//                    Book book = requestList.get(position);
-//                    intent.putExtra("Book Data", book);
-//                    //intent.putExtra("Check Data", true);
-//                    Activity bookActivity = (Activity) requestContext;
-//                    bookActivity.startActivity(intent);
-//                }
-//            });
         }
 
     @Override
     public int getItemCount() {
-        Log.d("j!!!Book3", Integer.toString(requestBooks.size()));
+        Log.d(TAG, "getItemCount = " + Integer.toString(requestBooks.size()));
         return requestBooks.size();
     }
+
 }

@@ -38,6 +38,7 @@ public class Request implements Parcelable {
      * Empty initializer
      */
     public Request(){
+        this.id = UUID.randomUUID();
     }
 
     /**
