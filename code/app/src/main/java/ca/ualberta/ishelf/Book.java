@@ -14,6 +14,7 @@ import java.util.UUID;
  */
 public class Book implements Parcelable{
     private String owner;
+    private String next_owner;
     private String name;
     private String description;
     private Long ISBN;
@@ -50,6 +51,7 @@ public class Book implements Parcelable{
 
     protected Book(Parcel in) {
         owner = in.readString();
+        next_owner = in.readString();
         name = in.readString();
         description = in.readString();
         if (in.readByte() == 0) {
@@ -185,6 +187,13 @@ public class Book implements Parcelable{
 
     public String getOwner(){ return owner; }
 
+    public String getNext_owner() {
+        return next_owner;
+    }
+
+    public void setNext_owner(String next_owner) {
+        this.next_owner = next_owner;
+    }
 
     // Public Methods
 
@@ -248,6 +257,7 @@ public class Book implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(owner);
+        dest.writeString(next_owner);
         dest.writeString(name);
         dest.writeString(description);
         if (ISBN == null) {
