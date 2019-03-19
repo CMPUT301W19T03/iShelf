@@ -123,6 +123,7 @@ public class EditBookActivity extends AppCompatActivity {
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         book.setOwner(currentUsername);
+        book.setHolder(currentUsername);
 
         if (passedBook != null){
             book.setId(passedBook.getId());

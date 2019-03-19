@@ -93,7 +93,7 @@ public class BookProfileActivity extends AppCompatActivity {
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
-        Boolean isRequester =(currentUsername.equals(passedBook.getOwner()));
+        Boolean isRequester =(currentUsername.equals(passedBook.getNext_holder()));
         if(isOwner && passedBook.getTransition()==1){
             Button lendButton =findViewById(R.id.lend);
             canEdit=false;
@@ -239,10 +239,10 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setBorrowedBook(true);
             passedBook.setBorrowed();
             passedBook.setTransition(3);
-            String temp = passedBook.getOwner();
+            String temp = passedBook.getHolder();
             final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-            passedBook.setOwner(passedBook.getNext_owner());
-            passedBook.setNext_owner(temp);
+            passedBook.setHolder(passedBook.getNext_holder());
+            passedBook.setNext_holder(temp);
             Database db =new Database(this );
             db.editBook(passedBook);
         }
@@ -252,8 +252,8 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setTransition(0);
             final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
-            passedBook.setOwner(passedBook.getNext_owner());
-            passedBook.setNext_owner(null);
+            passedBook.setHolder(passedBook.getNext_holder());
+            passedBook.setNext_holder(null);
             Database db =new Database(this );
             db.editBook(passedBook);
         }
