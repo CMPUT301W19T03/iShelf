@@ -223,6 +223,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void lend(View v){
+        Button lendButton =findViewById(R.id.lend);
+        lendButton.setVisibility(View.INVISIBLE);
         passedBook.setTransition(2);
         Database db = new Database(this);
 
@@ -230,6 +232,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void accept(View v){
+        Button acptButton =findViewById(R.id.acpt);
+        acptButton.setVisibility(View.INVISIBLE);
         if(passedBook.getTransition()==2)
         {
             passedBook.setBorrowedBook(true);
@@ -257,6 +261,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void ret(View v){
+        Button retButton =findViewById(R.id.ret);
+        retButton.setVisibility(View.INVISIBLE);
         passedBook.setTransition(4);
         Database db =new Database(this );
         db.editBook(passedBook);
