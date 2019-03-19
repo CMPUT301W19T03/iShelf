@@ -70,12 +70,6 @@ public class BookProfileActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
 
-
-
-        // get the book object passed by intent
-        Intent intent = getIntent();
-        passedBook = intent.getParcelableExtra("Book Data");
-
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
@@ -88,33 +82,15 @@ public class BookProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        // get the book object passed by intent
+        Intent intent = getIntent();
+        passedBook = intent.getParcelableExtra("Book Data");
         Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
-        Boolean isRequester =true;
-        if(isOwner && passedBook.getTransition()==1){
-            Button lendButton =findViewById(R.id.lend);
-            canEdit=false;
-            lendButton.setVisibility(View.VISIBLE);
-
-        }
-
-        if(!isOwner &&isRequester&& (passedBook.getTransition()==2||passedBook.getTransition()==4)){
-            Button acptButton =findViewById(R.id.acpt);
-            canEdit=false;
-            acptButton.setVisibility(View.VISIBLE);
-        }
-
-        if(isOwner && passedBook.getTransition()==3){
-            Button retButton =findViewById(R.id.ret);
-            retButton.setVisibility(View.VISIBLE);
-
-        }
-
-
-
 
 
         if(canEdit){
@@ -222,43 +198,6 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void lend(View v){
-        passedBook.setTransition(2);
-        Database db = new Database(this);
-
-        db.editBook(passedBook);
-    }
-
-    public void accept(View v){
-        if(passedBook.getTransition()==2)
-        {
-            passedBook.setBorrowedBook(true);
-            passedBook.setBorrowed();
-            passedBook.setTransition(3);
-            final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-            passedBook.setOwner(currentUsername);
-            Database db =new Database(this );
-            db.editBook(passedBook);
-        }
-        if(passedBook.getTransition()==4){
-            passedBook.setBorrowedBook(true);
-            passedBook.setBorrowed();
-            passedBook.setTransition(0);
-            final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-            passedBook.setOwner(currentUsername);
-            Database db =new Database(this );
-            db.editBook(passedBook);
-        }
-
-    }
-
-    public void ret(View v){
-        passedBook.setTransition(4);
-        Database db =new Database(this );
-        db.editBook(passedBook);
-
-    }
-
     //sends parcelable data into the edit book activity and goes the by intent
     public void edit(View v){
 
@@ -354,8 +293,6 @@ public class BookProfileActivity extends AppCompatActivity {
         Intent intent2 = new Intent(BookProfileActivity.this, ListOfRequestsActivity.class);
 
         String bookID = passedBook.getId().toString();
-
-
         // add the request to the book owner listOfRequests
 
 
@@ -363,7 +300,6 @@ public class BookProfileActivity extends AppCompatActivity {
 
 
         intent2.putExtra("ID",bookID);
-        intent2.putExtra("book", passedBook);
         startActivity(intent2);
         finish();
     }

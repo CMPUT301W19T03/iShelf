@@ -26,11 +26,9 @@ public class Book implements Parcelable{
     private String year;
     private String genre;
     private String author;
-    private int transition;
 
     public  Book(){
         this.status = 1;
-        this.transition=0;
         this.id = UUID.randomUUID();
     }
 
@@ -43,7 +41,6 @@ public class Book implements Parcelable{
         this.genre = genre;
         this.author = author;
         this.status = 1;
-        this.transition=0;
         this.borrowedBook = borrowedBook;
     }
 
@@ -58,7 +55,6 @@ public class Book implements Parcelable{
             ISBN = in.readLong();
         }
         status = in.readInt();
-        transition = in.readInt();
         byte tmpBorrowedBook = in.readByte();
         borrowedBook = tmpBorrowedBook == 0 ? null : tmpBorrowedBook == 1;
         year = in.readString();
@@ -78,15 +74,6 @@ public class Book implements Parcelable{
             return new Book[size];
         }
     };
-
-
-    public int getTransition() {
-        return transition;
-    }
-
-    public void setTransition(int transition) {
-        this.transition = transition;
-    }
 
     public String getAuthor() {
         return author;
@@ -257,12 +244,10 @@ public class Book implements Parcelable{
             dest.writeLong(ISBN);
         }
         dest.writeInt(status);
-        dest.writeInt(transition);
         dest.writeByte((byte) (borrowedBook == null ? 0 : borrowedBook ? 1 : 2));
         dest.writeString(year);
         dest.writeString(genre);
         dest.writeString(author);
         dest.writeString(id.toString());
-
     }
 }

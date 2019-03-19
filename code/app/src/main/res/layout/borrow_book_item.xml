@@ -61,19 +61,19 @@ android:backgroundTint="#80FFFFFF">
     android:layout_height="wrap_content"
     android:layout_marginStart="24dp"
     android:layout_marginTop="8dp"
-    android:text="Owner"
+    android:text="@string/owner"
     app:layout_constraintStart_toEndOf="@+id/imageView2"
     app:layout_constraintTop_toBottomOf="@+id/title" />
 
 <TextView
-    android:id="@+id/description"
+    android:id="@+id/description1"
     android:layout_width="wrap_content"
     android:layout_height="20dp"
     android:layout_marginStart="24dp"
     android:layout_marginTop="8dp"
-    android:text="Description"
+    android:text="@string/description"
     app:layout_constraintStart_toEndOf="@+id/imageView2"
-    app:layout_constraintTop_toBottomOf="@+id/owner_borrow" />
+    app:layout_constraintTop_toBottomOf="@id/owner_borrow" />
 
 
 </android.support.constraint.ConstraintLayout>
