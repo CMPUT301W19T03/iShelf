@@ -93,7 +93,7 @@ public class BookProfileActivity extends AppCompatActivity {
         // get the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
-        Boolean isRequester =true;
+        Boolean isRequester =(currentUsername.equals(passedBook.getNext_holder()));
         if(isOwner && passedBook.getTransition()==1){
             Button lendButton =findViewById(R.id.lend);
             canEdit=false;
@@ -223,6 +223,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void lend(View v){
+        Button lendButton =findViewById(R.id.lend);
+        lendButton.setVisibility(View.INVISIBLE);
         passedBook.setTransition(2);
         Database db = new Database(this);
 
@@ -230,13 +232,17 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void accept(View v){
+        Button acptButton =findViewById(R.id.acpt);
+        acptButton.setVisibility(View.INVISIBLE);
         if(passedBook.getTransition()==2)
         {
             passedBook.setBorrowedBook(true);
             passedBook.setBorrowed();
             passedBook.setTransition(3);
+            String temp = passedBook.getHolder();
             final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-            passedBook.setOwner(currentUsername);
+            passedBook.setHolder(passedBook.getNext_holder());
+            passedBook.setNext_holder(temp);
             Database db =new Database(this );
             db.editBook(passedBook);
         }
@@ -245,7 +251,9 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setBorrowed();
             passedBook.setTransition(0);
             final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-            passedBook.setOwner(currentUsername);
+
+            passedBook.setHolder(passedBook.getNext_holder());
+            passedBook.setNext_holder(null);
             Database db =new Database(this );
             db.editBook(passedBook);
         }
@@ -253,6 +261,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void ret(View v){
+        Button retButton =findViewById(R.id.ret);
+        retButton.setVisibility(View.INVISIBLE);
         passedBook.setTransition(4);
         Database db =new Database(this );
         db.editBook(passedBook);
