@@ -130,26 +130,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         Log.d(TAG+" acceptRequest", "Called with " + position);
         // Create Database object that we will use
         Database db = new Database(this);
-
-        Intent intent = getIntent();
-        String bookID  = intent.getStringExtra("ID");
-
-
-        //TODO replace with actual code
-//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
-
-
-        bookId = UUID.fromString(bookID);
-
-        Book book = new Book();
-        book = intent.getParcelableExtra("book");
-
-        book.setTransition(1);
-        book.setNext_holder(mNames.get(position));
-
-        db.editBook(book);
-
-
         // The specific request object
         Request selectedRequest = requests.get(position);
         // Decline all other requests
@@ -190,8 +170,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         safeNotify();
     }
 
-
-            /**
+    /**
      * Decline a requesters request
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
@@ -225,6 +204,59 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
 
     /**
+     * Update our RecyclerView when the data has changed
+     * Currently implemented by reinitializing the recyclerView
+     * But There may be a more optimal method
+     * @author : Randal Kimpinski
+     */
+    private void safeNotify() {
+        initRecyclerView();
+    }
+
+    /**
+     * version of safeNotify that is called from the XML onClick() method connector
+     * Calls recycler view to easily update the data
+     * Also prints extensive error messages detailing the current state of all the
+     * relevant information. This is because there were many errors getting to this point
+     * @param view
+     * @author : Randal Kimpinski
+     */
+    public void safeNotify(View view) {
+        initRecyclerView();
+        // Print out a bunch of error messages
+        for (String x: mBookNames) {
+            Log.d("current data", x);
+        }
+        for (String x: mNames) {
+            Log.d("current data", x);
+        }
+        for (float x: mRatings) {
+            Log.d("current data", Float.toString(x));
+        }
+    }
+
+    /**
+     * Add test Request objects to firebase
+     * Request attributes must be valid keys for other firebase entries
+     * Primary purpose is to test
+     * Useful for just testing getRequestInformation
+     * @author Randal Kimpinski
+     */
+    public void addTestData() {
+        // Create test Request objects that refer to real Firebase items
+        UUID id;
+        id = UUID.fromString("e1afab89-77e9-49d6-afdd-ab98e4e245d4");
+        Request r1 = new Request(id, "Evan", username);
+        Request r2 = new Request(id, "aalattas", username);
+        Request r3 = new Request(id, "jsgray1", username);
+        // Add requests to Firebase
+        Database db = new Database(this);
+        db.addRequest(r1);
+        db.addRequest(r2);
+        db.addRequest(r3);
+    }
+
+    /**
      * Get the User object representing the current user
      * From there, make calls to getReqeusterRating and getBookNames * We have to make these calls within onDataChange to avoid threading errors
      * Since they depend on us having a User object that isn't null
@@ -246,12 +278,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     Type tokenType = new TypeToken<User>(){}.getType();
                     user = gson.fromJson(jUser, tokenType);
                     Log.d("Confirm", user.getUsername());
-                    // This call must be nested since we need
-                    // the user object to access the requests data
-                    //getRequesterRatings();
-                    //getBookNames();
                     safeNotify();
-                    getRequestInformation2();
+                    getRequests();
                 } else {
                     Log.d("getUser FBerror1", "jUser was null");
                 }
@@ -264,13 +292,15 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
 
     /**
-     * Get the information associated and required for each of our requests
-     * This information is the rating of the requester, aswell as the
-     * name of the book
+     * Get all the requests for a specific book and specific user
+     * In this case, the book is provided by the previous activity,
+     * and the user is the user currently using the app
      * @author : Randal Kimpinski
      */
-    private void getRequestInformation2() {
-        Log.d(TAG+" getRequestInformation2", "getReqeustInformation2 has been called");
+    private void getRequests() {
+        Log.d(TAG + " getRequests", "getRequests has been called");
+        // get reference to specific entry
+        // create a one time use listener to immediately access datasnapshot
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -290,6 +320,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
@@ -351,58 +382,5 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
-    }
-
-    /**
-     * Update our RecyclerView when the data has changed
-     * Currently implemented by reinitializing the recyclerView
-     * But There may be a more optimal method
-     * @author : Randal Kimpinski
-     */
-    private void safeNotify() {
-        initRecyclerView();
-    }
-
-    /**
-     * version of safeNotify that is called from the XML onClick() method connector
-     * Calls recycler view to easily update the data
-     * Also prints extensive error messages detailing the current state of all the
-     * relevant information. This is because there were many errors getting to this point
-     * @param view
-     * @author : Randal Kimpinski
-     */
-    public void safeNotify(View view) {
-        initRecyclerView();
-        // Print out a bunch of error messages
-        for (String x: mBookNames) {
-            Log.d("current data", x);
-        }
-        for (String x: mNames) {
-            Log.d("current data", x);
-        }
-        for (float x: mRatings) {
-            Log.d("current data", Float.toString(x));
-        }
-    }
-
-    /**
-     * Add test Request objects to firebase
-     * Request attributes must be valid keys for other firebase entries
-     * Primary purpose is to test
-     * Useful for just testing getRequestInformation
-     * @author Randal Kimpinski
-     */
-    public void addTestData() {
-        // Create test Request objects that refer to real Firebase items
-        UUID id;
-        id = UUID.fromString("e1afab89-77e9-49d6-afdd-ab98e4e245d4");
-        Request r1 = new Request(id, "Evan", username);
-        Request r2 = new Request(id, "aalattas", username);
-        Request r3 = new Request(id, "jsgray1", username);
-        // Add requests to Firebase
-        Database db = new Database(this);
-        db.addRequest(r1);
-        db.addRequest(r2);
-        db.addRequest(r3);
     }
 }
