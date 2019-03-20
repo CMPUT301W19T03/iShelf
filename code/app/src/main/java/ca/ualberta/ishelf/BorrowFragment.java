@@ -102,7 +102,9 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         searchView = (SearchView) getActivity().findViewById(R.id.searchView1);
 
         borrowRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-        borrowRefresh.setOnRefreshListener(this);
+        borrowRefresh.setOnRefreshListener(this
+
+        );
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

@@ -91,6 +91,10 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         tempImgs.add("https://i.redd.it/j6myfqglup501.jpg");
         tempImgs.add("https://i.redd.it/0h2gm1ix6p501.jpg");
         int randomImg = position%tempImgs.size();
+        /**
+         * bind the stuff
+         */
+        mholder.title.setText(filterList.get(position).getName());
 
         //Glide.with(mContext).asBitmap().load(tempImgs.get(randomImg)).into(mholder.image);
         //mholder.imageName.setText(booksList.get(position).getName());
