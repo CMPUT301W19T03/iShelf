@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                //TODO notification_icon is empty right now, that may be causing errors
                 .setSmallIcon(R.drawable.notification_icon)
                 .setContentTitle("testTitle")
                 .setContentText("testContent")
