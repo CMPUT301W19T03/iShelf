@@ -145,7 +145,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         book = intent.getParcelableExtra("book");
 
         book.setTransition(1);
-        book.setNext_owner(mNames.get(position));
+        book.setNext_holder(mNames.get(position));
 
         db.editBook(book);
 
