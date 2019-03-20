@@ -99,9 +99,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         //TODO do I need to get User Object?
         getUser();
         // Add test data to test getRequestInformation
-        addTestData();
-        //getRequests();
-        //getRequestInformation();
+        //addTestData();
+        getRequests();
+        getRequestInformation();
     }
 
     /**
