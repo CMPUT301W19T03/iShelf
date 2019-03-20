@@ -65,16 +65,12 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
      *
      */
     public static class BorrowViewHolder extends RecyclerView.ViewHolder {
-        public TextView owner;
-        public TextView description;
         public TextView title;
         public ConstraintLayout borrowBody;
 
         public BorrowViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
-            owner = (TextView) view.findViewById(R.id.owner_borrow);
-            description = (TextView) view.findViewById(R.id.description);
             borrowBody = (ConstraintLayout) view.findViewById(R.id.borrow_body);
         }
     }
@@ -112,8 +108,6 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             BorrowViewHolder borrowHolder = (BorrowViewHolder) holder;
 
             borrowHolder.title.setText(filterList.get(position).getName());
-            borrowHolder.owner.setText(filterList.get(position).getOwner());
-            borrowHolder.description.setText(filterList.get(position).getDescription());
 
             borrowHolder.borrowBody.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -188,9 +182,6 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
         List<Book> results = new ArrayList<>();
 
         for (Book item : originalList) {
-            if (item.getDescription().toLowerCase().contains(constraint)) {
-                results.add(item);
-            }
             if (item.getName().toLowerCase().contains(constraint)) {
                 results.add(item);
             }
