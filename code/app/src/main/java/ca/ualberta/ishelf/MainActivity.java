@@ -22,11 +22,15 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.ChildEventListener;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.UUID;
 
 
@@ -48,6 +52,9 @@ public class MainActivity extends AppCompatActivity {
     private SearchView searchView;
     private TextView appName;
     private ImageView profileIcon;
+    // Firebase variables
+    private final String link = "https://ishelf-bb4e7.firebaseio.com";
+    private Firebase ref;
 
 
     private static final String TAG = "MainActivity";
@@ -85,6 +92,56 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Firebase listener, activated when there is a change to notifications
+        // Will be activated regardless of activity, or if the app is even running
+        // Set up test firebase listener
+        Firebase.setAndroidContext(this);
+        ref = new Firebase(link);
+        Firebase tempRef = ref.child("Notifications");
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG + " NotifcationEvent", "Notification listener activated");
+                Log.d("snapshot values", dataSnapshot.getKey() + " " +
+                        dataSnapshot.getValue().toString());
+                String jNotification = dataSnapshot.getValue(String.class);
+                if (jNotification != null) {
+                    Log.d("jNotification", jNotification);
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<Notification>() {
+                    }.getType();
+                    Notification notification = gson.fromJson(jNotification, tokenType);
+                    String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
+                    if (notification.getUserName().equals(username)) {
+                        Log.d(TAG + " validNotification", "Firebase contains a valid username for this user");
+                        // Create the notification
+                        //TODO why does it show all notifications when starting up
+                        //TODO this could be fixed by deleting notifications when we see them
+                    }
+                }
+                /*
+                if (previousChildName != null) {
+                    String test = dataSnapshot.child(previousChildName).getValue().toString();
+                    Log.d("test", test);
+                }
+                */
+                //String jUser = dataSnapshot.getValue(String.class);
+                // Write code to loop through notifications here
+            }
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) { }
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
 
         //TODO remove
         //Intent myIntent = new Intent(this, ListOfRequestsActivity.class);
