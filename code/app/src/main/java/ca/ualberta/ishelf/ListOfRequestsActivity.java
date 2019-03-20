@@ -30,10 +30,10 @@ import java.util.UUID;
 
 /**
  * This class deals with accepting requests that other users have made for one of our books
- * The book object in question is passed in through the intent.putExtra, and current user is in
- * Shared Preferences
- * Everything else is accessed via queries to firebase
- *
+ * The bookId for the appropriate book Object is passed in through the intent,
+ * and the current user's username is passed in through shared preferences
+ * The rest of the information necessary for displaying the requests is accessed via
+ * additional queries to firebase
  * @author : Randal
  */
 public class ListOfRequestsActivity extends AppCompatActivity {
@@ -45,15 +45,21 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private ArrayList<String> mBookNames = new ArrayList<>();
     // List of integers of user ratings
     private ArrayList<Float> mRatings = new ArrayList<>();
+    // List of request statuses, used to determine visibility of boxes
+    private ArrayList<Integer> mStatus = new ArrayList<>();
     // Username for current user
     String username;
     // RecyclerView view and adapter
     public RecyclerView recyclerView;
     // RecylerView adapter
     LORRecyclerViewAdapter adapter;
+    // Holds the current app user's username
     User user;
+    // Holds the BookId of the book being viewed in this activity
     UUID bookId;
-    // Firebase reference stuff
+    // List of request objects
+    ArrayList<Request> requests = new ArrayList<>();
+    // Firebase variables
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
 
@@ -72,90 +78,30 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Initialize firebase for use
         Firebase.setAndroidContext(this);
         ref = new Firebase(link);
-
-
-        /* Activity should be called in this format
-        Intent myIntent = new Intent(MainActivity.this, addMeasurementActivity.class);
-        myIntent.putExtra("myBookId", bookId);
-        startActivity(myIntent);
-         */
-
+        // Get the Book Id
         Intent intent = getIntent();
         String bookID  = intent.getStringExtra("ID");
-
-
-        //TODO replace with actual code
-//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
-
-
         bookId = UUID.fromString(bookID);
-
-
-
-        // Add testUsername, since we should be signed in from here
-        //TODO remove forced sharedPreference editing
-//        username = "testUsername";
-
-//        SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
-//        editor.putString("username", "testUsername").apply();
 
         // Get the current user's username from shared preferences
         username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
         Log.d(TAG+" getUser ", "User is " + username);
 
-        // get the reference of RecyclerView
+        // get the reference to RecyclerView
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.listOfRequestsRecycler);
         // set a LinearLayoutManager with default orientation
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
         recyclerView.setLayoutManager(linearLayoutManager); // set LayoutManager to RecyclerView
 
-        // Add simple test entries for the display
-        // Add entries to my mNames array
-        // mNames.add("Paul");
-        // mNames.add("James");
-        // mNames.add("Danny");
-        // mNames.add("Jessica");
-        // mBookNames.add("Moby Dick");
-        // mBookNames.add("I, Robot");
-        // mBookNames.add("In may we soar");
-        // mBookNames.add("Hello, would you like to spend the day together and maybe fall in love");
-        // mRatings.add(2f);
-        // mRatings.add(3f);
-        // mRatings.add(5f);
-        // mRatings.add(4f);
-
         // Initialize the recyclerView
         initRecyclerView();
-        // Run the code that gets our user object, and subsequently gets requests
-        // and the relevent information
+        // Run the code that gets our user object
+        //TODO do I need to get User Object?
         getUser();
-
-        // Add test data to database for use in this activity
-        /*
-        User u1 = new User();
-        u1.setUsername("testUsername");
-        User t1 = new User();
-        t1.setUsername("testReq1");
-        t1.setRating(new Rating(4f,""));
-        User t2 = new User();
-        t2.setUsername("testReq2");
-        t2.setRating(new Rating(3f, ""));
-        Book b1 = new Book();
-        b1.setName("bName1");
-        Book b2 = new Book();
-        b2.setName("bName2");
-        u1.addRequest(new Request(b1.getId(), "testReq1"));
-        u1.addRequest(new Request(b2.getId(), "testReq2"));
-        Database db = new Database(this);
-        db.addUser(u1);
-        db.addUser(t1);
-        db.addUser(t2);
-        db.addBook(b1);
-        db.addBook(b2);
-        */
-        // Expected output
-        // testReq1, 3 stars, book bName1
-        // testReq2, 4 stars, book bName1
+        // Add test data to test getRequestInformation
+        addTestData();
+        //getRequests();
+        //getRequestInformation();
     }
 
     /**
@@ -182,26 +128,70 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     void acceptRequest(int position){
         Log.d(TAG+" acceptRequest", "Called with " + position);
-        // If the adapter has been initialized, run the appropriate code
         // Create Database object that we will use
         Database db = new Database(this);
-        // Delete rating and name entries and update display
-        mRatings.remove(position);
-        mNames.remove(position);
-        mBookNames.remove(position);
-        safeNotify();
-        initRecyclerView();
+
+        Intent intent = getIntent();
+        String bookID  = intent.getStringExtra("ID");
+
+
+        //TODO replace with actual code
+//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+
+
+        bookId = UUID.fromString(bookID);
+
+        Book book = new Book();
+        book = intent.getParcelableExtra("book");
+
+        book.setTransition(1);
+        book.setNext_owner(mNames.get(position));
+
+        db.editBook(book);
+
+
+        // The specific request object
+        Request selectedRequest = requests.get(position);
+        // Decline all other requests
+        for (int i = 0; i < requests.size(); i++) {
+            if (i != position) {
+                Request tempRequest = requests.get(i);
+                tempRequest.decline();
+                db.addRequest(tempRequest);
+                Notification notification = new Notification(new Date(),
+                        username + " has declined your request for "+ mBookNames.get(i), tempRequest.getOwner());
+                db.addNotification(notification);
+            }
+        }
+        // Accept Request
+        selectedRequest.accept();
+        db.addRequest(selectedRequest);
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
-                user.getUsername() + " has accepted your request", "username");
+                username + " has accepted your request", selectedRequest.getOwner());
         db.addNotification(notification);
-        // Update user's Requests array, and update in database
-        user.getListofRequests().get(position).accept();
-        db.addUser(user);
-        //TODO move to Map activity so they can pick a geo location
+
+        // Remove appropriate array items
+        //TODO make this CLEAR then readd our request (so save all the values)
+        //TODO or iterate over it backwards, and remove all except position
+        //mRatings.remove(position);
+        //mNames.remove(position);
+        //mBookNames.remove(position);
+
+        // Call locationActivity and pass request UUID as an extra string
+        /*
+        Intent myIntent = new Intent(this, LocationActivity.class);
+        String requestId = selectedReqeust.getId().toString();
+        myIntent.puExtra("RequestId", requestId);
+        startActivity(myIntent);
+         */
+
+        // Update display
+        safeNotify();
     }
 
-    /**
+
+            /**
      * Decline a requesters request
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
@@ -211,29 +201,32 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     void declineRequest(int position){
         Log.d(TAG+" declineRequest", "Called with " + position);
-        // If the adapter has been initialized, run the appropriate code
         // Create Database object that we will use
         Database db = new Database(this);
-        // Delete rating and name entries and update display
+        // The specific request object
+        Request selectedRequest = requests.get(position);
+        // Decline this request
+        selectedRequest.decline();
+        // Create the appropriate notification and add to firebase
+        Notification notification = new Notification(new Date(),
+                username + " has declined your request for "+ mBookNames.get(position),
+                username);
+        db.addNotification(notification);
+        // Delete the request in firebase
+        db.deleteRequest(selectedRequest.getId().toString());
+        // Remove appropriate array items
         mRatings.remove(position);
         mNames.remove(position);
         mBookNames.remove(position);
+        requests.remove(position);
+
+        // Update display
         safeNotify();
-        initRecyclerView();
-        // Create the appropriate notification and add to firebase
-        Notification notification = new Notification(new Date(),
-                user.getUsername() + " has declined your request", "username");
-        db.addNotification(notification);
-        //TODO do we want to delete the request when it is declined?
-        // Update user's Requests array, and update in database
-        user.getListofRequests().remove(position);
-        db.addUser(user);
     }
 
     /**
      * Get the User object representing the current user
-     * From there, make calls to getReqeusterRating and getBookNames
-     * We have to make these calls within onDataChange to avoid threading errors
+     * From there, make calls to getReqeusterRating and getBookNames * We have to make these calls within onDataChange to avoid threading errors
      * Since they depend on us having a User object that isn't null
      * @author : Randal Kimpinski
      */
@@ -281,45 +274,21 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Log.d(TAG+"in onDataChange", "Entered in data change");
-                for (Request request : user.getListofRequests()) {
-                    // If the request is not for the current book, don't add to array
-                    if (!request.getBookId().equals(bookId)) {
-                        continue;
-                    }
-                    mNames.add(request.getRequester());
-                    String jUser = dataSnapshot.child("Users").
-                            child(request.getRequester()).getValue(String.class);
-                    if (jUser != null) {
-                        Log.d("jUser", jUser);
-                        // Get user object from Gson
+                Request tempRequest;
+                for (DataSnapshot d : dataSnapshot.child("Requests").getChildren()) {
+                    String requestString = d.getValue(String.class);
+                    if (requestString != null) {
+                        // Get the request object from Gson
                         Gson gson = new Gson();
-                        Type tokenType = new TypeToken<User>() {
-                        }.getType();
-                        User reqUser = gson.fromJson(jUser, tokenType);
-                        Log.d("Confirm", user.getUsername());
-                        //TODO I think there is an issue with the User class
-                        mRatings.add(reqUser.getOverallRating());
-                    } else {
-                        Log.d("getRequestInformation User FBerror1", "jUser was null");
-                    }
-                    String jBook = dataSnapshot.child("Books").
-                            child(request.getBookId().toString()).getValue(String.class);
-                    if (jBook != null) {
-                        Log.d("jBook", jBook);
-                        // Get user object from Gson
-                        Gson gson = new Gson();
-                        Type tokenType = new TypeToken<Book>() {
-                        }.getType();
-                        Book book = gson.fromJson(jBook, tokenType);
-                        Log.d("Confirm", user.getUsername());
-                        mBookNames.add(book.getName());
-                    } else {
-                        Log.d("getRequestInformation Book FBerror1", "jBook was null");
+                        Type tokenType = new TypeToken<Request>() { }.getType();
+                        tempRequest = gson.fromJson(requestString, tokenType);
+                        if (tempRequest.getOwner().equals(username) && tempRequest.getBookId().equals(bookId)) {
+                            // Add request to requests array
+                            requests.add(tempRequest);
+                        }
+                        initRecyclerView();
                     }
                 }
-                safeNotify();
-                initRecyclerView();
             }
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -329,84 +298,76 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
 
     /**
-     * Depreciated version of getRequestInformation
-     * This version has replaced with one that better syncs up our arrays
-     * @deprecated
+     * Using the arrays of proper requests we got, add the additional information
+     * necessary to display them. This includes the requester rating and book name
+     * Issues will arise if the bookId or Requester username don't reference valid
+     * entries in the firebase database
      * @author : Randal Kimpinski
      */
-    private void getRequestInformation(){
-        for (Request request: user.getListofRequests()) {
-            // Firebase reference to get Users information (requesters)
-            Firebase tempRefU = ref.child("Users").child(request.getRequester());
-            // Firebase reference to get Books information (names)
-            Firebase tempRefB = ref.child("Books").child(request.getBookId().toString());
-            tempRefU.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String jUser = dataSnapshot.getValue(String.class);
+    private void getRequestInformation() {
+        Log.d(TAG + " getRequests", "getRequests has been called");
+        // create a one time use listener to immediately access datasnapshot
+        ref.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Type tokenType;
+                Gson gson;
+                for (Request tempRequest: requests) {
+                    // Add requester to array
+                    mNames.add(tempRequest.getRequester());
+                    // Get the requester rating
+                    String jUser = dataSnapshot.child("Users").
+                            child(tempRequest.getRequester()).getValue(String.class);
                     if (jUser != null) {
                         Log.d("jUser", jUser);
                         // Get user object from Gson
-                        Gson gson = new Gson();
-                        Type tokenType = new TypeToken<User>() { }.getType();
+                        gson = new Gson();
+                        tokenType = new TypeToken<User>() {
+                        }.getType();
                         User reqUser = gson.fromJson(jUser, tokenType);
-                        Log.d("Confirm", user.getUsername());
+                        // Add requester rating to array
                         mRatings.add(reqUser.getOverallRating());
-                        safeNotify();
                     } else {
                         Log.d("getRequestInformation User FBerror1", "jUser was null");
                     }
-                }
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    return;
-                }
-            });
-            tempRefB.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot dataSnapshot) {
-                    String jBook = dataSnapshot.getValue(String.class);
-                    Log.d("jBook", jBook);
+                    // Get the book rating
+                    String jBook = dataSnapshot.child("Books").
+                            child(tempRequest.getBookId().toString()).getValue(String.class);
                     if (jBook != null) {
+                        Log.d("jBook", jBook);
                         // Get user object from Gson
-                        Gson gson = new Gson();
-                        Type tokenType = new TypeToken<Book>() { }.getType();
+                        gson = new Gson();
+                        tokenType = new TypeToken<Book>() {
+                        }.getType();
                         Book book = gson.fromJson(jBook, tokenType);
-                        Log.d("Confirm", user.getUsername());
                         mBookNames.add(book.getName());
-                        safeNotify();
                     } else {
                         Log.d("getRequestInformation Book FBerror1", "jBook was null");
                     }
                 }
-                @Override
-                public void onCancelled(FirebaseError firebaseError) {
-                    return;
-                }
-            });
-        }
-
+                safeNotify();
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+            }
+        });
     }
 
     /**
-     * Try to update the adapter's data
-     * If our adapter is null, instead of crashing, we just print a Log message
+     * Update our RecyclerView when the data has changed
+     * Currently implemented by reinitializing the recyclerView
+     * But There may be a more optimal method
      * @author : Randal Kimpinski
      */
     private void safeNotify() {
-        if (adapter != null) {
-            adapter.notifyDataSetChanged();
-            Log.d(TAG+" safeNotify", "successful update");
-        } else {
-            Log.d(TAG+" safeNotify", "adapter is null");
-        }
+        initRecyclerView();
     }
 
     /**
      * version of safeNotify that is called from the XML onClick() method connector
      * Calls recycler view to easily update the data
      * Also prints extensive error messages detailing the current state of all the
-     * relevent information. This is because there were many errors getting to this point
+     * relevant information. This is because there were many errors getting to this point
      * @param view
      * @author : Randal Kimpinski
      */
@@ -422,5 +383,26 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         for (float x: mRatings) {
             Log.d("current data", Float.toString(x));
         }
+    }
+
+    /**
+     * Add test Request objects to firebase
+     * Request attributes must be valid keys for other firebase entries
+     * Primary purpose is to test
+     * Useful for just testing getRequestInformation
+     * @author Randal Kimpinski
+     */
+    public void addTestData() {
+        // Create test Request objects that refer to real Firebase items
+        UUID id;
+        id = UUID.fromString("e1afab89-77e9-49d6-afdd-ab98e4e245d4");
+        Request r1 = new Request(id, "Evan", username);
+        Request r2 = new Request(id, "aalattas", username);
+        Request r3 = new Request(id, "jsgray1", username);
+        // Add requests to Firebase
+        Database db = new Database(this);
+        db.addRequest(r1);
+        db.addRequest(r2);
+        db.addRequest(r3);
     }
 }

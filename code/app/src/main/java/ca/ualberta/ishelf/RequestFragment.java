@@ -54,8 +54,11 @@ import static android.support.constraint.Constraints.TAG;
  */
 
 public class RequestFragment extends Fragment {
-    private ArrayList<Request> requestPendingList = new ArrayList<Request>();
-    private ArrayList<Request> requestAcceptedList = new ArrayList<Request>();
+    private final String TAG = "RequestFragment";
+    private ArrayList<Request> requestsUserMadeList = new ArrayList<>();
+    private ArrayList<Book> requestsUserMadeBooksList = new ArrayList<>();
+    private ArrayList<Request> requestUserReceivedList = new ArrayList<>();
+    private ArrayList<Book> requestUserReceivedBooksList = new ArrayList<>();
     private Spinner spinner;
     private RecyclerView requestRecyclerView;
     private RequestAdapter requestAdapter;
@@ -66,10 +69,9 @@ public class RequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_request, container, false);
-
         return view;
-
     }
+
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -80,11 +82,7 @@ public class RequestFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-
-
                 Request_Filter(selectedItem);
-
-
             }
 
             @Override
@@ -92,7 +90,7 @@ public class RequestFragment extends Fragment {
             }
         });
 
-        requestRecyclerView = (RecyclerView) getActivity().findViewById((R.id.request_recycler));
+        requestRecyclerView = getActivity().findViewById((R.id.request_recycler));
         requestLayoutManager = new LinearLayoutManager(this.getContext());
         requestRecyclerView.setLayoutManager(requestLayoutManager);
         requestAdapter = new RequestAdapter(this.getContext());
@@ -103,46 +101,52 @@ public class RequestFragment extends Fragment {
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requestRecyclerView.getContext(),
                 LinearLayoutManager.VERTICAL);
         requestRecyclerView.addItemDecoration(dividerItemDecoration);
-        //createDummy();
 
+        // Get requests from firebase
         getRequests();
 
 
     }
 
     /**
-     * get list requests for the logged in user and update list
+     * get list requests that the logged in user made and received
+     * and update the RecyclerView
+     * @author rmnattas
      */
     public void getRequests(){
 
-        requestPendingList.clear();
-
         // get logged in username
-        String username = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        if (username == null){
-            return;
-        }
+        final String username = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
         //connect to firebase
         Database db = new Database(getContext());
         Firebase fb = db.connect(getContext());
-        Firebase childRef = fb.child("Users").child(username);
+        Firebase childRef = fb.child("Requests");
 
         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                String jUser = dataSnapshot.getValue(String.class);
-//                Log.d("jUser", jUser);
-                if (jUser != null) {
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<User>(){}.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
-                    requestPendingList.addAll(user.getListofRequests());
-                    getBooks(requestPendingList);
-                } else {
-                    Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
+                clearLists();   // clear old list of requests and books
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jRequest = d.getValue(String.class);
+                    if (jRequest != null) {
+                        // Get Requests object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Request>() {
+                        }.getType();
+                        Request request = gson.fromJson(jRequest, tokenType);
+                        if (request.getRequester().equals(username)) {
+                            requestsUserMadeList.add(request);
+                        } else if (request.getOwner().equals(username)) {
+                            requestUserReceivedList.add(request);
+                        }
+                    } else {
+                        Log.d(TAG, "ERROR #123121");
+                    }
                 }
+
+                getBooks();
+
             }
 
             @Override
@@ -153,9 +157,7 @@ public class RequestFragment extends Fragment {
         });
     }
 
-    private void getBooks(final ArrayList<Request> requests){
-
-        final ArrayList<Book> requestBooks = new ArrayList<>();
+    private void getBooks(){
 
         //connect to firebase
         Database db = new Database(getContext());
@@ -167,30 +169,28 @@ public class RequestFragment extends Fragment {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 for(DataSnapshot d: dataSnapshot.getChildren()) {
                     String jBook = d.getValue(String.class);
-                    Log.d("jBook", jBook);
-                    if (jBook != null) {
-                        // Get book object from Gson
-                        Gson gson = new Gson();
-                        Type tokenType = new TypeToken<Book>() {}.getType();
-                        Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
-                        for (Request r : requests){
-                            if (r.getBookId().equals(book.getId())) {
-                                requestBooks.add(book);
-                                Log.d("j!!!Book", jBook);
-                            }
+                    // Get book object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<Book>() {}.getType();
+                    Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+                    for (Request r : requestUserReceivedList){
+                        if (r.getBookId().equals(book.getId())){
+                            requestUserReceivedBooksList.add(book);
+                            break;
                         }
-                    } else {
-                        Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
+                    }
+                    for (Request r : requestsUserMadeList){
+                        if (r.getBookId().equals(book.getId())){
+                            requestsUserMadeBooksList.add(book);
+                            break;
+                        }
                     }
                 }
 
-                assert (requestBooks.size() == requests.size());
+                assert (requestUserReceivedList.size() == requestUserReceivedBooksList.size());
+                assert (requestsUserMadeList.size() == requestsUserMadeBooksList.size());
 
-                Log.d("j!!!Book", Integer.toString(requestBooks.size()));
-                Log.d("j!!!Book2", Integer.toString(requests.size()));
-
-                requestAdapter.updateList(requests, requestBooks);
-                requestAdapter.notifyDataSetChanged();
+                Request_Filter("All");
 
             }
 
@@ -202,43 +202,48 @@ public class RequestFragment extends Fragment {
         });
     }
 
-    public void Request_Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
+    /**
+     * Clear all requests and books lists
+     * @author rmnattas
+     */
+    private void clearLists(){
+        requestsUserMadeList.clear();
+        requestsUserMadeBooksList.clear();
+        requestUserReceivedList.clear();
+        requestUserReceivedBooksList.clear();
+    }
 
-//filters between pending and accepted requests as wanted by the US
-        if(filter.equals("Pending Requests")) {
+    public void Request_Filter(String filter) { //this is going to filter strings for now, but should work whenever we pass in book/user
 
-            initRecyclerView(this.getContext());
-
-
-
-        }else if (filter.equals(("Accepted Requests"))){
-
-            initRecyclerView(this.getContext());
-             // basically do nothing and go back to main page
-
-
-
+        if (filter.equals("All")){
+            ArrayList<Request> allRequests = new ArrayList<>();
+            allRequests.addAll(requestsUserMadeList);
+            allRequests.addAll(requestUserReceivedList);
+            ArrayList<Book> allBooks = new ArrayList<>();
+            allBooks.addAll(requestsUserMadeBooksList);
+            allBooks.addAll(requestUserReceivedBooksList);
+            requestAdapter.updateList(allRequests, allBooks);
+        }else if(filter.equals("Requests Received")) {
+            requestAdapter.updateList(requestUserReceivedList, requestUserReceivedBooksList);
+        } else if (filter.equals(("Requests Made"))){
+            requestAdapter.updateList(requestsUserMadeList, requestsUserMadeBooksList);
         }
-    }
-    // Recycler view initialization
-    //This resets the recycler view to a new ArrayList everytime
-    private void initRecyclerView(Context context){
-        Log.d("j!!!init", "initRecyclerView: init recyclerview.");
 
     }
 
-    private void enteredAlert(String msg) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
-        alertDialogBuilder.setMessage((CharSequence) msg);
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                // TODO Auto-generated catch block
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
+
+//    private void enteredAlert(String msg) {
+//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
+//        alertDialogBuilder.setMessage((CharSequence) msg);
+//        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface arg0, int arg1) {
+//                // TODO Auto-generated catch block
+//            }
+//        });
+//        AlertDialog alertDialog = alertDialogBuilder.create();
+//        alertDialog.show();
+//    }
 
 
 

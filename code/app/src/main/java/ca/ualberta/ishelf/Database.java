@@ -26,18 +26,27 @@ import java.util.UUID;
  * Real-Time database
  * Important Note: Any method that gets an object from the firebase will not work
  * due to the nature of threads. Copy and alter code, inserting into the actual activity.
+ * @author : Randal Kimpinski
  */
 public class Database extends Application {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
 
-    //TODO documentation
-    //TODO use arrays to actually return objects
+    /**
+     * Initialize database using current context
+     * Database db = new Database(this)
+     * @author : Randal Kimpinski
+     */
     Database(Context context){
         Firebase.setAndroidContext(context);
         ref = new Firebase(link);
     }
 
+    /**
+     * Used to change the context of our firebase
+     * @param context
+     * @return
+     */
     public Firebase connect(Context context){
         Firebase ref;
         Firebase.setAndroidContext(context);
@@ -49,6 +58,7 @@ public class Database extends Application {
      * Given a user object, adds that object to firebase
      * Uses Gson to store the object
      * @param user
+     * @author : Randal Kimpinski
      */
     public void addUser(User user) {
         // Save user to Firebase
@@ -62,6 +72,7 @@ public class Database extends Application {
     /**
      * Given a username, finds that object in our database and deletes it
      * @param username
+     * @author : Randal Kimpinski
      */
     public void deleteUser(String username) {
         // get reference to specific entry
@@ -72,6 +83,7 @@ public class Database extends Application {
     /**
      * Given a user object, finds that object in the database and replaces it
      * @param user
+     * @author : Randal Kimpinski
      */
     public void editUser(User user) {
         deleteUser(user.getUsername());
@@ -83,6 +95,7 @@ public class Database extends Application {
      * firebase real-time database and replaces it with the new user.
      * @param oldUsername
      * @param user
+     * @author : Randal Kimpinski
      */
     public void editUser(String oldUsername, User user) {
         deleteUser(oldUsername);
@@ -93,6 +106,7 @@ public class Database extends Application {
     /**
      * Given a book object, adds that object to the firebase real-time database
      * @param book
+     * @author : Randal Kimpinski
      */
     public void addBook(Book book) {
         // Save book to Firebase
@@ -108,6 +122,7 @@ public class Database extends Application {
      * Given the UUID of a book, finds that book in the Firebase real-time database
      * and removes it
      * @param id
+     * @author : Randal Kimpinski
      */
     public void deleteBook(UUID id) {
         // get reference to specific entry
@@ -118,6 +133,7 @@ public class Database extends Application {
     /**
      * Given a book object, finds that object in the database and replaces it
      * @param book
+     * @author : Randal Kimpinski
      */
     public void editBook(Book book) {
         deleteBook(book.getId());
@@ -125,91 +141,45 @@ public class Database extends Application {
     }
 
 
-
     /**
-     * Given a request object, adds that object to the firebase real-time database
-     * @author rmnattas
-     * @param bookOwnerUsername username to edit the request in
-     * @param request request object to edit
+     * Given a Request object, adds that object to firebase
+     * Uses Gson to store the object
+     * @param request
+     * @author : Randal Kimpinski
      */
-    public void addRequest(final String bookOwnerUsername, final Request request) {
-        // get the user object from firebase
-        Firebase tempRef = ref.child("Users").child(bookOwnerUsername);
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
-                if (jUser != null) {
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<User>() {
-                    }.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
-                    user.addRequest(request);
-                    editUser(bookOwnerUsername, user);
-                } else {
-                    Log.d("DATABASE", "add notification");
-                }
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                return;
-            }
-        });
+    public void addRequest(Request request) {
+        // Save user to Firebase
+        Firebase userchild = ref.child("Requests").child(request.getId().toString());
+        Gson gson = new Gson();
+        String jRequest = gson.toJson(request);
+        // save the new User object to firebase
+        userchild.setValue(jRequest);
     }
 
     /**
-     * Given the UUID of a request, finds that request in the Firebase real-time database
-     * and removes it
-     * @param bookOwnerUsername username to edit the request in
-     * @param request request object to edit
-     * @author rmnattas
+     * Given a Request id, finds that object in our database and deletes it
+     * @param requestId
+     * @author : Randal Kimpinski
      */
-    public void deleteRequest(final String bookOwnerUsername, final Request request) {
-        // get the user object from firebase
-        Firebase tempRef = ref.child("Users").child(bookOwnerUsername);
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String jUser = dataSnapshot.getValue(String.class);
-                Log.d("jUser", jUser);
-                if (jUser != null) {
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<User>() {
-                    }.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
-                    user.deleteRequest(request);
-                    editUser(bookOwnerUsername, user);
-                } else {
-                    Log.d("DATABASE", "add notification");
-                }
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                return;
-            }
-        });
+    public void deleteRequest(String requestId) {
+        // get reference to specific entry
+        Log.d("Delete","Here");
+        ref.child("Requests").child(requestId).removeValue();
     }
-
 
     /**
-     * Given a book object, finds that object in the database and replaces it
-     * @author rmnattas
-     * @param bookOwnerUsername username to edit the request in
-     * @param request request object to edit
+     * Given a user object, finds that object in the database and replaces it
+     * @param request
+     * @author : Randal Kimpinski
      */
-    public void editRequest(final String bookOwnerUsername, final Request request) {
-        deleteRequest(bookOwnerUsername, request);
-        addRequest(bookOwnerUsername, request);
+    public void editUser(Request request) {
+        deleteRequest(request.getId().toString());
+        addRequest(request);
     }
-
-
-
     /**
      * Given a notification object, adds that object to the firebase realt-time database
      * @param notification
+     * @author : Randal Kimpinski
      */
     public void addNotification(Notification notification) {
         // Save notification to Firebase
@@ -224,6 +194,7 @@ public class Database extends Application {
     /**
      * Given the id of a notification, finds that obejct in the firebase database and deletes it
      * @param id
+     * @author : Randal Kimpinski
      */
     public void deleteNotification(UUID id) {
         // get reference to specific entry
@@ -234,6 +205,7 @@ public class Database extends Application {
      * Given a notification, finds that notification in the firebase real-time database
      * and replaces it with our new notification
      * @param notification
+     * @author : Randal Kimpinski
      */
     public void editNotification(Notification notification) {
         deleteNotification(notification.getId());
