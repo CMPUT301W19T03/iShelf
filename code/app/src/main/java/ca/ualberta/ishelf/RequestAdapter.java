@@ -46,6 +46,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         public TextView userName;
         public TextView state;
         public TextView type;
+        public TextView lblType;
         public ConstraintLayout requestBody;
 
 
@@ -56,6 +57,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             requestBody = view.findViewById(R.id.request_body);
             state = view.findViewById(R.id.request_state);
             type = view.findViewById(R.id.request_type);
+            lblType = view.findViewById(R.id.lableType);
 //            requesterRatingBar = view.findViewById(R.id.requesterRatingBar);
         }
     }
@@ -88,14 +90,12 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         // Changing to fit my implementation of Request
         requestHolder.title.setText(requestBooks.get(position).getName());
-        requestHolder.userName.setText(requestList.get(position).getRequester());
-        //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
 
         // set state TextView
         if (requestList.get(position).getStatus() == 1) {
             // accepted
             requestHolder.state.setText("Accepted");
-            requestHolder.state.setTextColor(Color.GREEN);
+            requestHolder.state.setTextColor(Color.rgb(50,205,50));  // green
         } else if (requestList.get(position).getStatus() == -1) {
             // declined
             requestHolder.state.setText("Declined");
@@ -107,9 +107,19 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
 
         final String username = requestContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         if (requestList.get(position).getRequester().equals(username)){
+            // the request is made by the logged in user
             requestHolder.type.setText("Requested");
+            requestHolder.userName.setText(requestList.get(position).getOwner());
+            requestHolder.lblType.setText("Book owner:");
+            // TODO show user rating
+            //requestHolder.requesterRatingBar.setRating(requestList.get(position).getOwner().getOverallRating());
         }else{
+            // the request is received from other user
             requestHolder.type.setText("Received");
+            requestHolder.userName.setText(requestList.get(position).getRequester());
+            requestHolder.lblType.setText("Requested By:");
+            // TODO show user rating
+            //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
         }
 
         requestHolder.requestBody.setOnClickListener(new View.OnClickListener() {
