@@ -130,6 +130,26 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         Log.d(TAG+" acceptRequest", "Called with " + position);
         // Create Database object that we will use
         Database db = new Database(this);
+
+        Intent intent = getIntent();
+        String bookID  = intent.getStringExtra("ID");
+
+
+        //TODO replace with actual code
+//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+
+
+        bookId = UUID.fromString(bookID);
+
+        Book book = new Book();
+        book = intent.getParcelableExtra("book");
+
+        book.setTransition(1);
+        book.setNext_owner(mNames.get(position));
+
+        db.editBook(book);
+
+
         // The specific request object
         Request selectedRequest = requests.get(position);
         // Decline all other requests
@@ -170,7 +190,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         safeNotify();
     }
 
-    /**
+
+            /**
      * Decline a requesters request
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
@@ -225,8 +246,12 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     Type tokenType = new TypeToken<User>(){}.getType();
                     user = gson.fromJson(jUser, tokenType);
                     Log.d("Confirm", user.getUsername());
+                    // This call must be nested since we need
+                    // the user object to access the requests data
+                    //getRequesterRatings();
+                    //getBookNames();
                     safeNotify();
-                    getRequests();
+                    getRequestInformation2();
                 } else {
                     Log.d("getUser FBerror1", "jUser was null");
                 }
@@ -239,15 +264,13 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
 
     /**
-     * Get all the requests for a specific book and specific user
-     * In this case, the book is provided by the previous activity,
-     * and the user is the user currently using the app
+     * Get the information associated and required for each of our requests
+     * This information is the rating of the requester, aswell as the
+     * name of the book
      * @author : Randal Kimpinski
      */
-    private void getRequests() {
-        Log.d(TAG + " getRequests", "getRequests has been called");
-        // get reference to specific entry
-        // create a one time use listener to immediately access datasnapshot
+    private void getRequestInformation2() {
+        Log.d(TAG+" getRequestInformation2", "getReqeustInformation2 has been called");
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -267,7 +290,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     }
                 }
             }
-
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 

@@ -14,6 +14,8 @@ import java.util.UUID;
  */
 public class Book implements Parcelable{
     private String owner;
+    private String holder;
+    private String next_holder;
     private String name;
     private String description;
     private Long ISBN;
@@ -26,9 +28,11 @@ public class Book implements Parcelable{
     private String year;
     private String genre;
     private String author;
+    private int transition;
 
     public  Book(){
         this.status = 1;
+        this.transition=0;
         this.id = UUID.randomUUID();
     }
 
@@ -41,12 +45,15 @@ public class Book implements Parcelable{
         this.genre = genre;
         this.author = author;
         this.status = 1;
+        this.transition=0;
         this.borrowedBook = borrowedBook;
     }
 
 
     protected Book(Parcel in) {
         owner = in.readString();
+        next_holder = in.readString();
+        holder= in.readString();
         name = in.readString();
         description = in.readString();
         if (in.readByte() == 0) {
@@ -55,6 +62,7 @@ public class Book implements Parcelable{
             ISBN = in.readLong();
         }
         status = in.readInt();
+        transition = in.readInt();
         byte tmpBorrowedBook = in.readByte();
         borrowedBook = tmpBorrowedBook == 0 ? null : tmpBorrowedBook == 1;
         year = in.readString();
@@ -74,6 +82,15 @@ public class Book implements Parcelable{
             return new Book[size];
         }
     };
+
+
+    public int getTransition() {
+        return transition;
+    }
+
+    public void setTransition(int transition) {
+        this.transition = transition;
+    }
 
     public String getAuthor() {
         return author;
@@ -172,7 +189,21 @@ public class Book implements Parcelable{
 
     public String getOwner(){ return owner; }
 
+    public String getNext_holder() {
+        return next_holder;
+    }
 
+    public void setNext_holder(String next_holder) {
+        this.next_holder= next_holder;
+    }
+
+    public String getHolder() {
+        return holder;
+    }
+
+    public void setHolder(String holder) {
+        this.holder = holder;
+    }
     // Public Methods
 
     /**
@@ -235,6 +266,8 @@ public class Book implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(owner);
+        dest.writeString(holder);
+        dest.writeString(next_holder);
         dest.writeString(name);
         dest.writeString(description);
         if (ISBN == null) {
@@ -244,10 +277,12 @@ public class Book implements Parcelable{
             dest.writeLong(ISBN);
         }
         dest.writeInt(status);
+        dest.writeInt(transition);
         dest.writeByte((byte) (borrowedBook == null ? 0 : borrowedBook ? 1 : 2));
         dest.writeString(year);
         dest.writeString(genre);
         dest.writeString(author);
         dest.writeString(id.toString());
+
     }
 }
