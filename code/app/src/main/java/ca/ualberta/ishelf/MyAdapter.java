@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -34,56 +33,49 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * TODO get actual images instead of the 3 temp ones
  * @author evan
  * @edited rmnattas
- *
- * mar 18 changed to match borrowfragment so i can search and filter - Evan
  */
-public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable{
+public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private static final String TAG = "MyAdapter";
 
-    private ArrayList<Book> booksList = new ArrayList<>();
-    private ArrayList<Book> filterList = new ArrayList<>();
+//    private ArrayList<String> mImageName = new ArrayList<>();
+//    private ArrayList<String> mImages = new ArrayList<>();
+
+    // one list that has the book objects no need
+    // for separate lists for names and images @rmnattas
+    private  ArrayList<Book> booksList;
+
     private Context mContext;
 
-    public MyAdapter(ArrayList<Book> booksList, Context mContext, ArrayList<Book> filterList) {
-        this.filterList = filterList;
+//    public MyAdapter(ArrayList<String> mImageName, ArrayList<String> mImages,ArrayList<Book> mbookList, Context mContext) {
+//        this.mImageName = mImageName;
+//        this.mImages = mImages;
+
+    public MyAdapter(ArrayList<Book> booksList, Context mContext) {
         this.booksList = booksList;
         this.mContext = mContext;
     }
 
-
-    public class ViewHolder extends RecyclerView.ViewHolder{
-        CircleImageView image;
-        TextView imageName;
-        public TextView owner;
-        public TextView description;
-        public TextView title;
-        public ConstraintLayout parentLayout;
-
-        public ViewHolder(View itemView) {
-            super(itemView);
-            //image = itemView.findViewById(R.id.imageView2);
-            //imageName = itemView.findViewById(R.id.image_name);
-            parentLayout = (ConstraintLayout) itemView.findViewById(R.id.borrow_body); // just using the layout - Evan
-            title = (TextView) itemView.findViewById(R.id.title);
-            owner = (TextView) itemView.findViewById(R.id.owner_borrow);
-            description = (TextView) itemView.findViewById(R.id.description1); //changed the id to not be the same as your declaration - Evan
-
-        }
+    /**
+     * update the list of books in the adadpter
+     * @param booksList new list of books
+     * @author rmnattas
+     */
+    public void updateList (ArrayList<Book> booksList){
+        this.booksList = booksList;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // this one inflates the view
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.borrow_book_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_items, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, final int position) {
         //changes based on layout
         Log.d(TAG, "onbindviewHolder: called");
-        ViewHolder mholder = (ViewHolder) holder;
 
         // temp images
         ArrayList<String> tempImgs = new ArrayList<>();
@@ -92,9 +84,9 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         tempImgs.add("https://i.redd.it/0h2gm1ix6p501.jpg");
         int randomImg = position%tempImgs.size();
 
-        //Glide.with(mContext).asBitmap().load(tempImgs.get(randomImg)).into(mholder.image);
-        //mholder.imageName.setText(booksList.get(position).getName());
-        mholder.parentLayout.setOnClickListener(new View.OnClickListener() {
+        Glide.with(mContext).asBitmap().load(tempImgs.get(randomImg)).into(holder.image);
+        holder.imageName.setText(booksList.get(position).getName());
+        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent( mContext, BookProfileActivity.class);
@@ -103,8 +95,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
                 intent.putExtra("pos data", position);
                 intent.putExtra("Button Visible", true);
 
-                Activity bookActivity = (Activity) mContext;
-                bookActivity.startActivity(intent);
+                ((Activity) mContext).startActivityForResult(intent,1002);
 
             }
         });
@@ -120,56 +111,21 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     @Override
     public int getItemCount() {
         // if 0, you would just get a blank screen
-        return filterList.size();
+        return booksList.size();
     }
 
-    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected void publishResults(CharSequence constraint, FilterResults results) {
-                filterList = (ArrayList<Book>) results.values;
-                notifyDataSetChanged();
-            }
 
-            @Override
-            protected FilterResults performFiltering(CharSequence constraint) {
-                List<Book> filteredResults = null;
-                if (constraint.length() == 0) {
-                    filteredResults = booksList;
-                } else {
-                    filteredResults = getFilteredResults(constraint.toString().toLowerCase());
-                }
+    public class ViewHolder extends RecyclerView.ViewHolder{
+        CircleImageView image;
+        TextView imageName;
+        ConstraintLayout parentLayout;
 
-                FilterResults results = new FilterResults();
-                results.values = filteredResults;
+        public ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            image = itemView.findViewById(R.id.image);
+            imageName = itemView.findViewById(R.id.image_name);
+            parentLayout = itemView.findViewById(R.id.parent_layout);
 
-                return results;
-            }
-        };
-    }
-    protected List<Book> getFilteredResults(String constraint) {
-        List<Book> results = new ArrayList<>();
-
-        for (Book item : booksList) {
-            if (item.getDescription().toLowerCase().contains(constraint)) {
-                results.add(item);
-            }
-            if (item.getName().toLowerCase().contains(constraint)) {
-                results.add(item);
-            }
         }
-        return results;
     }
-    /**
-     * update the list of books in the adadpter
-     * @param booksList new list of books
-     * @author rmnattas
-     * @edited Evan
-     */
-    public void updateList (ArrayList<Book> booksList){
-        this.booksList = booksList;
-        this.filterList = booksList;
-    }
-
 }
