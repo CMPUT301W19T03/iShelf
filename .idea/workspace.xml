@@ -2,13 +2,150 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f4c1da9c-6731-42c2-b14f-1bfb9369110a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/iShelf.iml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/gradle_wrapper.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.10.1/fileHashes/fileHashes.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/build_file_checksums.ser" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/code/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/code/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-10.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-11.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-12.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-13.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-14.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-15.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-16.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-17.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-18.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-19.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-3.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-4.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-5.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-6.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-7.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-8.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/index-files/index-9.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/Book.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BookProfileActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BookProfileTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BookTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/Borrow.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BorrowAdapter.BorrowViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BorrowAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BorrowFragment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BorrowFragmentTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/BorrowTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/Database.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/EditBookActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/EditBookTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/EditProfileActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/ExampleInstrumentedTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/ExampleUnitTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/GalleryActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/GalleryActivityTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/GalleryAdapter.GalleryViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/GalleryAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/LORRecyclerViewAdapter.ViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/LORRecyclerViewAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/ListOfRequestsActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/ListOfRequestsTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/MainActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/MyAdapter.ViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/MyAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/MyViewAction.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/Notification.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/NotificationActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/NotificationAdapter.NotificationViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/NotificationAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/NotificationTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/Rating.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/RatingTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/Request.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/RequestAdapter.RequestViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/RequestAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/RequestFragment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/RequestTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/SignInActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/User.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/UserTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/ViewImageActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/ViewProfileActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/ViewProfileTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/Book.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BookProfileActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BookProfileTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BookTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/Borrow.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BorrowAdapter.BorrowViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BorrowAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BorrowFragment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BorrowFragmentTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/BorrowTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/Database.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/EditBookActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/EditBookTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/EditProfileActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/ExampleInstrumentedTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/ExampleUnitTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/GalleryActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/GalleryActivityTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/GalleryAdapter.GalleryViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/GalleryAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/LORRecyclerViewAdapter.ViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/LORRecyclerViewAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/ListOfRequestsActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/ListOfRequestsTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/MainActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/MyAdapter.ViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/MyAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/MyViewAction.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/Notification.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/NotificationActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/NotificationAdapter.NotificationViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/NotificationAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/NotificationTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/Rating.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/RatingTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/Request.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/RequestAdapter.RequestViewHolder.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/RequestAdapter.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/RequestFragment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/RequestTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/SignInActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/User.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/UserTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/ViewImageActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/ViewProfileActivity.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/ViewProfileTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/myBooksFragment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/class-use/myBooksFragmentTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/myBooksFragment.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/myBooksFragmentTest.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/package-frame.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/package-summary.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/package-tree.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/ca/ualberta/ishelf/package-use.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-1.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-10.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-11.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-12.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-13.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-14.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-15.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-16.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-17.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-18.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-19.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-2.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-20.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-3.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-4.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-5.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-6.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-7.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-8.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/code/app/src/javaDoc/index-files/index-9.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/iShelf.iml" beforeDir="false" afterPath="$PROJECT_DIR$/iShelf.iml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -27,12 +164,32 @@
     <session id="-1695990217">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="1" />
-          <entry key="project.open.time.0" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.closed" value="4" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.1" value="2" />
+          <entry key="project.opened" value="4" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="java" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="JAVA" value="1" />
         </counts>
       </usages-collector>
     </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/code/app/src/main/java/ca/ualberta/ishelf/myBooksFragment.java">
+          <provider selected="true" editor-type-id="text-editor" />
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -134,6 +291,7 @@
     <property name="android.project.structure.last.selected" value="SDK Location" />
     <property name="android.project.structure.proportion" value="0.15" />
     <property name="android.sdk.path" value="$USER_HOME$/AppData/Local/Android/Sdk" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RunDashboard">
@@ -172,27 +330,32 @@
   <component name="ToolWindowManager">
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" visible="true" weight="0.3295302" />
-      <window_info id="Structure" side_tool="true" />
-      <window_info id="Build Variants" side_tool="true" />
-      <window_info id="Image Layers" />
-      <window_info id="Designer" />
-      <window_info id="Capture Tool" />
-      <window_info id="Favorites" side_tool="true" />
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="TODO" />
-      <window_info anchor="bottom" id="Terminal" />
-      <window_info anchor="bottom" id="Event Log" side_tool="true" />
-      <window_info anchor="bottom" id="Build" visible="true" weight="0.32907802" />
-      <window_info anchor="right" id="Capture Analysis" />
-      <window_info anchor="right" id="Gradle" />
-      <window_info anchor="right" id="Theme Preview" />
-      <window_info anchor="right" id="Palette&#9;" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.34362417" />
+      <window_info id="Structure" order="2" side_tool="true" />
+      <window_info id="Build Variants" order="3" side_tool="true" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Designer" order="5" />
+      <window_info id="Capture Tool" order="6" />
+      <window_info id="Favorites" order="7" side_tool="true" />
+      <window_info anchor="bottom" id="Version Control" order="0" />
+      <window_info anchor="bottom" id="TODO" order="1" />
+      <window_info anchor="bottom" id="Terminal" order="2" />
+      <window_info anchor="bottom" id="Event Log" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Build" order="4" visible="true" weight="0.32907802" />
+      <window_info anchor="right" id="Capture Analysis" order="0" />
+      <window_info anchor="right" id="Gradle" order="1" />
+      <window_info anchor="right" id="Theme Preview" order="2" />
+      <window_info anchor="right" id="Palette&#9;" order="3" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
     <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/code/app/src/main/java/ca/ualberta/ishelf/myBooksFragment.java">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
   </component>
   <component name="masterDetails">
     <states>
