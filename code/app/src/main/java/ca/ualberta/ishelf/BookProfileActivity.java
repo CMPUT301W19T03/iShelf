@@ -117,7 +117,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
 
 
-        if(canEdit){
+        if(canEdit || isOwner){
             // show the edit and delete book buttons
             Button delButton = findViewById(R.id.del);
             Button editButton = findViewById(R.id.edit);
