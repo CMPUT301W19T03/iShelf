@@ -6,11 +6,14 @@ import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.RatingBar;
 import android.widget.RatingBar.OnRatingBarChangeListener;
+import android.widget.SearchView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -58,7 +62,7 @@ import static android.app.Activity.RESULT_OK;
  * -a lot of this code is going to change once i change myAdapter to match the one from borrow books, the tests will change too
  * -right now the way it's displayed will largely be changed in the next sprint - Evan
  */
-public class myBooksFragment extends Fragment {
+public class myBooksFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     //    https://stackoverflow.com/questions/44777605/android-studio-how-to-add-filter-on-a-recyclerview-and-how-to-implement-it
     private static final String TAG = "MyBooksFragment";
 
@@ -70,20 +74,27 @@ public class myBooksFragment extends Fragment {
     private Spinner spinner; //drop-down filter: https://www.mkyong.com/android/android-spinner-drop-down-list-example/
     private RecyclerView recyclerView;
     private MyAdapter myAdapter;
+    private SwipeRefreshLayout myBooksRefresh;
+    private SearchView searchView;
 
+    /***********************************************************************************/
+
+    @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.my_book, container, false);
-    }
+        View view = inflater.inflate(R.layout.my_book, container, false);
+        // make  a list for recycler view
+        ArrayList<Book> allMyBooks = new ArrayList<>(); // both owned and borrowed
+        allMyBooks.addAll(myOwnedBooks);
+        allMyBooks.addAll(myBorrowedBooks);
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        Log.d(TAG, "OnCreate started");
-
-        // set recycler view events
-        spinner = getActivity().findViewById(R.id.spinner);
-        FloatingActionButton add = (FloatingActionButton) getActivity().findViewById(R.id.addButton); //sorry abdul
+        // set recycler view
+        recyclerView = (RecyclerView) view.findViewById(R.id.my_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(view.getContext()));
+        myAdapter = new MyAdapter(allMyBooks, this.getContext(), allMyBooks);
+        recyclerView.setAdapter(myAdapter);
+        spinner = view.findViewById(R.id.spinner);
+        FloatingActionButton add = (FloatingActionButton) view.findViewById(R.id.addButton); //sorry abdul
         add.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -101,31 +112,87 @@ public class myBooksFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
-
-        // set recycler view
-        recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
-        // make  a list for recycler view
-        ArrayList<Book> allMyBooks = new ArrayList<>(); // both owned and borrowed
-        allMyBooks.addAll(myOwnedBooks);
-        allMyBooks.addAll(myBorrowedBooks);
-        myAdapter = new MyAdapter(allMyBooks, this.getContext());
-        recyclerView.setAdapter(myAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        // clear myBooks listView
-        ArrayList<Book> cleanList = new ArrayList<>();
-        myAdapter.updateList(cleanList);
-        myAdapter.notifyDataSetChanged();
-
-        // update list of books
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
+                LinearLayoutManager.VERTICAL);
+        recyclerView.addItemDecoration(dividerItemDecoration);
         getUserBooks();
+
+        searchView = (SearchView) getActivity().findViewById(R.id.searchView1);
+
+        myBooksRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh1);
+        myBooksRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                getUserBooks();
+                myBooksRefresh.setRefreshing(false);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String text) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String text) {
+                myAdapter.getFilter().filter(text);
+                return true;
+            }
+        });
+        return view;
     }
+
+//    @Override
+//    public void onActivityCreated(Bundle savedInstanceState) {
+//        super.onActivityCreated(savedInstanceState);
+//        Log.d(TAG, "OnCreate started");
+//
+//        // set recycler view events
+//        spinner = getActivity().findViewById(R.id.spinner);
+//        FloatingActionButton add = (FloatingActionButton) getActivity().findViewById(R.id.addButton); //sorry abdul
+//        add.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                addBook(v);
+//            }
+//        });
+//        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String selectedItem = parent.getItemAtPosition(position).toString();
+//                Filter(selectedItem);
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//            }
+//        });
+//
+//        // set recycler view
+//        recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
+//        // make  a list for recycler view
+//        ArrayList<Book> allMyBooks = new ArrayList<>(); // both owned and borrowed
+//        allMyBooks.addAll(myOwnedBooks);
+//        allMyBooks.addAll(myBorrowedBooks);
+//        myAdapter = new MyAdapter(allMyBooks, this.getContext(), allMyBooks);
+//        recyclerView.setAdapter(myAdapter);
+//        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+//    }
+
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//
+//        // clear myBooks listView
+//        ArrayList<Book> cleanList = new ArrayList<>();
+//        myAdapter.updateList(cleanList);
+//        myAdapter.notifyDataSetChanged();
+//
+//        // update list of books
+//        getUserBooks();
+//    }
 
     /**
      * Get the logged in user books from firebase
@@ -136,7 +203,7 @@ public class myBooksFragment extends Fragment {
         // clear previous lists
         myOwnedBooks.clear();
         myBorrowedBooks.clear();
-        
+
         // get logged in user username
         final String currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
@@ -293,10 +360,6 @@ public class myBooksFragment extends Fragment {
         /** editing or deleting a book */
         if(requestCode == 1002){
 
-//            boolean check = data.getBooleanExtra("Check", true);
-//            Book book = data.getParcelableExtra("Data");
-//            int pos = data.getIntExtra("Pos", 0);
-
             // clear myBooks listView
             ArrayList<Book> cleanList = new ArrayList<>();
             myAdapter.updateList(cleanList);
@@ -307,31 +370,10 @@ public class myBooksFragment extends Fragment {
             if(resultCode == RESULT_OK){ }
         }
     }
+
+    @Override
+    public void onRefresh() {
+        getUserBooks();
+        myBooksRefresh.setRefreshing(false);
+    }
 }
-
-
-// commented code by @rmnattas
-//deleted a bunch of comments i dont think we'll need @Evan
-/*
-    private void enteredAlert(String msg) {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
-        alertDialogBuilder.setMessage((CharSequence) msg);
-        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface arg0, int arg1) {
-                // TODO Auto-generated catch block
-            }
-        });
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.show();
-    }
-
-    private void initRecyclerView(ArrayList<Book> list, Context context){
-        Log.d(TAG, "initRecyclerView: init recyclerview.");
-        RecyclerView recyclerView = (RecyclerView) getActivity().findViewById(R.id.my_recycler_view);
-        MyAdapter adapter = new MyAdapter(list, this.getContext()); //in the same order as the constructor in MyAdapter
-        recyclerView.setAdapter(adapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
-    }
-
- */
