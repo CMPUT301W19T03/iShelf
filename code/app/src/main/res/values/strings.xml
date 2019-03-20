@@ -13,8 +13,9 @@
         <item name="borrowedBooks">Borrowed Books</item>
     </string-array>
     <string-array name="requested_array">
-        <item name="Pending">Pending Requests</item>
-        <item name="Accepted">Accepted Requests</item>
+        <item name="All">All</item>
+        <item name="Made">Requests Made</item>
+        <item name="Received">Requests Received</item>
     </string-array>
 
 </resources>

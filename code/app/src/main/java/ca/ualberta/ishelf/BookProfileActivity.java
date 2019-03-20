@@ -385,12 +385,13 @@ public class BookProfileActivity extends AppCompatActivity {
         // set requester username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         request.setRequester(currentUsername);
+        request.setOwner(passedBook.getOwner());
         // set request time
         request.setTimeRequested(Calendar.getInstance().getTime());
 
         // add the request to the book owner listOfRequests
         Database db = new Database(this);
-        db.addRequest(passedBook.getOwner(), request);
+        db.addRequest(request);
         Toast toast = Toast.makeText(getApplicationContext(),
                 "Book Requested",
                 Toast.LENGTH_LONG);

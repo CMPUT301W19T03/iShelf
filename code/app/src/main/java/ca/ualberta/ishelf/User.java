@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 /**
  * deleted "state" and rearranged some code, need to get ratings working - Evan
+ * deleted listOfRequests since we are restructuring firebase - Randal
  * @author Evan
  *
  */
@@ -16,7 +17,6 @@ public class User implements Serializable {
     private ArrayList<UUID> ownedBooks = new ArrayList<>();
     private Rating rating;
     private ArrayList<Rating> ratingArrayList = new ArrayList<>();
-    private ArrayList<Request> listofRequests = new ArrayList<>();
     private String phoneNum;
     private String email;
     private static final String TAG = "User";
@@ -60,14 +60,6 @@ public class User implements Serializable {
 
     public void setBorrowedBooks(ArrayList<UUID> borrowedBooks) {
         this.borrowedBooks = borrowedBooks;
-    }
-
-    public ArrayList<Request> getListofRequests() {
-        return listofRequests;
-    }
-
-    public void setListofRequests(ArrayList<Request> listofRequests) {
-        this.listofRequests = listofRequests;
     }
 
     public String getPhoneNum() {
@@ -119,13 +111,5 @@ public class User implements Serializable {
 
     public void addRating(Rating rating){
         ratingArrayList.add(rating);
-    }
-
-    public void addRequest(Request request){
-        listofRequests.add(request);
-    }
-
-    public void deleteRequest(Request request){
-        listofRequests.remove(request);
     }
 }
