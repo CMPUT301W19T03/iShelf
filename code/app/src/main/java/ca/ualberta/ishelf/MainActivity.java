@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.app.SearchManager;
@@ -46,6 +48,8 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String CHANNEL_ID = "1256";
+    private static final int NOTIFICATION_ID = 192873641;
     // Here is my first comment
     private TextView mTextMessage;
     private Toolbar myToolbar;
@@ -92,6 +96,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setSmallIcon(R.drawable.notification_icon)
+                .setContentTitle("testTitle")
+                .setContentText("testContent")
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        //TODO fix notification id, might be okay since there is only 1 notification
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
+
 
         // Firebase listener, activated when there is a change to notifications
         // Will be activated regardless of activity, or if the app is even running
