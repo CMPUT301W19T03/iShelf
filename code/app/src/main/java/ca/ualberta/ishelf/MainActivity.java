@@ -35,7 +35,14 @@ import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -62,6 +69,8 @@ public class MainActivity extends AppCompatActivity {
     // Firebase variables
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
+    // File for saving date object for notifications
+    private static final String FILENAME = "date1.sav";
 
 
     private static final String TAG = "MainActivity";
@@ -101,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Necessary to activate notifications for the app
         createNotificationChannel();
-
-
+        //TODO remove this code once the file is created
+        setLastNotificationDate(new Date());
         // Firebase listener, activated when there is a change to notifications
         // Will be activated regardless of activity, or if the app is even running
         // Set up test firebase listener
@@ -124,9 +133,14 @@ public class MainActivity extends AppCompatActivity {
                     Type tokenType = new TypeToken<Notification>() {
                     }.getType();
                     Notification notification = gson.fromJson(jNotification, tokenType);
-                    String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
-                    if (notification.getUserName().equals(username)) {
-                        Log.d(TAG + " validNotification", "Firebase contains a valid username for this user");
+                    String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+                            .getString("username", "TestUsername");
+                    Date lastNotificationDate = getLastNotificationDate();
+                    setLastNotificationDate(new Date());
+                    Log.d(TAG + " notificationDate", "File notification date is set to " + lastNotificationDate.toString());
+                    // Also check the date here, to confirm it is new
+                    if (notification.getUserName().equals(username) && notification.getDate().after(lastNotificationDate)) {
+                        Log.d(TAG + " validNotification", "Firebase contains a new notification with a valid username for this user");
                         pushNotification(notification.getText());
                     }
                 }
@@ -383,6 +397,30 @@ public class MainActivity extends AppCompatActivity {
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);
             notificationManager.createNotificationChannel(channel);
+        }
+    }
+    private Date getLastNotificationDate() {
+        try {
+            FileReader in = new FileReader(new File(getFilesDir(),FILENAME));
+            Gson gson = new Gson();
+            Type notificationtype = new TypeToken<Notification>(){}.getType();
+            Date date = gson.fromJson(in, notificationtype);
+            return date;
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+    private void setLastNotificationDate(Date date) {
+        try {
+            FileWriter out = new FileWriter(new File(getFilesDir(),FILENAME));
+            Gson gson = new Gson();
+            gson.toJson(date, out);
+            out.close();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
