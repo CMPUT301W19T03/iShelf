@@ -45,7 +45,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:background="?android:attr/windowBackground"
-        android:backgroundTint="@android:color/holo_blue_bright"
+        android:backgroundTint="@color/dark_blue"
         android:elevation="16dp"
         android:fadingEdge="none"
         android:requiresFadingEdge="none"

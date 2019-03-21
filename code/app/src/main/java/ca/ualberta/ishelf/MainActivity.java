@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -121,6 +122,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 appName.setVisibility(View.INVISIBLE);
                 profileIcon.setVisibility(View.INVISIBLE);
+                int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+                TextView textView = (TextView) searchView.findViewById(id);
+                textView.setTextColor(Color.CYAN);
+                textView.setHintTextColor(Color.CYAN);
             }
         });
 
@@ -147,77 +152,6 @@ public class MainActivity extends AppCompatActivity {
 
         //loadFragment(new myBooksFragment());
     }
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.toolbar, menu);
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        switch (item.getItemId()) {
-//            case R.id.action_favorite:
-//                // User chose the "Settings" item, show the app settings UI...
-//                Intent intent = new Intent(this, ViewProfileActivity.class);
-//                String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
-//                Log.d(TAG, "onOptionsItemSelected: Username:" + username);
-//                intent.putExtra("Username", username);
-//                startActivity(intent);
-//                finish();
-//                return true;
-//
-//            case R.id.action_settings:
-//                // User chose the "Favorite" action, mark the current item
-//                // as a favorite...
-//                return true;
-//
-//            default:
-//                // If we got here, the user's action was not recognized.
-//                // Invoke the superclass to handle it.
-//                return super.onOptionsItemSelected(item);
-//
-//        }
-//    }
-
-
-
-
-
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        getMenuInflater().inflate(R.menu.search_menu, menu);
-//
-//        MenuItem searchItem = menu.findItem(R.id.book_search);
-//        SearchView searchView = (SearchView) searchItem.getActionView();
-//
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onQueryTextChange(String query) {
-//        // Here is where we are going to implement the filter logic
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean onQueryTextSubmit(String query) {
-//        return false;
-//    }
-
-
-
-
-
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//
-//        final MenuItem searchItem = menu.findItem(R.id.book_search);
-//        final android.support.v7.widget.SearchView searchView = (SearchView) searchItem.getActionView();
-//        searchView.setQueryHint("test for something");
-//
-//        return true;
-//    }
 
     /**
      * Check if a user is signed in, if not
