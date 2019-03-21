@@ -101,19 +101,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Necessary to activate notifications for the app
         createNotificationChannel();
-        // Create instance of notification
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                //TODO notification_icon is empty right now, that may be causing errors
-                .setSmallIcon(R.drawable.  notification_icon)
-                .setContentTitle("testTitle")
-                .setContentText("testContent")
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        // Set context for notification
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId is a unique int for each notification that you must define
-        //TODO fix notification id, might be okay since there is only 1 notification
-        // Generate the notification
-        notificationManager.notify(NOTIFICATION_ID, builder.build());
 
 
         // Firebase listener, activated when there is a change to notifications
@@ -140,13 +127,9 @@ public class MainActivity extends AppCompatActivity {
                     String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", "TestUsername");
                     if (notification.getUserName().equals(username)) {
                         Log.d(TAG + " validNotification", "Firebase contains a valid username for this user");
-                        // Create the notification
-                        //TODO why does it show all notifications when starting up
-                        //TODO this could be fixed by deleting notifications when we see them
+                        pushNotification(notification.getText());
                     }
                 }
-                //String jUser = dataSnapshot.getValue(String.class);
-                // Write code to loop through notifications here
             }
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
@@ -159,12 +142,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
         });
-
-        //TODO remove
-        //Intent myIntent = new Intent(this, ListOfRequestsActivity.class);
-        //myIntent.putExtra("key", value); //Optional parameters
-        //this.startActivity(myIntent);
-        //TODO remove
 
         SignIn();
 
@@ -220,6 +197,27 @@ public class MainActivity extends AppCompatActivity {
         }
 
         //loadFragment(new myBooksFragment());
+    }
+
+    private void pushNotification(String text) {
+        // Create the notification
+        //TODO why does it show all notifications when starting up
+        //TODO this could be fixed by deleting notifications when we see them
+        String title = "Request";
+        String content = text;
+        // Create instance of notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
+                //TODO notification_icon is empty right now, that may be causing errors
+                .setSmallIcon(R.drawable.ic_stat_name)
+                .setContentTitle(title)
+                .setContentText(content)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        // Set context for notification
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        // notificationId is a unique int for each notification that you must define
+        //TODO fix notification id, might be okay since there is only 1 notification
+        // Generate the notification
+        notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
 //    @Override
