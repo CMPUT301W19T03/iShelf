@@ -131,6 +131,30 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         Log.d(TAG+" acceptRequest", "Called with " + position);
         // Create Database object that we will use
         Database db = new Database(this);
+
+        Intent intent = getIntent();
+        String bookID  = intent.getStringExtra("ID");
+
+
+        //TODO replace with actual code
+//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
+
+
+        bookId = UUID.fromString(bookID);
+
+        Book book = new Book();
+        book = intent.getParcelableExtra("book");
+
+        book.setTransition(1);
+        book.setNext_holder(mNames.get(position));
+
+        // Add the book ID to the new holder borrowedBooks list
+        addToUserBorrowList(mNames.get(position), book.getId());
+
+
+        db.editBook(book);
+
+
         // The specific request object
         Request selectedRequest = requests.get(position);
         // Decline all other requests
@@ -174,6 +198,42 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
 
     /**
+     * add the bookId to the user list of borrowedBooks
+     * @param username user to add to
+     * @param bookId book id to save
+     * @author rmnattas
+     */
+    private void addToUserBorrowList(final String username, final UUID bookId){
+        // get the user object from firebase
+        final Database db = new Database(this);
+        Firebase ref = db.connect(this);
+        Firebase tempRef = ref.child("Users").child(username);
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+//                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    user.addBorrowedBook(bookId);
+                    db.editUser(username, user);
+                } else {
+                    Log.d("myBookFrag", "11321");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
+
+
+            /**
      * Decline a requesters request
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
@@ -204,59 +264,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
 
         // Update display
         safeNotify();
-    }
-
-    /**
-     * Update our RecyclerView when the data has changed
-     * Currently implemented by reinitializing the recyclerView
-     * But There may be a more optimal method
-     * @author : Randal Kimpinski
-     */
-    private void safeNotify() {
-        initRecyclerView();
-    }
-
-    /**
-     * version of safeNotify that is called from the XML onClick() method connector
-     * Calls recycler view to easily update the data
-     * Also prints extensive error messages detailing the current state of all the
-     * relevant information. This is because there were many errors getting to this point
-     * @param view
-     * @author : Randal Kimpinski
-     */
-    public void safeNotify(View view) {
-        initRecyclerView();
-        // Print out a bunch of error messages
-        for (String x: mBookNames) {
-            Log.d("current data", x);
-        }
-        for (String x: mNames) {
-            Log.d("current data", x);
-        }
-        for (float x: mRatings) {
-            Log.d("current data", Float.toString(x));
-        }
-    }
-
-    /**
-     * Add test Request objects to firebase
-     * Request attributes must be valid keys for other firebase entries
-     * Primary purpose is to test
-     * Useful for just testing getRequestInformation
-     * @author Randal Kimpinski
-     */
-    public void addTestData() {
-        // Create test Request objects that refer to real Firebase items
-        UUID id;
-        id = UUID.fromString("e1afab89-77e9-49d6-afdd-ab98e4e245d4");
-        Request r1 = new Request(id, "Evan", username);
-        Request r2 = new Request(id, "aalattas", username);
-        Request r3 = new Request(id, "jsgray1", username);
-        // Add requests to Firebase
-        Database db = new Database(this);
-        db.addRequest(r1);
-        db.addRequest(r2);
-        db.addRequest(r3);
     }
 
     /**
@@ -385,5 +392,58 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             public void onCancelled(FirebaseError firebaseError) {
             }
         });
+    }
+
+    /**
+     * Update our RecyclerView when the data has changed
+     * Currently implemented by reinitializing the recyclerView
+     * But There may be a more optimal method
+     * @author : Randal Kimpinski
+     */
+    private void safeNotify() {
+        initRecyclerView();
+    }
+
+    /**
+     * version of safeNotify that is called from the XML onClick() method connector
+     * Calls recycler view to easily update the data
+     * Also prints extensive error messages detailing the current state of all the
+     * relevant information. This is because there were many errors getting to this point
+     * @param view
+     * @author : Randal Kimpinski
+     */
+    public void safeNotify(View view) {
+        initRecyclerView();
+        // Print out a bunch of error messages
+        for (String x: mBookNames) {
+            Log.d("current data", x);
+        }
+        for (String x: mNames) {
+            Log.d("current data", x);
+        }
+        for (float x: mRatings) {
+            Log.d("current data", Float.toString(x));
+        }
+    }
+
+    /**
+     * Add test Request objects to firebase
+     * Request attributes must be valid keys for other firebase entries
+     * Primary purpose is to test
+     * Useful for just testing getRequestInformation
+     * @author Randal Kimpinski
+     */
+    public void addTestData() {
+        // Create test Request objects that refer to real Firebase items
+        UUID id;
+        id = UUID.fromString("e1afab89-77e9-49d6-afdd-ab98e4e245d4");
+        Request r1 = new Request(id, "Evan", username);
+        Request r2 = new Request(id, "aalattas", username);
+        Request r3 = new Request(id, "jsgray1", username);
+        // Add requests to Firebase
+        Database db = new Database(this);
+        db.addRequest(r1);
+        db.addRequest(r2);
+        db.addRequest(r3);
     }
 }
