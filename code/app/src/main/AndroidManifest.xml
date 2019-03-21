@@ -3,6 +3,10 @@
     package="ca.ualberta.ishelf">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -11,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-        <activity android:name=".ViewImageActivity"></activity>
+        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".ViewImageActivity" />
         <activity android:name=".GalleryActivity" />
         <activity android:name=".NotificationActivity" />
         <activity
@@ -28,7 +33,7 @@
         </activity>
         <activity android:name=".ListOfRequestsActivity" />
         <activity
-            android:name=".MainActivity"
+            android:name=".scanActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

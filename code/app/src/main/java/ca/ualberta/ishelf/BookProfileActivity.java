@@ -1,11 +1,18 @@
 package ca.ualberta.ishelf;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.graphics.Camera;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
 import android.widget.RatingBar;
@@ -16,11 +23,16 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.vision.CameraSource;
+import com.google.android.gms.vision.Detector;
+import com.google.android.gms.vision.barcode.Barcode;
+import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import org.w3c.dom.Text;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.UUID;
@@ -61,6 +73,7 @@ public class BookProfileActivity extends AppCompatActivity {
     private Firebase ref;
     private Book passedBook = null;
     final String TAG = "BookProfileActivity";
+    private Button scanButton;
 
     // to see a gallery of books
     private Button galleryButton;
@@ -69,6 +82,19 @@ public class BookProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
+
+        scanButton = (Button) findViewById(R.id.scan_button);
+
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle extras = new Bundle();
+                extras.putParcelable("sent_book", passedBook);
+                Intent intent = new Intent(view.getContext(), GalleryActivity.class);
+                intent.putExtras(extras);
+                startActivity(intent);
+            }
+        });
 
 
 
@@ -398,5 +424,4 @@ public class BookProfileActivity extends AppCompatActivity {
         toast.show();
 
     }
-
 }
