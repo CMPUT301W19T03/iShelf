@@ -45,8 +45,8 @@ public class Request implements Parcelable {
      * Request initializer
      * timeRequested is automatically set to when the request object is created
      * but can be manually set afterwards
-     * @param bookId
-     * @param requester
+     * @param bookId id of book being requested
+     * @param requester id of person requesting the book
      */
     public Request(UUID bookId, String requester, String owner) {
         this.id = UUID.randomUUID();
@@ -86,7 +86,7 @@ public class Request implements Parcelable {
 
     /**
      * get the id of this request object
-     * @return
+     * @return UUID the id of the Request object
      */
     public UUID getId() {
         return id;
@@ -94,7 +94,7 @@ public class Request implements Parcelable {
 
     /**
      * set the id of this request object
-     * @param id
+     * @param id the id of the Request object
      */
     public void setId(UUID id) {
         this.id = id;
@@ -102,7 +102,7 @@ public class Request implements Parcelable {
 
     /**
      * get the id of the book to be borrowed
-     * @return
+     * @return UUID the id of the book
      */
     public UUID getBookId() {
         return bookId;
@@ -110,7 +110,7 @@ public class Request implements Parcelable {
 
     /**
      * set the id of the book to be borrowed
-     * @param bookId
+     * @param bookId the id of the book
      */
     public void setBookId(UUID bookId) {
         this.bookId = bookId;
@@ -118,7 +118,7 @@ public class Request implements Parcelable {
 
     /**
      * Get the username of the user requesting the book
-     * @return
+     * @return String the username of the requester
      */
     public String getRequester() {
         return requester;
@@ -126,7 +126,7 @@ public class Request implements Parcelable {
 
     /**
      * set the username of the user requesting the book
-     * @param requester
+     * @param requester the username of the requester
      */
     public void setRequester(String requester) {
         this.requester = requester;
@@ -139,7 +139,7 @@ public class Request implements Parcelable {
 
     /**
      * get the username of the owner of the book
-     * @return
+     * @return String the username of the owner
      */
     public String getOwner() {
         return owner;
@@ -147,7 +147,7 @@ public class Request implements Parcelable {
 
     /**
      * set the username of the owner of the book
-     * @param owner
+     * @param owner the username of the owner
      */
     public void setOwner(String owner) {
         this.owner = owner;
@@ -155,7 +155,7 @@ public class Request implements Parcelable {
 
     /**
      * Get the time that the book was requested
-     * @return
+     * @return timeRequested the time requested
      */
     public Date getTimeRequested() {
         return timeRequested;
@@ -163,7 +163,7 @@ public class Request implements Parcelable {
 
     /**
      * set the time that the book was requested
-     * @param timeRequested
+     * @param timeRequested the time requested
      */
     public void setTimeRequested(Date timeRequested) {
         this.timeRequested = timeRequested;
@@ -171,7 +171,7 @@ public class Request implements Parcelable {
 
     /**
      * get the location that the owner designated to meet at
-     * @return
+     * @return Location to pick up the book
      */
     public Location getLocation() {
         return location;
@@ -180,7 +180,7 @@ public class Request implements Parcelable {
     /**
      * set the location for that owner and requester to meet at
      * set the location using a location object
-     * @param location
+     * @param location the location to pick up the book
      */
     public void setLocation(Location location) {
         this.location = location;
@@ -189,8 +189,8 @@ public class Request implements Parcelable {
     /**
      * set the location for that owner and requester to meet at
      * set the location using doubles representing latitude and longitude
-     * @param latitude
-     * @param longitude
+     * @param latitude the latitude of the location
+     * @param longitude the longitude of the location
      */
     public void setLocation(double latitude, double longitude) {
         this.location = new Location("");
@@ -219,7 +219,7 @@ public class Request implements Parcelable {
      * If the status is 0, then the owner has taken no action on the request
      * If the status is 1, then the owner has accepted the request
      * If the status is -1, then the owner has declined the request
-     * @return
+     * @return int the status of the request
      */
     public int getStatus() {
         return status;
@@ -228,7 +228,7 @@ public class Request implements Parcelable {
     /**
      * Return a string representation of the request
      * This is a very simple toSting method which may or may not be useful
-     * @return
+     * @return String the request as a string
      */
     @Override
     public String toString() {

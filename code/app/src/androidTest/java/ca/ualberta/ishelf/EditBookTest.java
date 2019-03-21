@@ -41,7 +41,7 @@ import static org.hamcrest.Matchers.allOf;
  *This is the Intent test for the EditBookActivity
  *
  *
- * @author: Mehrab
+ * @author : Mehrab
  */
 
 

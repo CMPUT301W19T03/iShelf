@@ -53,7 +53,7 @@ import java.util.UUID;
  *
  *
  *
- * @author: Mehrab
+ * @author : Mehrab
  */
 
 public class BookProfileActivity extends AppCompatActivity {
@@ -392,7 +392,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
     /**
      * called when the request button is clicked
-     * @param v
+     * @param v the view
      * @author rmnattas
      */
     public void requestClicked(View v){

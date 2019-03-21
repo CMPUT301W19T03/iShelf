@@ -38,7 +38,7 @@ import static androidx.test.platform.app.InstrumentationRegistry.getInstrumentat
  *This is the Intent test for the ListofRequestsActivity
  *
  *
- * @author: Randal
+ * @author : Randal
  */
 
 

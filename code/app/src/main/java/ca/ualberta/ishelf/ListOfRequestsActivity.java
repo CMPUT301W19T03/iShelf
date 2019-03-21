@@ -67,7 +67,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * The onCreate method initializes Firebase, gets the User object associated with the
      * current User's username. It also queries Firebase to take the requests under User
      * and get the additional information we need (bookNames, Requester rating)
-     * @param savedInstanceState
+     * @param savedInstanceState savedInstanceState needed for onCreate
      * @author : Randal Kimpinski
      */
     @Override
@@ -124,7 +124,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
      * and creates the appropriate notification
-     * @param position
+     * @param position the position in the recycler view of the clicked button
      * @author : Randal Kimpinski
      */
     void acceptRequest(int position){
@@ -203,7 +203,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
      * and creates the appropriate notification
-     * @param position
+     * @param position the position in the recycler view of the clicked button
      * @author : Randal Kimpinski
      */
     void declineRequest(int position) {
@@ -374,7 +374,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * Calls recycler view to easily update the data
      * Also prints extensive error messages detailing the current state of all the
      * relevant information. This is because there were many errors getting to this point
-     * @param view
+     * @param view the view needed for onCLick method in xml
      * @author : Randal Kimpinski
      */
     public void safeNotify(View view) {

@@ -38,10 +38,10 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
     /**
      * Assigns the arrays that we pass in to variables so that they can
      * later be assigned to their appropriate views
-     * @param context
-     * @param imageNames
-     * @param myRatings
-     * @param bookNames
+     * @param context the context that we create the recycler in
+     * @param imageNames the names of the requesters
+     * @param myRatings the value of the requester ratings
+     * @param bookNames the name of the book they are requesting
      * @author : Randal Kimpinski
      */
     public LORRecyclerViewAdapter(Context context, ArrayList<String> imageNames,
@@ -54,9 +54,9 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
 
     /**
      * Inflates the view so that we can display our recyclerView
-     * @param parent
-     * @param i
-     * @return
+     * @param parent viewgroup parent object
+     * @param i position
+     * @return holder object
      * @author : Randal Kimpinski
      */
     @NonNull
@@ -73,8 +73,8 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
      * We define the functions that are called when the buttons are pressed in
      * our recycler view. We have the accept and decline button, aswell as a
      * rating bar and a textView
-     * @param holder
-     * @param position
+     * @param holder viewholder
+     * @param position position in view holder
      * @author : Randal Kimpinski
      */
     @Override
@@ -125,7 +125,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
 
     /**
      * How we decide how long the recyclerView is
-     * @return
+     * @return int size of our array and so the number of recycler view items
      * @author : Randal Kimpinski
      */
     @Override
