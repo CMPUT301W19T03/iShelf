@@ -116,8 +116,8 @@ public class BookProfileActivity extends AppCompatActivity {
 
 
 
-
-        if(canEdit || isOwner){
+        // TODO edit from fragment request
+        if(canEdit){
             // show the edit and delete book buttons
             Button delButton = findViewById(R.id.del);
             Button editButton = findViewById(R.id.edit);
@@ -245,10 +245,12 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setNext_holder(temp);
             Database db =new Database(this );
             db.editBook(passedBook);
+            // Add the book ID to the new holder borrowedBooks list
+            addToUserBorrowList(passedBook.getHolder(), passedBook.getId());
         }
         if(passedBook.getTransition()==4){
-            passedBook.setBorrowedBook(true);
-            passedBook.setBorrowed();
+            passedBook.setBorrowedBook(false);
+            passedBook.setAvailable();
             passedBook.setTransition(0);
             final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
@@ -256,8 +258,44 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setNext_holder(null);
             Database db =new Database(this );
             db.editBook(passedBook);
+            // TODO remove from brrower borrwoed list
         }
 
+    }
+
+    /**
+     * add the bookId to the user list of borrowedBooks
+     * @param username user to add to
+     * @param bookId book id to save
+     * @author rmnattas
+     */
+    private void addToUserBorrowList(final String username, final UUID bookId){
+        // get the user object from firebase
+        final Database db = new Database(this);
+        Firebase ref = db.connect(this);
+        Firebase tempRef = ref.child("Users").child(username);
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+//                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    user.addBorrowedBook(bookId);
+                    db.editUser(username, user);
+                } else {
+                    Log.d("myBookFrag", "11321");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
     }
 
     public void ret(View v){
