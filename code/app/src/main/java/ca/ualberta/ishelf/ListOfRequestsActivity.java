@@ -147,6 +147,10 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         book.setTransition(1);
         book.setNext_holder(mNames.get(position));
 
+        // Add the book ID to the new holder borrowedBooks list
+        addToUserBorrowList(mNames.get(position), book.getId());
+
+
         db.editBook(book);
 
 
@@ -188,6 +192,41 @@ public class ListOfRequestsActivity extends AppCompatActivity {
 
         // Update display
         safeNotify();
+    }
+
+    /**
+     * add the bookId to the user list of borrowedBooks
+     * @param username user to add to
+     * @param bookId book id to save
+     * @author rmnattas
+     */
+    private void addToUserBorrowList(final String username, final UUID bookId){
+        // get the user object from firebase
+        final Database db = new Database(this);
+        Firebase ref = db.connect(this);
+        Firebase tempRef = ref.child("Users").child(username);
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+//                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    user.addBorrowedBook(bookId);
+                    db.editUser(username, user);
+                } else {
+                    Log.d("myBookFrag", "11321");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
     }
 
 
