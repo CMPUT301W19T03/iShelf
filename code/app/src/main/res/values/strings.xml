@@ -6,6 +6,8 @@
     <string name="my_books">My Books</string>
     <string name="borrow_books">Borrow Books</string>
     <string name="requested_books">Requested Books</string>
+    <string name="channel_description">test_description</string>
+    <string name="channel_name">test_channel_name</string>
     <string-array name="array">
         <item name="mine">All</item>
         <item name="mine">My Books</item>

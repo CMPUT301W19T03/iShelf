@@ -95,13 +95,14 @@ public class ListOfRequestsActivity extends AppCompatActivity {
 
         // Initialize the recyclerView
         initRecyclerView();
+
         // Run the code that gets our user object
         //TODO do I need to get User Object?
         getUser();
         // Add test data to test getRequestInformation
-        addTestData();
-        //getRequests();
-        //getRequestInformation();
+        //addTestData();
+        getRequests();
+        getRequestInformation();
     }
 
     /**
@@ -147,8 +148,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         book.setTransition(1);
         book.setNext_holder(mNames.get(position));
 
-        // Add the book ID to the new holder borrowedBooks list
-        addToUserBorrowList(mNames.get(position), book.getId());
 
 
         db.editBook(book);
@@ -157,6 +156,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // The specific request object
         Request selectedRequest = requests.get(position);
         // Decline all other requests
+        /*
         for (int i = 0; i < requests.size(); i++) {
             if (i != position) {
                 Request tempRequest = requests.get(i);
@@ -167,16 +167,17 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                 db.addNotification(notification);
             }
         }
+        */
         // Accept Request
         selectedRequest.accept();
         db.addRequest(selectedRequest);
         // Create the appropriate notification and add to firebase
         Notification notification = new Notification(new Date(),
-                username + " has accepted your request", selectedRequest.getOwner());
+                username + " has accepted your request", selectedRequest.getRequester());
         db.addNotification(notification);
 
         // Remove appropriate array items
-        //TODO make this CLEAR then readd our request (so save all the values)
+        //TODO make this CLEAR then re-add our request (so save all the values)
         //TODO or iterate over it backwards, and remove all except position
         //mRatings.remove(position);
         //mNames.remove(position);
@@ -194,40 +195,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         safeNotify();
     }
 
-    /**
-     * add the bookId to the user list of borrowedBooks
-     * @param username user to add to
-     * @param bookId book id to save
-     * @author rmnattas
-     */
-    private void addToUserBorrowList(final String username, final UUID bookId){
-        // get the user object from firebase
-        final Database db = new Database(this);
-        Firebase ref = db.connect(this);
-        Firebase tempRef = ref.child("Users").child(username);
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String jUser = dataSnapshot.getValue(String.class);
-//                Log.d("jUser", jUser);
-                if (jUser != null) {
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<User>() {
-                    }.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
-                    user.addBorrowedBook(bookId);
-                    db.editUser(username, user);
-                } else {
-                    Log.d("myBookFrag", "11321");
-                }
-            }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                return;
-            }
-        });
-    }
+
 
 
             /**
@@ -238,7 +206,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      * @param position
      * @author : Randal Kimpinski
      */
-    void declineRequest(int position){
+    void declineRequest(int position) {
         Log.d(TAG+" declineRequest", "Called with " + position);
         // Create Database object that we will use
         Database db = new Database(this);
@@ -285,12 +253,8 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     Type tokenType = new TypeToken<User>(){}.getType();
                     user = gson.fromJson(jUser, tokenType);
                     Log.d("Confirm", user.getUsername());
-                    // This call must be nested since we need
-                    // the user object to access the requests data
-                    //getRequesterRatings();
-                    //getBookNames();
                     safeNotify();
-                    getRequestInformation2();
+                    getRequests();
                 } else {
                     Log.d("getUser FBerror1", "jUser was null");
                 }
@@ -303,13 +267,15 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     }
 
     /**
-     * Get the information associated and required for each of our requests
-     * This information is the rating of the requester, aswell as the
-     * name of the book
+     * Get all the requests for a specific book and specific user
+     * In this case, the book is provided by the previous activity,
+     * and the user is the user currently using the app
      * @author : Randal Kimpinski
      */
-    private void getRequestInformation2() {
-        Log.d(TAG+" getRequestInformation2", "getReqeustInformation2 has been called");
+    private void getRequests() {
+        Log.d(TAG + " getRequests", "getRequests has been called");
+        // get reference to specific entry
+        // create a one time use listener to immediately access datasnapshot
         ref.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -329,6 +295,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                     }
                 }
             }
+
             @Override
             public void onCancelled(FirebaseError firebaseError) {
 
