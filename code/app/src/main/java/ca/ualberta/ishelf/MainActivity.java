@@ -122,10 +122,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 appName.setVisibility(View.INVISIBLE);
                 profileIcon.setVisibility(View.INVISIBLE);
-                int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
-                TextView textView = (TextView) searchView.findViewById(id);
-                textView.setTextColor(Color.CYAN);
-                textView.setHintTextColor(Color.CYAN);
+                
             }
         });
 
