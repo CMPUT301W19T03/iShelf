@@ -110,8 +110,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Necessary to activate notifications for the app
         createNotificationChannel();
-        //TODO remove this code once the file is created
-        setLastNotificationDate(new Date());
         // Firebase listener, activated when there is a change to notifications
         // Will be activated regardless of activity, or if the app is even running
         // Set up test firebase listener
@@ -382,6 +380,12 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(v.getContext(), NotificationActivity.class);
         startActivity(intent);
     }
+
+    /**
+     * If the SDK version is above a certain number, we need to create the notification channel
+     * Conditional statements ensure that we are backwards compatible
+     * @author : https://developer.android.com/training/notify-user/build-notification#java
+     */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
         // the NotificationChannel class is new and not in the support library
@@ -399,23 +403,45 @@ public class MainActivity extends AppCompatActivity {
             notificationManager.createNotificationChannel(channel);
         }
     }
+
+    /**
+     * Get the last time the notification listener was run
+     * This code is necessary so that not all Firebase notifications are shown when the
+     * app is completely closed and reopened. Only Notifications after this date are "new"
+     * @return
+     * @author : Randal Kimpinski
+     */
     private Date getLastNotificationDate() {
         try {
             FileReader in = new FileReader(new File(getFilesDir(),FILENAME));
             Gson gson = new Gson();
-            Type notificationtype = new TypeToken<Notification>(){}.getType();
-            Date date = gson.fromJson(in, notificationtype);
-            return date;
+            Type listtype = new TypeToken<ArrayList<Date>>(){}.getType();
+            ArrayList<Date> dates;
+            dates = gson.fromJson(in, listtype);
+            return dates.get(0);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             return null;
+        } catch (Exception e) {
+            Date date = new Date();
+            setLastNotificationDate(date);
+            return date;
         }
     }
+
+    /**
+     * Set the last time the notification listener was run
+     * This code is necessary so that not all Firebase notifications are shown when the
+     * app is completely closed and reopened. Only Notifications after this date are "new"
+     * @author : Randal Kimpinski
+     */
     private void setLastNotificationDate(Date date) {
         try {
             FileWriter out = new FileWriter(new File(getFilesDir(),FILENAME));
             Gson gson = new Gson();
-            gson.toJson(date, out);
+            ArrayList<Date> dates = new ArrayList<>();
+            dates.add(date);
+            gson.toJson(dates, out);
             out.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
