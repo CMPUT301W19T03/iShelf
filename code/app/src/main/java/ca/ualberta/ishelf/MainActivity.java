@@ -111,10 +111,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Necessary to activate notifications for the app
         createNotificationChannel();
+        SignIn();
         // Create the listener for children being added to firebase.Notifications
         createNotificationListener();
 
-        SignIn();
 
 
         mTextMessage = (TextView) findViewById(R.id.message);
