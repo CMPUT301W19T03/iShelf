@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
-    android:background="#AA6725"
+    android:background="@color/midnight_blue"
     android:elevation="16dp"
     android:theme="@style/AppTheme"
     app:contentInsetLeft="0dp"
@@ -16,6 +16,7 @@
     app:layout_collapseMode="pin"
     app:layout_constraintTop_toTopOf="parent"
     app:menu="@menu/toolbar"
+
     app:popupTheme="@style/AppTheme">
 
     <android.support.constraint.ConstraintLayout
@@ -32,7 +33,7 @@
             android:clickable="true"
             android:padding="12dp"
             android:onClick="ViewNotification"
-            android:tint="@android:color/holo_orange_light"
+            android:tint="@android:color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_outline_notifications_24px" />
@@ -47,7 +48,7 @@
             android:clickable="true"
             android:onClick="ViewProfile"
             android:padding="12dp"
-            android:tint="@android:color/holo_orange_light"
+            android:tint="@android:color/white"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/ic_outline_account_circle_24px" />
@@ -60,7 +61,7 @@
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
             android:text="iShelf"
-            android:textColor="@color/black"
+            android:textColor="@color/white"
             android:textSize="20sp"
             app:layout_constraintHorizontal_bias="0.505"
             app:layout_constraintStart_toEndOf="@+id/profile_icon"
@@ -73,6 +74,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
+            android:textColorHint="@color/ghost_white"
+            android:textColor="@color/ghost_white"
+            android:backgroundTint="@color/ghost_white"
             android:closeIcon="@drawable/ic_dialog_close_light"
             android:searchIcon="@drawable/ic_baseline_search_24px"
             app:layout_constraintBottom_toBottomOf="parent"
