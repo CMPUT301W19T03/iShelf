@@ -86,7 +86,7 @@ public class User implements Serializable {
 
     /**
      * delete the book UUID from the list of user owned books
-     * @param bookId
+     * @param bookId the id of the book
      * @author rmnattas
      * @edited Evan
      */

@@ -22,7 +22,7 @@ import java.util.ArrayList;
  *
  * This is just a normal adapter, but for GalleryActivity (and associated recyclerView)
  *
- * @author: Faisal
+ * @author : Faisal
  */
 class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<Bitmap> originalList = new ArrayList<Bitmap>();

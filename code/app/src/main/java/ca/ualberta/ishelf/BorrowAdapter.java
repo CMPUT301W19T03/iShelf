@@ -35,7 +35,7 @@ import java.util.List;
  *
  * Allows for searching of firebase (description)
  *
- * @author: Faisal
+ * @author : Faisal
  */
 class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Filterable {
     private ArrayList<Book> filterList = new ArrayList<Book>();
@@ -45,9 +45,9 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
     /**
      * Constructor
      *
-     * @author: Faisal
-     * @param: filterList - after search
-     * @param: originalList - before search
+     * @author : Faisal
+     * @param filterList - after search
+     * @param originalList - before search
      */
     public BorrowAdapter(Context bookContext, ArrayList<Book> filterList, ArrayList<Book> originalList) {
         this.filterList = filterList;
@@ -61,7 +61,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
      * holds information about a book (name, description, user, rating)
      * and is clickable
      *
-     * @author: Faisal
+     * @author : Faisal
      *
      */
     public static class BorrowViewHolder extends RecyclerView.ViewHolder {
@@ -85,7 +85,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
      *
      * A regular ViewHolder
      *
-     * @author: Faisal
+     * @author : Faisal
      *
      */
     @Override
@@ -104,7 +104,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
      * Allows for clicking on a book (takes you to Book Profile)
      * and connecting Book information to the TextViews.
      *
-     * @author: Faisal
+     * @author : Faisal
      *
      */
     @Override
@@ -133,7 +133,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
      *
      * Gets the size of filterList (RecyclerView uses this for displaying the list)
      *
-     * @author: Faisal
+     * @author : Faisal
      *
      */
     @Override
@@ -154,7 +154,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
      *
      * Implements Filter
      *
-     * @author: Faisal
+     * @author : Faisal
      *
      */
     @Override

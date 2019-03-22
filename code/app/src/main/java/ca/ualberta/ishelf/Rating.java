@@ -5,7 +5,7 @@ package ca.ualberta.ishelf;
  * of an User or Book object. The rating is stored as a float, which is the
  * number of staes it has. There is also a comment stored with a persons rating
  *
- * @author: Mehrab
+ * @author : Mehrab
  */
 
 public class Rating {

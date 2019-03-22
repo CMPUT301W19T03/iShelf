@@ -56,7 +56,8 @@ class NotificationAdapter extends RecyclerView.Adapter<ViewHolder> {
     public void onBindViewHolder(ViewHolder holder, final int position) {
         NotificationViewHolder notificationHolder = (NotificationViewHolder) holder;
 
-        notificationHolder.noti.setText(notificationList.get(position).getText());
+        notificationHolder.noti.setText(notificationList.get(position).getText() + " on\n"
+        + notificationList.get(position).getDate().toString());
 
         //notificationHolder.notificationerRatingBar.setRating(notificationList.get(position).getNotificationer().getOverallRating());
 

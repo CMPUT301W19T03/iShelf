@@ -53,7 +53,7 @@ public class SignInActivity extends AppCompatActivity {
      * Called when sign in button is clicked
      * Confirms the sign in and call signedIn to complete
      * the necessary steps in UserPreferences and Firebase
-     * @param view
+     * @param view the view
      */
     public void singinClicked(View view){
         // For now, only use the entered username without a password
@@ -66,7 +66,7 @@ public class SignInActivity extends AppCompatActivity {
      * Takes the new user to the EditProfileActivity
      * for them to register for a new account
      * @author Jeremy
-     * @param view
+     * @param view the view
      */
     public void registerClicked(View view){
         Intent intent = new Intent(this, EditProfileActivity.class);
