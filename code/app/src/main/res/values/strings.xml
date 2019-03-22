@@ -19,5 +19,6 @@
         <item name="Made">Requests Made</item>
         <item name="Received">Requests Received</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
 
 </resources>
