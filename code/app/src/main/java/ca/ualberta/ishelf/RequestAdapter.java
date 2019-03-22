@@ -84,6 +84,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
     //deals with if an request is clicked
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
+        Boolean canEdit = false;
         RequestViewHolder requestHolder = (RequestViewHolder) holder;
 
         Log.d(TAG, "onBindViewHolder");
@@ -118,6 +119,12 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             requestHolder.type.setText("Received");
             requestHolder.userName.setText(requestList.get(position).getRequester());
             requestHolder.lblType.setText("Requested By:");
+
+            // set showing edit/delete button in book profile
+            if (requestBooks.get(position).getTransition() == 0){
+                canEdit = true;
+            }
+
             // TODO show user rating
             //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
         }
@@ -127,6 +134,9 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(requestContext, BookProfileActivity.class);
                 intent.putExtra("Book Data", requestBooks.get(position));
+                if (canEdit){
+                    intent.putExtra("Button Visible", true);
+                }
                 requestContext.startActivity(intent);
             }
         });
