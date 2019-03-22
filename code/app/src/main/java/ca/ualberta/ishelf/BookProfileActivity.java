@@ -249,6 +249,9 @@ public class BookProfileActivity extends AppCompatActivity {
             addToUserBorrowList(passedBook.getHolder(), passedBook.getId());
         }
         if(passedBook.getTransition()==4){
+            // Remove the book ID to the new holder borrowedBooks list
+            removeToUserBorrowList(passedBook.getHolder(), passedBook.getId());
+
             passedBook.setBorrowedBook(false);
             passedBook.setAvailable();
             passedBook.setTransition(0);
@@ -258,7 +261,6 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setNext_holder(null);
             Database db =new Database(this );
             db.editBook(passedBook);
-            // TODO remove from brrower borrwoed list
         }
 
     }
@@ -298,7 +300,42 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void ret(View v){
+    /**
+     * remove the bookId from the user list of borrowedBooks
+     * @param username user to remove from
+     * @param bookId book id to remove
+     * @author rmnattas
+     */
+    private void removeToUserBorrowList(final String username, final UUID bookId){
+        // get the user object from firebase
+        final Database db = new Database(this);
+        Firebase ref = db.connect(this);
+        Firebase tempRef = ref.child("Users").child(username);
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+//                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    user.removeBorrowedBook(bookId);
+                    db.editUser(username, user);
+                } else {
+                    Log.d("myBookFrag", "11321");
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
+
+    public void returnClicked(View v){
         Button retButton =findViewById(R.id.ret);
         retButton.setVisibility(View.INVISIBLE);
         passedBook.setTransition(4);
