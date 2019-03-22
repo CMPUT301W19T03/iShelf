@@ -99,6 +99,9 @@ public class User implements Serializable {
     public void addBorrowedBook(UUID bookId){
         borrowedBooks.add(bookId);
     }
+    public void removeBorrowedBook(UUID bookId){
+        borrowedBooks.remove(bookId);
+    }
     public float getOverallRating(){
         int numberOfRatings = ratingArrayList.size();
         float aggregateRating = 0;

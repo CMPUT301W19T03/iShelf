@@ -120,6 +120,7 @@
         android:layout_marginEnd="36dp"
         android:text="RETURN"
         android:visibility="invisible"
+        android:onClick="returnClicked"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
