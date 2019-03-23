@@ -7,6 +7,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,6 +16,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Locale;
@@ -21,8 +24,10 @@ import java.util.Locale;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private String TAG = "MapsActivity";
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private LatLng bookLocation;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +37,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+
+        // get the LatLng bookLocation from the passed in request
     }
 
 
@@ -50,7 +57,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         // Add a marker in Sydney and move the camera
         LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         enableMyLocation();
@@ -64,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         "Lat: %1$.5f, Long: %2$.5f",
                         latLng.latitude,
                         latLng.longitude);
+                Log.d(TAG, "onMapClick: ");
                 //Toast.makeText(snippet, Toast.LENGTH_LONG).show();
             }
         });
@@ -71,14 +79,34 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                String snippet = String.format(Locale.getDefault(),
-                        "Lat: %1$.5f, Long: %2$.5f",
-                        latLng.latitude,
-                        latLng.longitude);
+                if (bookLocation == null) {
+                    String snippet = String.format(Locale.getDefault(),
+                            "Lat: %1$.5f, Long: %2$.5f",
+                            latLng.latitude,
+                            latLng.longitude);
+                    Log.d(TAG, "onMapLongClick: " + snippet);
+                    mMap.addMarker(new MarkerOptions()
+                            .position(latLng)).setDraggable(true);
+                    bookLocation = latLng;
+                } else {
+                    Log.d(TAG, "onMapLongClick: pin already placed");
+                }
+            }
+        });
 
-                mMap.addMarker(new MarkerOptions()
-                        .position(latLng)
-                        .snippet(snippet));
+        mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+            @Override
+            public void onMarkerDragStart(Marker marker) {
+            }
+
+            @Override
+            public void onMarkerDrag(Marker marker) {
+
+            }
+
+            @Override
+            public void onMarkerDragEnd(Marker marker) {
+                bookLocation = marker.getPosition();
             }
         });
     }
@@ -110,5 +138,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     break;
                 }
         }
+    }
+
+    public void onButtonHit(View v){
+        Log.d(TAG, "onButtonHit: " + String.format(Locale.getDefault(),
+                "Lat: %1$.5f, Long: %2$.5f",
+                bookLocation.latitude,
+                bookLocation.longitude));
+        // Save the new LatLong and return to next activity
     }
 }
