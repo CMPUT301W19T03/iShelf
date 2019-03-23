@@ -34,7 +34,21 @@ import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.Collections;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Response;
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.ResponseBody;
 
 public class scanActivity extends AppCompatActivity {
 
@@ -46,7 +60,6 @@ public class scanActivity extends AppCompatActivity {
     private CameraCaptureSession scanSession;
     private CaptureRequest captureRequest;
     final String TAG = "scanActivity";
-
 
     private Size Size;
     private Handler backgroundHandler;
@@ -69,6 +82,9 @@ public class scanActivity extends AppCompatActivity {
     private TextureView textureView;
     private FloatingActionButton scanFab;
     private Button lastISBN;
+
+    String url ="https://www.googleapis.com/books/v1/volumes?q=isbn:";
+    private final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,11 +125,8 @@ public class scanActivity extends AppCompatActivity {
                     lastISBN.setText(outputISBN);
                 }
 
-                Toast toast = Toast.makeText(scanActivity.this, outputISBN,
-                        Toast.LENGTH_LONG);
-                toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
-                toast.show();
-                //lastISBN.setText("123456668888");
+                getAsyncCall();
+
             }
         });
 
@@ -263,7 +276,6 @@ public class scanActivity extends AppCompatActivity {
         }
     }
 
-
     // opens the camera
     private void openCamera() {
         try {
@@ -281,5 +293,39 @@ public class scanActivity extends AppCompatActivity {
         backgroundThread = new HandlerThread("camera_background_thread");
         backgroundThread.start();
         backgroundHandler = new Handler(backgroundThread.getLooper());
+    }
+
+    public void getAsyncCall(){
+        Request request = new Request.Builder()
+                .url(url + "9781451648546")
+                .build();
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override public void onFailure(Call call, IOException e) {
+                Log.e(TAG, "error in getting response using async okhttp call");
+            }
+
+            @Override public void onResponse(Call call, Response response) throws IOException {
+                ResponseBody responseBody = response.body();
+                String string = responseBody.string();
+                String description = "";
+                try {
+                    JSONObject root = new JSONObject(string);
+                    JSONArray books = root.getJSONArray("items");
+                    for (int i = 0; i < books.length(); i++) {
+                        JSONObject book = books.getJSONObject(i);
+                        JSONObject info = book.getJSONObject("volumeInfo");
+                        description = info.getString("description");
+                    }
+                }
+                catch (JSONException e) {
+                }
+
+                if (!response.isSuccessful()) {
+                    throw new IOException("Error response " + response);
+                }
+
+            }
+        });
     }
 }
