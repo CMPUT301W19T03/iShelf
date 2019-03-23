@@ -380,6 +380,14 @@ public class BookProfileActivity extends AppCompatActivity {
         final Database db = new Database(this);
         db.deleteBook(passedBook.getId());
 
+        if(passedBook.getTransition() != 0){
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Book cannot be deleted \n Book is in a transition state",
+                    Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+
         // get logged in user username
         final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         DeleteBookFromUser(currentUsername, passedBook.getId());
