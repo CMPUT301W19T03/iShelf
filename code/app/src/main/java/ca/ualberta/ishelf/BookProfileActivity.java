@@ -78,6 +78,8 @@ public class BookProfileActivity extends AppCompatActivity {
         UUID bookId = UUID.fromString(bookID);
        // passedBook = intent.getParcelableExtra("Book Data");
 
+
+        //TODO get book using bookID
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
