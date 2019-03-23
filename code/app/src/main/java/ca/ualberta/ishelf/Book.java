@@ -276,8 +276,9 @@ public class Book implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(owner);
-        dest.writeString(holder);
         dest.writeString(next_holder);
+        dest.writeString(holder);
+
         dest.writeString(name);
         dest.writeString(description);
         if (ISBN == null) {
