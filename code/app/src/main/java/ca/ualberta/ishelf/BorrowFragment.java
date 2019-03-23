@@ -14,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.app.SearchManager;
 import android.util.Log;
+import android.widget.AdapterView;
 import android.widget.SearchView;
 import android.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
@@ -32,6 +33,8 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
@@ -69,6 +72,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private BorrowAdapter bookAdapter;
     private RecyclerView.LayoutManager bookLayoutManager;
     private SwipeRefreshLayout borrowRefresh;
+    private Spinner spinner;
 
 
     private SearchView searchView;
@@ -90,6 +94,19 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         bookRecyclerView.setLayoutManager(bookLayoutManager);
         bookAdapter = new BorrowAdapter(view.getContext(), bookList, bookList);
         bookRecyclerView.setAdapter(bookAdapter);
+        spinner = view.findViewById(R.id.rating_sorter);
+
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                Filter(selectedItem);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
 
         // creates a line between each individual record in the list
         // https://developer.android.com/reference/android/support/v7/widget/DividerItemDecoration
@@ -120,6 +137,62 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         });
 
         return view;
+    }
+
+
+
+    public void Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
+        if(filter.equals("1")) {
+            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+            for (Book book : bookList){
+                if (book.getAvgRating()>=0){
+                    ratedBooks.add(book);
+                }
+            }
+            bookAdapter.updateList(ratedBooks);
+            bookAdapter.notifyDataSetChanged();
+        } else if(filter.equals("2")) {
+            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+            for (Book book : bookList){
+                if (book.getAvgRating()>=2){
+                    ratedBooks.add(book);
+                }
+            }
+            bookAdapter.updateList(ratedBooks);
+            bookAdapter.notifyDataSetChanged();
+        } else if (filter.equals(("3"))){
+            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+            for (Book book : bookList){
+                if (book.getAvgRating()>=3){
+                    ratedBooks.add(book);
+                }
+        }
+            bookAdapter.updateList(ratedBooks);
+            bookAdapter.notifyDataSetChanged();
+        } else if(filter.equals("4")){
+            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+            for (Book book : bookList){
+                if (book.getAvgRating()>=4){
+                    ratedBooks.add(book);
+                }
+            }
+            bookAdapter.updateList(ratedBooks);
+            bookAdapter.notifyDataSetChanged();
+        }
+        else if(filter.equals("5")){
+            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+            for (Book book : bookList){
+                if (book.getAvgRating()>=5){
+                    ratedBooks.add(book);
+                }
+            }
+            bookAdapter.updateList(ratedBooks);
+            bookAdapter.notifyDataSetChanged();
+        }
+        else if(filter.equals("All")){
+            bookAdapter.updateList(bookList);
+            bookAdapter.notifyDataSetChanged();
+        }
     }
 
     /**
