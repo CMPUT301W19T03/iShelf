@@ -99,6 +99,8 @@ public class BookProfileActivity extends AppCompatActivity {
             canEdit = true;
         }
 
+        String holder= passedBook.getHolder();
+        Boolean isHolder =(currentUsername.equals(passedBook.getHolder()));
         if(isOwner && passedBook.getTransition()==1){
             Button lendButton =findViewById(R.id.lend);
             canEdit=false;
@@ -106,13 +108,13 @@ public class BookProfileActivity extends AppCompatActivity {
 
         }
 
-        if(!isOwner &&isRequester&& (passedBook.getTransition()==2||passedBook.getTransition()==4)){
+        if(!isHolder &&isRequester&& (passedBook.getTransition()==2||passedBook.getTransition()==4)){
             Button acptButton =findViewById(R.id.acpt);
             canEdit=false;
             acptButton.setVisibility(View.VISIBLE);
         }
 
-        if(isOwner && passedBook.getTransition()==3){
+        if(isHolder && passedBook.getTransition()==3){
             Button retButton =findViewById(R.id.ret);
             retButton.setVisibility(View.VISIBLE);
             canEdit = false;
@@ -123,7 +125,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
 
         // TODO edit from fragment request
-        if(canEdit){
+        if(canEdit&& isHolder && isOwner && !isRequester){
             // show the edit and delete book buttons
             Button delButton = findViewById(R.id.del);
             Button editButton = findViewById(R.id.edit);
@@ -134,7 +136,7 @@ public class BookProfileActivity extends AppCompatActivity {
             reqButton.setVisibility(View.VISIBLE);
         }
 
-        if (!isOwner && !passedBook.checkBorrowed()){
+        if (!isOwner && !passedBook.checkBorrowed() && !isHolder){
             Button bkingButton = findViewById(R.id.bking);
             bkingButton.setVisibility(View.VISIBLE);
         }
@@ -250,7 +252,8 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setBorrowed();
             passedBook.setTransition(3);
             String temp = passedBook.getHolder();
-            final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+            //final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
             passedBook.setHolder(passedBook.getNext_holder());
             passedBook.setNext_holder(temp);
             Database db =new Database(this );
@@ -267,7 +270,7 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setTransition(0);
             final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
-            passedBook.setHolder(passedBook.getNext_holder());
+            passedBook.setHolder(passedBook.getOwner());
             passedBook.setNext_holder(null);
             Database db =new Database(this );
             db.editBook(passedBook);

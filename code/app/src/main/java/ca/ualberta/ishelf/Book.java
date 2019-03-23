@@ -211,8 +211,8 @@ public class Book implements Parcelable{
         return holder;
     }
 
-    public void setHolder(String holder) {
-        this.holder = holder;
+    public void setHolder(String name) {
+        this.holder = name;
     }
     // Public Methods
 
@@ -276,8 +276,9 @@ public class Book implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(owner);
-        dest.writeString(holder);
         dest.writeString(next_holder);
+        dest.writeString(holder);
+
         dest.writeString(name);
         dest.writeString(description);
         if (ISBN == null) {

@@ -102,6 +102,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
                 Intent intent = new Intent( mContext, BookProfileActivity.class);
                 Book book = booksList.get(position);
                 intent.putExtra("Book Data", book);
+                //intent.putExtra("Book ID", book.getId().toString());
                 intent.putExtra("pos data", position);
                 intent.putExtra("Button Visible", true);
 
