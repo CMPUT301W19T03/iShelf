@@ -55,6 +55,18 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/back_button_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:clickable="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:backgroundTint="#ffffffff"
+        app:srcCompat="@drawable/ic_round_arrow_back_24px" />
+
 
 </android.support.constraint.ConstraintLayout>
 

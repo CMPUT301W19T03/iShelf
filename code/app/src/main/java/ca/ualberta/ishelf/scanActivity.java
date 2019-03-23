@@ -85,6 +85,7 @@ public class scanActivity extends AppCompatActivity {
 
     String url ="https://www.googleapis.com/books/v1/volumes?q=isbn:";
     private final OkHttpClient client = new OkHttpClient();
+    private String description = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -308,14 +309,13 @@ public class scanActivity extends AppCompatActivity {
             @Override public void onResponse(Call call, Response response) throws IOException {
                 ResponseBody responseBody = response.body();
                 String string = responseBody.string();
-                String description = "";
                 try {
-                    JSONObject root = new JSONObject(string);
-                    JSONArray books = root.getJSONArray("items");
+                    JSONObject urlJSON = new JSONObject(string);
+                    JSONArray books = urlJSON.getJSONArray("items");
                     for (int i = 0; i < books.length(); i++) {
                         JSONObject book = books.getJSONObject(i);
-                        JSONObject info = book.getJSONObject("volumeInfo");
-                        description = info.getString("description");
+                        JSONObject volumeInfo = book.getJSONObject("volumeInfo");
+                        description = volumeInfo.getString("description");
                     }
                 }
                 catch (JSONException e) {
