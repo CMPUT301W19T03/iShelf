@@ -169,7 +169,11 @@ public class BookProfileActivity extends AppCompatActivity {
         textView5.setText(Long.toString(isbn));
 
         TextView textView6 = findViewById(R.id.status);
-        textView6.setText("AVAILABLE");
+        if (passedBook.getTransition() == 0){
+            textView6.setText("AVAILABLE");
+        }else{
+            textView6.setText("BORROWED");
+        }
 
         TextView ownerUsername = findViewById(R.id.ownerUsername);
         ownerUsername.setText(owner);
