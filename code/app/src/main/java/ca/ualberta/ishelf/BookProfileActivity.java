@@ -125,7 +125,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
 
         // TODO edit from fragment request
-        if(canEdit&& isHolder){
+        if(canEdit&& isHolder && isOwner && !isRequester){
             // show the edit and delete book buttons
             Button delButton = findViewById(R.id.del);
             Button editButton = findViewById(R.id.edit);
