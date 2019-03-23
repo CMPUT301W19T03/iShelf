@@ -94,6 +94,11 @@ public class BookProfileActivity extends AppCompatActivity {
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
         Boolean isRequester =(currentUsername.equals(passedBook.getNext_holder()));
+
+        if(isOwner && passedBook.getTransition()==0){
+            canEdit = true;
+        }
+
         if(isOwner && passedBook.getTransition()==1){
             Button lendButton =findViewById(R.id.lend);
             canEdit=false;
@@ -110,6 +115,7 @@ public class BookProfileActivity extends AppCompatActivity {
         if(isOwner && passedBook.getTransition()==3){
             Button retButton =findViewById(R.id.ret);
             retButton.setVisibility(View.VISIBLE);
+            canEdit = false;
 
         }
 

@@ -114,7 +114,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             requestHolder.lblType.setText("Book owner:");
             // TODO show user rating
             //requestHolder.requesterRatingBar.setRating(requestList.get(position).getOwner().getOverallRating());
-        }else{
+        }else if (requestList.get(position).getOwner().equals(username)){
             // the request is received from other user
             requestHolder.type.setText("Received");
             requestHolder.userName.setText(requestList.get(position).getRequester());
@@ -134,9 +134,6 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             public void onClick(View v) {
                 Intent intent = new Intent(requestContext, BookProfileActivity.class);
                 intent.putExtra("Book Data", requestBooks.get(position));
-                if (canEdit){
-                    intent.putExtra("Button Visible", true);
-                }
                 requestContext.startActivity(intent);
             }
         });
