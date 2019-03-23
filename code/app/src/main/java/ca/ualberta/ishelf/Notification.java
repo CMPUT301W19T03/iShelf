@@ -6,7 +6,7 @@ import java.util.UUID;
 /**
  * display notifications
  */
-public class Notification {
+public class Notification implements Comparable<Notification> {
     private Date date;
     private String text;
     private String userName;
@@ -53,5 +53,17 @@ public class Notification {
 
     public void setId(UUID id) {
         this.id = id;
+    }
+
+    @Override
+    public int compareTo(Notification o) {
+        Date d1 = this.getDate();
+        Date d2 = o.getDate();
+        if (d1.after(d2)) {
+            return 1;
+        } else if (d1.before(d2)) {
+            return -1;
+        }
+        return 0;
     }
 }

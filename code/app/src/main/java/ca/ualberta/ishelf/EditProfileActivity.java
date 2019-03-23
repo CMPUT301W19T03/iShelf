@@ -117,7 +117,7 @@ public class EditProfileActivity extends AppCompatActivity {
      * saveButton is called when the user hits the Save button
      * Saves the inputted information to Firebase
      * TODO: ensure all fields are filled out?
-     * @param v
+     * @param v the view
      */
     public void saveButton(View v){
         // Retrieve the inputted data

@@ -43,6 +43,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * Notifications Activity
@@ -127,6 +129,11 @@ public class NotificationActivity extends AppCompatActivity {
                         Log.d("NotificationActivity", "Notification ERROR");
                     }
                 }
+                nAdapter.updateList(notificationList);
+                nAdapter.notifyDataSetChanged();
+                // Sort notifications based on date
+                Collections.sort(notificationList);
+                Collections.reverse(notificationList);
                 nAdapter.updateList(notificationList);
                 nAdapter.notifyDataSetChanged();
             }

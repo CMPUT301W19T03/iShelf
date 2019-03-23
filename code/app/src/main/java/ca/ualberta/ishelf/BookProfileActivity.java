@@ -53,7 +53,7 @@ import java.util.UUID;
  *
  *
  *
- * @author: Mehrab
+ * @author : Mehrab
  */
 
 public class BookProfileActivity extends AppCompatActivity {
@@ -74,12 +74,8 @@ public class BookProfileActivity extends AppCompatActivity {
 
         // get the book object passed by intent
         Intent intent = getIntent();
-        String bookID  = intent.getStringExtra("ID");
-        UUID bookId = UUID.fromString(bookID);
-       // passedBook = intent.getParcelableExtra("Book Data");
+        passedBook = intent.getParcelableExtra("Book Data");
 
-
-        //TODO get book using bookID
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
         galleryButton.setOnClickListener(new View.OnClickListener() {
@@ -98,6 +94,11 @@ public class BookProfileActivity extends AppCompatActivity {
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
         Boolean isRequester =(currentUsername.equals(passedBook.getNext_holder()));
+
+        if(isOwner && passedBook.getTransition()==0){
+            canEdit = true;
+        }
+
         String holder= passedBook.getHolder();
         Boolean isHolder =(currentUsername.equals(passedBook.getHolder()));
         if(isOwner && passedBook.getTransition()==1){
@@ -115,8 +116,8 @@ public class BookProfileActivity extends AppCompatActivity {
 
         if(isHolder && passedBook.getTransition()==3){
             Button retButton =findViewById(R.id.ret);
-            canEdit=false;
             retButton.setVisibility(View.VISIBLE);
+            canEdit = false;
 
         }
 
@@ -170,7 +171,11 @@ public class BookProfileActivity extends AppCompatActivity {
         textView5.setText(Long.toString(isbn));
 
         TextView textView6 = findViewById(R.id.status);
-        textView6.setText("AVAILABLE");
+        if (passedBook.getTransition() == 0){
+            textView6.setText("AVAILABLE");
+        }else{
+            textView6.setText("BORROWED");
+        }
 
         TextView ownerUsername = findViewById(R.id.ownerUsername);
         ownerUsername.setText(owner);
@@ -382,6 +387,14 @@ public class BookProfileActivity extends AppCompatActivity {
         final Database db = new Database(this);
         db.deleteBook(passedBook.getId());
 
+        if(passedBook.getTransition() != 0){
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Book cannot be deleted \n Book is in a transition state",
+                    Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
+
         // get logged in user username
         final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         DeleteBookFromUser(currentUsername, passedBook.getId());
@@ -476,7 +489,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
     /**
      * called when the request button is clicked
-     * @param v
+     * @param v the view
      * @author rmnattas
      */
     public void requestClicked(View v){

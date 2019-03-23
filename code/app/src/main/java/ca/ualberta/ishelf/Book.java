@@ -31,6 +31,14 @@ public class Book implements Parcelable{
     private String genre;
     private String author;
     private int transition;
+    /*
+    0 is its available for booking
+    1 is when u have accept someones request.
+    2 is when u meet up with the person and pressed the lend button to hand over the book to that person
+    3 is when the borrower presses accept to receive the book
+    4 is when the borrower presses return to hand the book back to you
+    It is set back to 0, when u press the accept to get the book back from the borrower, as the book becomes available again
+     */
 
     public  Book(){
         this.status = 1;

@@ -34,7 +34,7 @@ import java.util.UUID;
  * Allows for you to see an expanded view of the image if yyou click on the image
  * Allows for oyui to add a new image
  *
- * @author: Faisal
+ * @author : Faisal
  */
 
 public class GalleryActivity extends AppCompatActivity {
@@ -57,7 +57,7 @@ public class GalleryActivity extends AppCompatActivity {
      *
      * Initializes recyclerView and button
      *
-     * @author: Faisal
+     * @author : Faisal
      */
 
     @Override
@@ -101,7 +101,7 @@ public class GalleryActivity extends AppCompatActivity {
      *
      * And based on documentation:
      * https://developer.android.com/training/camera/photobasics
-     * @author: Faisal (based on Ahsan Kamal)
+     * @author : Faisal (based on Ahsan Kamal)
      */
     public void pickImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
@@ -150,7 +150,7 @@ public class GalleryActivity extends AppCompatActivity {
      *
      * matches a book to get the list of images
      *
-     * @author: Faisal, Abdul
+     * @author : Faisal, Abdul
      */
     public void getBook(UUID bookId){
         // Retrive the user's info from Firebase
@@ -193,7 +193,7 @@ public class GalleryActivity extends AppCompatActivity {
      *
      * handles getting the list of images
      *
-     * @author: Faisal
+     * @author : Faisal
      */
 
     public void gotBook(Book book){
@@ -219,7 +219,7 @@ public class GalleryActivity extends AppCompatActivity {
      * User: sachin10
      *
      * Allows for conversion between Bitmap and String (Bitmap -> String)
-     * @author: Faisal (copied from sachin10)
+     * @author : Faisal (copied from sachin10)
      */
 
     public static String BitMapToString(Bitmap bitmap){
@@ -238,7 +238,7 @@ public class GalleryActivity extends AppCompatActivity {
      * User: sachin10
      *
      * Allows for conversion between Bitmap and String (String -> Bitmap)
-     * @author: Faisal (copied from sachin10)
+     * @author : Faisal (copied from sachin10)
      */
     public static Bitmap StringToBitMap(String encodedString){
         try {
