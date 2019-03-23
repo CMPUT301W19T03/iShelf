@@ -203,8 +203,8 @@ public class Book implements Parcelable{
         return holder;
     }
 
-    public void setHolder(String holder) {
-        this.holder = holder;
+    public void setHolder(String name) {
+        this.holder = name;
     }
     // Public Methods
 
