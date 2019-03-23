@@ -94,6 +94,11 @@ public class BookProfileActivity extends AppCompatActivity {
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         Boolean isOwner = (currentUsername.equals(passedBook.getOwner()));    // is the user the owner of this book
         Boolean isRequester =(currentUsername.equals(passedBook.getNext_holder()));
+
+        if(isOwner && passedBook.getTransition()==0){
+            canEdit = true;
+        }
+
         if(isOwner && passedBook.getTransition()==1){
             Button lendButton =findViewById(R.id.lend);
             canEdit=false;
@@ -110,6 +115,7 @@ public class BookProfileActivity extends AppCompatActivity {
         if(isOwner && passedBook.getTransition()==3){
             Button retButton =findViewById(R.id.ret);
             retButton.setVisibility(View.VISIBLE);
+            canEdit = false;
 
         }
 
@@ -163,7 +169,11 @@ public class BookProfileActivity extends AppCompatActivity {
         textView5.setText(Long.toString(isbn));
 
         TextView textView6 = findViewById(R.id.status);
-        textView6.setText("AVAILABLE");
+        if (passedBook.getTransition() == 0){
+            textView6.setText("AVAILABLE");
+        }else{
+            textView6.setText("BORROWED");
+        }
 
         TextView ownerUsername = findViewById(R.id.ownerUsername);
         ownerUsername.setText(owner);
@@ -373,6 +383,14 @@ public class BookProfileActivity extends AppCompatActivity {
         // delete book from firebase
         final Database db = new Database(this);
         db.deleteBook(passedBook.getId());
+
+        if(passedBook.getTransition() != 0){
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "Book cannot be deleted \n Book is in a transition state",
+                    Toast.LENGTH_LONG);
+            toast.show();
+            return;
+        }
 
         // get logged in user username
         final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
