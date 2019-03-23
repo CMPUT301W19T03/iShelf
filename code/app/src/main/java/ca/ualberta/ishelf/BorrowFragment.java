@@ -73,7 +73,8 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView.LayoutManager bookLayoutManager;
     private SwipeRefreshLayout borrowRefresh;
     private Spinner spinner;
-
+    private Spinner object_spinner;
+    private String selected_object;
 
     private SearchView searchView;
 
@@ -95,18 +96,35 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         bookAdapter = new BorrowAdapter(view.getContext(), bookList, bookList);
         bookRecyclerView.setAdapter(bookAdapter);
         spinner = view.findViewById(R.id.rating_sorter);
+        object_spinner = view.findViewById(R.id.object_rating);
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                Filter(selectedItem);
+                Filter(selectedItem, selected_object);
+
+
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
             }
         });
+
+        object_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedItem = parent.getItemAtPosition(position).toString();
+                //Filter(selectedItem);
+                selected_object= selectedItem;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
 
         // creates a line between each individual record in the list
         // https://developer.android.com/reference/android/support/v7/widget/DividerItemDecoration
@@ -141,58 +159,114 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
 
 
 
-    public void Filter(String filter){ //this is going to filter strings for now, but should work whenever we pass in book/user
-        if(filter.equals("1")) {
-            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-            for (Book book : bookList){
-                if (book.getAvgRating()>=0){
-                    ratedBooks.add(book);
+    public void Filter(String filter, String object){
+        if(object.equals("Book")){
+            if(filter.equals("1")) {
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=0){
+                        ratedBooks.add(book);
+                    }
                 }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
+            } else if(filter.equals("2")) {
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=2){
+                        ratedBooks.add(book);
+                    }
+                }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
+            } else if (filter.equals(("3"))){
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=3){
+                        ratedBooks.add(book);
+                    }
+                }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
+            } else if(filter.equals("4")){
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=4){
+                        ratedBooks.add(book);
+                    }
+                }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
             }
-            bookAdapter.updateList(ratedBooks);
-            bookAdapter.notifyDataSetChanged();
-        } else if(filter.equals("2")) {
-            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-            for (Book book : bookList){
-                if (book.getAvgRating()>=2){
-                    ratedBooks.add(book);
+            else if(filter.equals("5")){
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=5){
+                        ratedBooks.add(book);
+                    }
                 }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
             }
-            bookAdapter.updateList(ratedBooks);
-            bookAdapter.notifyDataSetChanged();
-        } else if (filter.equals(("3"))){
-            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-            for (Book book : bookList){
-                if (book.getAvgRating()>=3){
-                    ratedBooks.add(book);
-                }
-        }
-            bookAdapter.updateList(ratedBooks);
-            bookAdapter.notifyDataSetChanged();
-        } else if(filter.equals("4")){
-            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-            for (Book book : bookList){
-                if (book.getAvgRating()>=4){
-                    ratedBooks.add(book);
-                }
+            else if(filter.equals("All")){
+                bookAdapter.updateList(bookList);
+                bookAdapter.notifyDataSetChanged();
             }
-            bookAdapter.updateList(ratedBooks);
-            bookAdapter.notifyDataSetChanged();
         }
-        else if(filter.equals("5")){
-            ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-            for (Book book : bookList){
-                if (book.getAvgRating()>=5){
-                    ratedBooks.add(book);
+        else if(object.equals("Owner")){
+            if(filter.equals("1")) {
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=0){
+                        ratedBooks.add(book);
+                    }
                 }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
+            } else if(filter.equals("2")) {
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=2){
+                        ratedBooks.add(book);
+                    }
+                }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
+            } else if (filter.equals(("3"))){
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=3){
+                        ratedBooks.add(book);
+                    }
+                }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
+            } else if(filter.equals("4")){
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getAvgRating()>=4){
+                        ratedBooks.add(book);
+                    }
+                }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
             }
-            bookAdapter.updateList(ratedBooks);
-            bookAdapter.notifyDataSetChanged();
+            else if(filter.equals("5")){
+                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
+                for (Book book : bookList){
+                    if (book.getOwner()>=5){
+                        ratedBooks.add(book);
+                    }
+                }
+                bookAdapter.updateList(ratedBooks);
+                bookAdapter.notifyDataSetChanged();
+            }
+            else if(filter.equals("All")){
+                bookAdapter.updateList(bookList);
+                bookAdapter.notifyDataSetChanged();
+            }
         }
-        else if(filter.equals("All")){
-            bookAdapter.updateList(bookList);
-            bookAdapter.notifyDataSetChanged();
-        }
+
     }
 
     /**

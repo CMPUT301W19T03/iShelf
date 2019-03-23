@@ -3,6 +3,7 @@
 <android.support.v4.widget.SwipeRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/swipe_refresh"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -33,6 +34,19 @@
         android:entries="@array/rating_array"
         android:spinnerMode="dropdown"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Spinner
+        android:id="@+id/object_rating"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="12dp"
+        android:backgroundTint="@color/common_google_signin_btn_text_dark_focused"
+        android:dropDownWidth="wrap_content"
+        android:entries="@array/select_rating"
+        android:spinnerMode="dropdown"
+        app:layout_constraintEnd_toStartOf="@+id/rating_sorter"
         app:layout_constraintTop_toTopOf="parent" />
 
 

@@ -27,4 +27,9 @@
         <item name="four">4</item>
         <item name="five">5</item>
     </string-array>
+    <string-array name="select_rating">
+        <!--<item name="All">All</item>-->
+        <item name="Owner">Owner</item>
+        <item name="Book">Book</item>
+    </string-array>
 </resources>
