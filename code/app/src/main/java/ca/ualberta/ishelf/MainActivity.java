@@ -3,6 +3,7 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -26,24 +27,51 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+        import android.app.Activity;
+        import android.app.NotificationChannel;
+        import android.app.NotificationManager;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.content.SharedPreferences;
+        import android.graphics.Color;
+        import android.os.Build;
+        import android.os.Bundle;
+        import android.support.annotation.NonNull;
+        import android.support.design.widget.BottomNavigationView;
+        import android.support.v4.app.Fragment;
+        import android.support.v4.app.NotificationCompat;
+        import android.support.v4.app.NotificationManagerCompat;
+        import android.support.v7.app.AppCompatActivity;
+        import android.support.v7.widget.Toolbar;
+        import android.app.SearchManager;
+        import android.widget.EditText;
+        import android.widget.ImageView;
+        import android.widget.SearchView;
+        import android.widget.SearchView.OnQueryTextListener;
+        import android.util.Log;
+        import android.view.Menu;
+        import android.view.MenuItem;
+        import android.view.View;
+        import android.widget.TextView;
+        import android.widget.Toast;
 
-import com.firebase.client.ChildEventListener;
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
+        import com.firebase.client.ChildEventListener;
+        import com.firebase.client.DataSnapshot;
+        import com.firebase.client.Firebase;
+        import com.firebase.client.FirebaseError;
+        import com.firebase.client.ValueEventListener;
+        import com.google.gson.Gson;
+        import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.UUID;
+        import java.io.File;
+        import java.io.FileNotFoundException;
+        import java.io.FileReader;
+        import java.io.FileWriter;
+        import java.io.IOException;
+        import java.lang.reflect.Type;
+        import java.util.ArrayList;
+        import java.util.Date;
+        import java.util.UUID;
 
 
 /**
@@ -100,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         }
-        };
+    };
 
     Fragment fragment;
 
@@ -110,52 +138,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Necessary to activate notifications for the app
         createNotificationChannel();
-        // Firebase listener, activated when there is a change to notifications
-        // Will be activated regardless of activity, or if the app is even running
-        // Set up test firebase listener
-        Firebase.setAndroidContext(this);
-        ref = new Firebase(link);
-        Firebase tempRef = ref.child("Notifications");
-        // create a one time use listener to immediately access datasnapshot
-        tempRef.addChildEventListener(new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                Log.d(TAG + " NotifcationEvent", "Notification listener activated");
-                Log.d("snapshot values", dataSnapshot.getKey() + " " +
-                        dataSnapshot.getValue().toString());
-                String jNotification = dataSnapshot.getValue(String.class);
-                if (jNotification != null) {
-                    Log.d("jNotification", jNotification);
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<Notification>() {
-                    }.getType();
-                    Notification notification = gson.fromJson(jNotification, tokenType);
-                    String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
-                            .getString("username", "TestUsername");
-                    Date lastNotificationDate = getLastNotificationDate();
-                    setLastNotificationDate(new Date());
-                    Log.d(TAG + " notificationDate", "File notification date is set to " + lastNotificationDate.toString());
-                    // Also check the date here, to confirm it is new
-                    if (notification.getUserName().equals(username) && notification.getDate().after(lastNotificationDate)) {
-                        Log.d(TAG + " validNotification", "Firebase contains a new notification with a valid username for this user");
-                        pushNotification(notification.getText());
-                    }
-                }
-            }
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) { }
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) { }
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                return;
-            }
-        });
-
         SignIn();
+        // Create the listener for children being added to firebase.Notifications
+        createNotificationListener();
+
 
 
         mTextMessage = (TextView) findViewById(R.id.message);
@@ -184,6 +170,10 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 appName.setVisibility(View.INVISIBLE);
                 profileIcon.setVisibility(View.INVISIBLE);
+                int id = searchView.getContext().getResources().getIdentifier("android:id/search_src_text", null, null);
+                TextView textView = (TextView) searchView.findViewById(id);
+                textView.setTextColor(Color.CYAN);
+                textView.setHintTextColor(Color.CYAN);
             }
         });
 
@@ -211,24 +201,41 @@ public class MainActivity extends AppCompatActivity {
         //loadFragment(new myBooksFragment());
     }
 
+    /**
+     * Create an external notification object, and push it so that the viewer can see it
+     * Only takes a string which is the message of the notification
+     * @author : Randal Kimpinski
+     * @param text message of the notification
+     * @since March 3, 2019
+     */
     private void pushNotification(String text) {
         // Create the notification
-        //TODO why does it show all notifications when starting up
-        //TODO this could be fixed by deleting notifications when we see them
         String title = "Request";
         String content = text;
+
+        // Create an explicit intent for an app Activity and add book as extra
+        //TODO get this working
+        //Intent intent = new Intent(this, BookProfileActivity.class);
+        Intent intent = new Intent(this, NotificationActivity.class);
+        //Bundle extras = new Bundle();
+        //extras.putParcelable("Book Data", new Book());
+        //intent.putExtras(extras);
+
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
         // Create instance of notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID)
-                //TODO notification_icon is empty right now, that may be causing errors
                 .setSmallIcon(R.drawable.ic_stat_name)
                 .setContentTitle(title)
                 .setContentText(content)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                // Set the intent that will fire when the user taps the notification
+                .setContentIntent(pendingIntent)
+                // Delete the notification when the user touches it
+                .setAutoCancel(true);
         // Set context for notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        // notificationId is a unique int for each notification that you must define
-        //TODO fix notification id, might be okay since there is only 1 notification
-        // Generate the notification
+        // Generate the notification, NOTIFICATION_ID is unique for each notification
         notificationManager.notify(NOTIFICATION_ID, builder.build());
     }
 
@@ -365,7 +372,7 @@ public class MainActivity extends AppCompatActivity {
      * When the profile icon is hit on the appbar
      * Takes the user to the ViewProfileActivity
      * @author Jeremy
-     * @param v
+     * @param v the view
      */
     public void ViewProfile(View v){
         Log.d(TAG, "ViewProfile: button clicked");
@@ -384,7 +391,10 @@ public class MainActivity extends AppCompatActivity {
     /**
      * If the SDK version is above a certain number, we need to create the notification channel
      * Conditional statements ensure that we are backwards compatible
-     * @author : https://developer.android.com/training/notify-user/build-notification#java
+     * @author : Android Tutorial at "https://developer.android.com/training/notify-user/build-notification#java"
+     * @see MainActivity
+     * @see Notification
+     * @since March 3, 2019
      */
     private void createNotificationChannel() {
         // Create the NotificationChannel, but only on API 26+ because
@@ -408,8 +418,11 @@ public class MainActivity extends AppCompatActivity {
      * Get the last time the notification listener was run
      * This code is necessary so that not all Firebase notifications are shown when the
      * app is completely closed and reopened. Only Notifications after this date are "new"
-     * @return
+     * @return Date object representing the last time the listener was activated
      * @author : Randal Kimpinski
+     * @see MainActivity
+     * @see Notification
+     * @since March 3, 2019
      */
     private Date getLastNotificationDate() {
         try {
@@ -434,6 +447,9 @@ public class MainActivity extends AppCompatActivity {
      * This code is necessary so that not all Firebase notifications are shown when the
      * app is completely closed and reopened. Only Notifications after this date are "new"
      * @author : Randal Kimpinski
+     * @see MainActivity
+     * @see Notification
+     * @since March 3, 2019
      */
     private void setLastNotificationDate(Date date) {
         try {
@@ -448,5 +464,75 @@ public class MainActivity extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Creates the listener for notifications in firebase
+     * Anytime a firebase notification is created, this method is activated
+     * If the notification is for the current user, we create the external notification
+     * This function uses a file to track the last time it was called, so that no
+     * old notifications seem valid and have external notifications created for them
+     * @author : Randal Kimpinski
+     * @see MainActivity
+     * @see Notification
+     * @since March 3, 2019
+     */
+    private void createNotificationListener() {
+        // Firebase listener, activated when there is a change to notifications
+        // Will be activated regardless of activity, or if the app is even running
+        // Set up test firebase listener
+        Firebase.setAndroidContext(this);
+        ref = new Firebase(link);
+        Firebase tempRef = ref.child("Notifications");
+        // create a one time use listener to immediately access datasnapshot
+        // Create a listener to access the database if an entry is added to "Notifications"
+        tempRef.addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                Log.d(TAG + " NotifcationEvent", "Notification listener activated");
+                Log.d("snapshot values", dataSnapshot.getKey() + " " +
+                        dataSnapshot.getValue().toString());
+                String jNotification = dataSnapshot.getValue(String.class);
+                if (jNotification != null) {
+                    Log.d("jNotification", jNotification);
+                    // Get notification object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<Notification>() {
+                    }.getType();
+                    Notification notification = gson.fromJson(jNotification, tokenType);
+                    // Get username from shared preferences
+                    String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE)
+                            .getString("username", "TestUsername");
+                    // Get when the listener was lasted called
+                    Date lastNotificationDate = getLastNotificationDate();
+                    // Update when listener was lasted called
+                    setLastNotificationDate(new Date());
+                    Log.d(TAG + " notificationDate", "File notification date is set to " + lastNotificationDate.toString());
+                    // Check that the notification is for this user, and the it is a "new" notification
+                    if (notification.getUserName().equals(username) && notification.getDate().after(lastNotificationDate)) {
+                        Log.d(TAG + " validNotification", "Firebase contains a new notification with a valid username for this user");
+                        // Create an external notification for the user
+                        pushNotification(notification.getText());
+                    }
+                }
+            }
+            // Do nothing onChildChanged
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+            }
+            // Do nothing onChildRemoved
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+            }
+            // Do nothing onChildMoved
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+            }
+            // Do nothing onCancelled
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
     }
 }

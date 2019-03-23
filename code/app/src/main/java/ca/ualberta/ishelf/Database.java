@@ -43,9 +43,9 @@ public class Database extends Application {
     }
 
     /**
-     * Used to change the context of our firebase
-     * @param context
-     * @return
+     * Used to change the context of our firebase between different activites
+     * @param context context that we want to switch firebase to
+     * @return new firebase reference
      */
     public Firebase connect(Context context){
         Firebase ref;
@@ -57,7 +57,7 @@ public class Database extends Application {
     /**
      * Given a user object, adds that object to firebase
      * Uses Gson to store the object
-     * @param user
+     * @param user the user object to add
      * @author : Randal Kimpinski
      */
     public void addUser(User user) {
@@ -71,7 +71,7 @@ public class Database extends Application {
 
     /**
      * Given a username, finds that object in our database and deletes it
-     * @param username
+     * @param username the username of the user to delete
      * @author : Randal Kimpinski
      */
     public void deleteUser(String username) {
@@ -82,7 +82,7 @@ public class Database extends Application {
 
     /**
      * Given a user object, finds that object in the database and replaces it
-     * @param user
+     * @param user the user object to edit
      * @author : Randal Kimpinski
      */
     public void editUser(User user) {
@@ -93,8 +93,8 @@ public class Database extends Application {
     /**
      * Given a user object, and it's original username, finds the old User object in the
      * firebase real-time database and replaces it with the new user.
-     * @param oldUsername
-     * @param user
+     * @param oldUsername the original username of the user object we are replacing
+     * @param user the user object to edit
      * @author : Randal Kimpinski
      */
     public void editUser(String oldUsername, User user) {
@@ -105,7 +105,7 @@ public class Database extends Application {
 
     /**
      * Given a book object, adds that object to the firebase real-time database
-     * @param book
+     * @param book the book object to add
      * @author : Randal Kimpinski
      */
     public void addBook(Book book) {
@@ -121,7 +121,7 @@ public class Database extends Application {
     /**
      * Given the UUID of a book, finds that book in the Firebase real-time database
      * and removes it
-     * @param id
+     * @param id the id of the book object to delete
      * @author : Randal Kimpinski
      */
     public void deleteBook(UUID id) {
@@ -132,7 +132,7 @@ public class Database extends Application {
 
     /**
      * Given a book object, finds that object in the database and replaces it
-     * @param book
+     * @param book the book object edit
      * @author : Randal Kimpinski
      */
     public void editBook(Book book) {
@@ -144,7 +144,7 @@ public class Database extends Application {
     /**
      * Given a Request object, adds that object to firebase
      * Uses Gson to store the object
-     * @param request
+     * @param request the request object to add
      * @author : Randal Kimpinski
      */
     public void addRequest(Request request) {
@@ -158,7 +158,7 @@ public class Database extends Application {
 
     /**
      * Given a Request id, finds that object in our database and deletes it
-     * @param requestId
+     * @param requestId the id of the request object to delete
      * @author : Randal Kimpinski
      */
     public void deleteRequest(String requestId) {
@@ -169,7 +169,7 @@ public class Database extends Application {
 
     /**
      * Given a user object, finds that object in the database and replaces it
-     * @param request
+     * @param request the request object to edit
      * @author : Randal Kimpinski
      */
     public void editUser(Request request) {
@@ -178,7 +178,7 @@ public class Database extends Application {
     }
     /**
      * Given a notification object, adds that object to the firebase realt-time database
-     * @param notification
+     * @param notification the notification object to update
      * @author : Randal Kimpinski
      */
     public void addNotification(Notification notification) {
@@ -193,7 +193,7 @@ public class Database extends Application {
 
     /**
      * Given the id of a notification, finds that obejct in the firebase database and deletes it
-     * @param id
+     * @param id the id of the notification to delete
      * @author : Randal Kimpinski
      */
     public void deleteNotification(UUID id) {
@@ -204,7 +204,7 @@ public class Database extends Application {
     /**
      * Given a notification, finds that notification in the firebase real-time database
      * and replaces it with our new notification
-     * @param notification
+     * @param notification the notification object to edit
      * @author : Randal Kimpinski
      */
     public void editNotification(Notification notification) {

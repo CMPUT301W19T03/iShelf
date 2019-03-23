@@ -6,8 +6,8 @@ import org.junit.Test;
 /**
  *
  * borrow unit test
+ * edited - Evan
  * @author Evan
- * @edited Evan
  */
 public class BorrowTest {
     @Test

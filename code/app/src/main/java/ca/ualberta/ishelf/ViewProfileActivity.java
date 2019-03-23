@@ -61,7 +61,7 @@ import java.util.ArrayList;
  *
  * TODO: add message to the screen if viewing the profile of no-one (aka nothing passed in)
  *
- * @author: Jeremy
+ * @author : Jeremy
  */
 public class ViewProfileActivity extends AppCompatActivity {
     private String TAG = "ViewProfileActivity";
@@ -164,7 +164,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     /**
      * This function is called when the Edit button is pressed
-     * @param v
+     * @param v the view
      */
     public void EditProfile(View v){
         // when "Edit" button is clicked - "Edit" button is only viewable for the logged-in user
@@ -178,7 +178,7 @@ public class ViewProfileActivity extends AppCompatActivity {
      * This function is called When a user hits the Sign Out button
      * Removes the Shared Prefences username parameter and sends
      * the user back to Main Activity
-     * @param v
+     * @param v the view
      */
     public void SignOut(View v){
         SharedPreferences.Editor editor = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).edit();
@@ -206,7 +206,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
     /**
      * Used for updating the UI elements
-     * @param user
+     * @param user the current user object
      */
     public void updateUI(User user){
         Log.d(TAG, "in updateUI");

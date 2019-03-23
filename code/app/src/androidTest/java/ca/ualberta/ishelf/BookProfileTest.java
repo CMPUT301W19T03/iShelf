@@ -40,7 +40,7 @@ import static org.hamcrest.Matchers.allOf;
  *This is the Intent test for the BookProfileActivity
  *
  *
- * @author: Mehrab
+ * @author : Mehrab
  */
 
 @RunWith(AndroidJUnit4.class)

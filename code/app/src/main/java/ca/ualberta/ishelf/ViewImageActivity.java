@@ -17,7 +17,7 @@ import android.widget.ImageView;
  *
  * TODO_: Implement with TouchImageView for allow for dynamic image manipulation
  *
- * @author: Faisal
+ * @author : Faisal
  */
 public class ViewImageActivity extends AppCompatActivity {
 

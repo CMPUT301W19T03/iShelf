@@ -10,6 +10,8 @@ import java.util.UUID;
 /**
  * Book class
  * Signatures created by Jeremy
+ * -edited Mehrab
+ * @author Jeremy
  *
  */
 public class Book implements Parcelable{

@@ -53,7 +53,7 @@ import java.util.UUID;
  *
  *
  *
- * @author: Mehrab
+ * @author : Mehrab
  */
 
 public class BookProfileActivity extends AppCompatActivity {
@@ -378,6 +378,9 @@ public class BookProfileActivity extends AppCompatActivity {
         final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
         DeleteBookFromUser(currentUsername, passedBook.getId());
 
+        // delete all requests for this book
+        deleteBookRequests(passedBook.getId());
+
         Intent intent = new Intent();
         intent.putExtra("edit", false);
         intent.putExtra("Book", passedBook);
@@ -418,6 +421,42 @@ public class BookProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    /**
+     * Delete all requests for a book
+     * (Called when a book gets deleted
+     * @param bookId the id for the book
+     * @author rmnattas
+     */
+    public void deleteBookRequests(final UUID bookId){
+        //connect to firebase
+        final Database db = new Database(this);
+        Firebase fb = db.connect(this);
+        Firebase childRef = fb.child("Requests");
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jRequest = d.getValue(String.class);
+                    // Get book object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<Request>() {}.getType();
+                    Request request = gson.fromJson(jRequest, tokenType); // here is where we get the user object
+                    if (request.getBookId().equals(bookId)){
+                        db.deleteRequest(request.getId().toString());
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
+
+
     //goes into viewProfile if the owner is clicked
     public void viewProfile(View view){
         Intent intent = getIntent();
@@ -429,7 +468,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
     /**
      * called when the request button is clicked
-     * @param v
+     * @param v the view
      * @author rmnattas
      */
     public void requestClicked(View v){
