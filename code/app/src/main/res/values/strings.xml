@@ -19,6 +19,7 @@
         <item name="Made">Requests Made</item>
         <item name="Received">Requests Received</item>
     </string-array>
+    <string name="title_activity_maps">Map</string>
     <string-array name="rating_array">
         <item name="All">All</item>
         <item name="one">1</item>
