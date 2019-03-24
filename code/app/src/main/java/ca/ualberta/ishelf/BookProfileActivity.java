@@ -551,7 +551,7 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void MapButton(View v){
-        Intent mapIntent = new Intent();
+        Intent mapIntent = new Intent(this, MapsActivity.class);
         Request request = new Request();
         LatLng edmonton = new LatLng(53.537398, -113.513158);
         request.setLocation(edmonton);

@@ -54,6 +54,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         Intent intent = getIntent();
+        saveButton = findViewById(R.id.mapButton);
+
 
         // retrieve the passed in Request
         if (intent.hasExtra("Request")) {
@@ -62,8 +64,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG, "onCreate: Has no Request passed in");
             finish(); // return to previous activity because we have no request
         }
-
-        if (request != null) {
 
             // get the signed-in username so we can use it later to determine if we are bookowner or not
             currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -76,18 +76,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 bookLocation = request.getLocation();
             }
             // retrieve the book name?
-            saveButton = findViewById(R.id.saveButton);
 
             if (ownerUsername.equals(currentUsername)){
                 saveButton.setText("Save");
             } else {
                 saveButton.setVisibility(View.GONE);
             }
-
-        } else {
-            Log.d(TAG, "onCreate: nothing passed in");
-            finish();
-        }
 
         Log.d(TAG, "onCreate: logged in username:" + currentUsername + " book owner's username:" + ownerUsername);
 
@@ -106,6 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.moveCamera(CameraUpdateFactory.zoomTo(14));
 
         // if location is already set, initially send the view there
         if (request != null && request.hasLocation()){
