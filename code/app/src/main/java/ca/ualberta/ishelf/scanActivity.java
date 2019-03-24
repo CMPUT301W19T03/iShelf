@@ -1,10 +1,12 @@
 package ca.ualberta.ishelf;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
@@ -14,6 +16,7 @@ import android.hardware.camera2.CameraManager;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.params.StreamConfigurationMap;
 import android.media.ImageReader;
+import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.design.widget.FloatingActionButton;
@@ -27,7 +30,12 @@ import android.view.Gravity;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import com.google.android.gms.vision.Frame;
@@ -82,6 +90,7 @@ public class scanActivity extends AppCompatActivity {
     private TextureView textureView;
     private FloatingActionButton scanFab;
     private Button lastISBN;
+    private FrameLayout shutter;
 
     String url ="https://www.googleapis.com/books/v1/volumes?q=isbn:";
     private final OkHttpClient client = new OkHttpClient();
@@ -89,8 +98,10 @@ public class scanActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
+        getWindow().setStatusBarColor(Color.TRANSPARENT);
 
         // need to use camera
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
@@ -99,6 +110,47 @@ public class scanActivity extends AppCompatActivity {
         textureView = (TextureView) findViewById(R.id.texture_view);
         scanFab = (FloatingActionButton) findViewById(R.id.scan_fab);
         lastISBN = (Button) findViewById(R.id.last_ISBN);
+        shutter = (FrameLayout) findViewById(R.id.snapshot_effect);
+
+        Button finishScanButton = (Button) findViewById(R.id.accept_scan_button);
+        FloatingActionButton backScan = (FloatingActionButton) findViewById(R.id.back_button_camera);
+
+        finishScanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle extras = new Bundle();
+                extras.putString("ISBN", outputISBN);
+                extras.putString("description", description);
+                Intent intent = new Intent(scanActivity.this, EditBookActivity.class);
+                intent.putExtras(extras);
+                setResult(RESULT_OK, intent);
+                finish();
+            }
+        });
+
+        backScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+            }
+        });
+
+        shutter.setVisibility(View.INVISIBLE);
+        AlphaAnimation fade = new AlphaAnimation(1, 0);
+        fade.setDuration(1000);
+        fade.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation anim) {
+                shutter.setVisibility(View.GONE);
+            }
+            @Override
+            public void onAnimationRepeat(Animation anim) {
+            }
+            @Override
+            public void onAnimationStart(Animation anim) {
+            }
+
+        });
 
         // basic camera setup
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
@@ -117,6 +169,7 @@ public class scanActivity extends AppCompatActivity {
         scanFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                shutter.startAnimation(fade);
                 lastScan = textureView.getBitmap();
                 Frame frame = new Frame.Builder().setBitmap(lastScan).build();
                 SparseArray<Barcode> barCodes = ISBNdetector.detect(frame);
@@ -125,6 +178,8 @@ public class scanActivity extends AppCompatActivity {
                     outputISBN = thisCode.rawValue;
                     lastISBN.setText(outputISBN);
                 }
+                // for testing
+                outputISBN = "9781451648546";
 
                 getAsyncCall();
 

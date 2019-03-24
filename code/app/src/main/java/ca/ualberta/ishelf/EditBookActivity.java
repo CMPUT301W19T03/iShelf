@@ -1,8 +1,14 @@
 package ca.ualberta.ishelf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.provider.ContactsContract;
+import android.support.annotation.RequiresApi;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +28,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
@@ -60,6 +67,8 @@ public class EditBookActivity extends AppCompatActivity {
     private static final String FILENAME = "book1.sav";
     private Book passedBook = null;
 
+    private final int SCAN_AND_GET_DESCRIPTION = 212;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +86,19 @@ public class EditBookActivity extends AppCompatActivity {
         GenreText= (EditText) findViewById(R.id.editGenre);
         DescriptionText = (EditText) findViewById(R.id.editDes);
 
-
         Button clearButton = (Button) findViewById(R.id.cancel);
         Button saveButton = (Button) findViewById(R.id.save);
+        Button scanButton = (Button) findViewById(R.id.scan_button);
+
+        scanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                // convert imageView to a bitMap
+
+                Intent intent = new Intent(EditBookActivity.this, scanActivity.class);
+                startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
+            }
+        });
 
         loadFromFile();
 //if its a book being edited set all text views to the preset data of the book object
@@ -280,6 +299,18 @@ public class EditBookActivity extends AppCompatActivity {
         } catch (IOException e) {
 
             e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SCAN_AND_GET_DESCRIPTION && resultCode == Activity.RESULT_OK) {
+            String ISBN = data.getStringExtra("ISBN");
+            String description = data.getStringExtra("description");
+            DescriptionText.setText(description);
+            ISBNText.setText(ISBN);
         }
     }
 

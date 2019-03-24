@@ -5,5 +5,12 @@
     <corners android:bottomRightRadius="32dp"
         android:bottomLeftRadius="32dp"
         android:topRightRadius="32dp"
-        android:topLeftRadius="32dp"/>
+        android:topLeftRadius="32dp"
+
+        />
+    <gradient
+        android:startColor="#304ffe"
+        android:centerColor="#714cfe"
+        android:endColor="#a200e0"
+        android:angle="270" />
 </shape>
