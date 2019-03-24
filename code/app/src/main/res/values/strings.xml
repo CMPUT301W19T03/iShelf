@@ -20,5 +20,17 @@
         <item name="Received">Requests Received</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
-
+    <string-array name="rating_array">
+        <item name="All">All</item>
+        <item name="one">1</item>
+        <item name="two">2</item>
+        <item name="three">3</item>
+        <item name="four">4</item>
+        <item name="five">5</item>
+    </string-array>
+    <string-array name="select_rating">
+        <!--<item name="All">All</item>-->
+        <item name="Owner">Owner</item>
+        <item name="Book">Book</item>
+    </string-array>
 </resources>
