@@ -136,7 +136,7 @@ public class BookProfileActivity extends AppCompatActivity {
             reqButton.setVisibility(View.VISIBLE);
         }
 
-        if (!isOwner && !passedBook.checkBorrowed() && !isHolder){
+        if (!isOwner && !passedBook.checkBorrowed() && !isHolder && !isRequester){
             Button bkingButton = findViewById(R.id.bking);
             bkingButton.setVisibility(View.VISIBLE);
         }

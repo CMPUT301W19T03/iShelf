@@ -73,6 +73,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private Firebase ref;
     private ArrayList<Book> bookList = new ArrayList<Book>();
     private User user = new User();
+    private Book book = new Book();
     private RecyclerView bookRecyclerView;
     private BorrowAdapter bookAdapter;
     private RecyclerView.LayoutManager bookLayoutManager;
@@ -81,7 +82,11 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private Spinner object_spinner;
     private String selected_object = new String();
 
+    private String currentUsername = new String();
     private SearchView searchView;
+
+
+
 
     /**
      * onCreateView
@@ -339,7 +344,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         Firebase fb = db.connect(getContext());
         Firebase childRef = fb.child("Books");
 
-        final String currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
 
         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -352,9 +357,13 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         Gson gson = new Gson();
                         Type tokenType = new TypeToken<Book>() {
                         }.getType();
-                        Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+                        book = gson.fromJson(jBook, tokenType); // here is where we get the user object
                         if (book.checkBorrowed() == false){
-                            if(!currentUsername.equals(book.getOwner()))
+                            currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+                            if(currentUsername==null){
+                            }
+                            else if(!currentUsername.equals(book.getOwner()))
                             {
                                 bookList.add(book);
                             }
