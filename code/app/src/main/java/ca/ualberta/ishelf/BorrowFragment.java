@@ -169,7 +169,11 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return view;
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAvailableBooks();
+    }
 
     public void Filter(String filter, String object){
         if(object.equals("Book")){
