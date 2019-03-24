@@ -40,7 +40,8 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps">
+        </activity>
         <activity android:name=".ViewImageActivity" />
         <activity android:name=".GalleryActivity" />
         <activity android:name=".NotificationActivity" />

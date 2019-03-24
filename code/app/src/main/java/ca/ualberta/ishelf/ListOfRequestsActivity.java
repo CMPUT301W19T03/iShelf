@@ -193,6 +193,12 @@ public class ListOfRequestsActivity extends AppCompatActivity {
 
         // Update display
         safeNotify();
+
+
+        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        mapIntent.putExtra("Request", selectedRequest);
+        startActivity(mapIntent);
     }
 
 

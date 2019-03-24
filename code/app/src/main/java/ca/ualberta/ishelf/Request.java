@@ -4,6 +4,8 @@ import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -27,7 +29,8 @@ public class Request implements Parcelable {
     // when the book was requested
     private Date timeRequested;
     // Location set for meeting
-    private Location location;
+    //private Location location;
+    private LatLng location;
     // Status of the request
     private int status;
     // 1: accepted
@@ -173,16 +176,16 @@ public class Request implements Parcelable {
      * get the location that the owner designated to meet at
      * @return Location to pick up the book
      */
-    public Location getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
     /**
      * set the location for that owner and requester to meet at
      * set the location using a location object
-     * @param location the location to pick up the book
+     * @param location LatLng of the location to pick up the book
      */
-    public void setLocation(Location location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
@@ -192,10 +195,22 @@ public class Request implements Parcelable {
      * @param latitude the latitude of the location
      * @param longitude the longitude of the location
      */
+    /*
     public void setLocation(double latitude, double longitude) {
         this.location = new Location("");
         this.location.setLatitude(latitude);
         this.location.setLongitude(longitude);
+    }
+    */
+
+    /**
+     * hasLocation
+     * returns true if location of pickup location has been set
+     * false if location has not been set
+     * @return
+     */
+    public boolean hasLocation(){
+        return this.location != null;
     }
 
     /**

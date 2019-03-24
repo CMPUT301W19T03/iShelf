@@ -1,6 +1,7 @@
 package ca.ualberta.ishelf;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -27,10 +28,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String TAG = "MapsActivity";
 
     private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private Request request;
     private LatLng bookLocation;
+    private String ownerUsername;
+    private String borrowerUsername;
+    private String bookName;
+    private String currentUsername;
+    private Marker marker;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // pass in to here the Request object
+        // use the database function to edit the request
+        request = new Request();
+        request.setOwner("Tom");
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -38,7 +50,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-        // get the LatLng bookLocation from the passed in request
+        // retrieve the passed in Request
+        if (this.getIntent().hasExtra("Request")) {
+            Bundle bundle = this.getIntent().getExtras();
+            request = (Request) bundle.getSerializable("Request");
+        } else {
+            Log.d(TAG, "onCreate: Has no Request passed in");
+            finish(); // return to previous activity because we have no request
+        }
+
+        if (request != null) {
+
+            // get the signed-in username so we can use it later to determine if we are bookowner or not
+            currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+            // get the requested book's owner's username
+            //ownerUsername = request.getOwner();
+
+            // get the LatLng bookLocation from the passed in request
+            if (request.hasLocation()) {
+                bookLocation = request.getLocation();
+            }
+            // retrieve the book name?
+
+        } else {
+            Log.d(TAG, "onCreate: nothing passed in");
+            finish();
+        }
     }
 
 
@@ -55,12 +93,32 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        // if location is already set, initially send the view there
+        if (request != null && request.hasLocation()){
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(bookLocation));
+        } else {
+            // if not set just center on edmonton
+            LatLng edmonton = new LatLng(53.530410, -113.511956);
+            mMap.moveCamera(CameraUpdateFactory.newLatLng(edmonton));
+        }
+
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
+        //LatLng sydney = new LatLng(-34, 151);
         //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
 
         enableMyLocation();
+
+        if (request != null && request.hasLocation()) {
+            marker = mMap.addMarker(new MarkerOptions().position(bookLocation));
+            // Set the name of the pin - could change this to the name of the book?
+            marker.setTitle("Swap Spot");
+            if (currentUsername.equals(ownerUsername)){
+                marker.setDraggable(true);
+            } else {
+                marker.setDraggable(false);
+            }
+        }
 
         // Check if we are viewing a map or editing a map
 
@@ -79,17 +137,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
             @Override
             public void onMapLongClick(LatLng latLng) {
-                if (bookLocation == null) {
-                    String snippet = String.format(Locale.getDefault(),
-                            "Lat: %1$.5f, Long: %2$.5f",
-                            latLng.latitude,
-                            latLng.longitude);
-                    Log.d(TAG, "onMapLongClick: " + snippet);
-                    mMap.addMarker(new MarkerOptions()
-                            .position(latLng)).setDraggable(true);
-                    bookLocation = latLng;
-                } else {
-                    Log.d(TAG, "onMapLongClick: pin already placed");
+                // only allow the owner to add a pin or move the pin
+                if (currentUsername.equals(ownerUsername)) {
+                    if (bookLocation == null) {
+                        String snippet = String.format(Locale.getDefault(),
+                                "Lat: %1$.5f, Long: %2$.5f",
+                                latLng.latitude,
+                                latLng.longitude);
+                        Log.d(TAG, "onMapLongClick: " + snippet);
+                        mMap.addMarker(new MarkerOptions()
+                                .position(latLng)).setDraggable(true);
+                        bookLocation = latLng;
+                    } else {
+                        Log.d(TAG, "onMapLongClick: pin already placed");
+                    }
                 }
             }
         });
@@ -106,7 +167,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             @Override
             public void onMarkerDragEnd(Marker marker) {
-                bookLocation = marker.getPosition();
+                if (currentUsername.equals(ownerUsername)) {
+                    bookLocation = marker.getPosition();
+                }
             }
         });
     }
