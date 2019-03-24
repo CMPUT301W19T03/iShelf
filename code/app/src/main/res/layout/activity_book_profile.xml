@@ -308,6 +308,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="100dp"
+        android:onClick="MapButton"
         android:text="MAP"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"

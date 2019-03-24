@@ -43,8 +43,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         // pass in to here the Request object
         // use the database function to edit the request
-        request = new Request();
-        request.setOwner("Tom");
+        //request = new Request();
+        //request.setOwner("Tom");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);

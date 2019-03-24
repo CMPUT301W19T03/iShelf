@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -38,6 +39,16 @@ public class RatingActivity extends AppCompatActivity {
 
         saveButton = findViewById(R.id.saveButton);
 
+        // retrieve the user to be rated name
+        Intent intent = this.getIntent();
+        user = intent.getParcelableExtra("User");
+
+        if (intent.hasExtra("Book")){
+            book = intent.getParcelableExtra("Book");
+        }
+
+
+
         // retrieve user's name
         // TODO: retrieve from firebase or attached username?
         user = new User();
@@ -54,7 +65,7 @@ public class RatingActivity extends AppCompatActivity {
         // check if book exists, if it doesn't we need to hide it, else we need to set it
         if (book != null) {
             // book exists, so update the relevant UI elements
-            bookname = "Harry Potter";
+            bookname = book.getName();
             bookName.setText("Please review the book: " + bookname);
         } else {
             // book does not exist, so remove all relevant UI elements
