@@ -107,6 +107,11 @@ public class BookProfileActivity extends AppCompatActivity {
             lendButton.setVisibility(View.VISIBLE);
 
         }
+        if(isOwner && isHolder && isRequester&& passedBook.getTransition()>0){
+            Button mapButton =findViewById(R.id.map);
+            canEdit=false;
+            mapButton.setVisibility(View.VISIBLE);
+        }
 
         if(!isHolder &&isRequester&& (passedBook.getTransition()==2||passedBook.getTransition()==4)){
             Button acptButton =findViewById(R.id.acpt);
