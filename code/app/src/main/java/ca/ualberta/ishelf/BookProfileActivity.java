@@ -107,6 +107,11 @@ public class BookProfileActivity extends AppCompatActivity {
             lendButton.setVisibility(View.VISIBLE);
 
         }
+        if((isOwner || isHolder || isRequester)&& passedBook.getTransition()>0){
+            Button mapButton =findViewById(R.id.map);
+            canEdit=false;
+            mapButton.setVisibility(View.VISIBLE);
+        }
 
         if(!isHolder &&isRequester&& (passedBook.getTransition()==2||passedBook.getTransition()==4)){
             Button acptButton =findViewById(R.id.acpt);
@@ -136,7 +141,7 @@ public class BookProfileActivity extends AppCompatActivity {
             reqButton.setVisibility(View.VISIBLE);
         }
 
-        if (!isOwner && !passedBook.checkBorrowed() && !isHolder){
+        if (!isOwner && !passedBook.checkBorrowed() && !isHolder && !isRequester){
             Button bkingButton = findViewById(R.id.bking);
             bkingButton.setVisibility(View.VISIBLE);
         }
@@ -514,6 +519,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void Booking(View v){
+        Button bkingButton = findViewById(R.id.bking);
+        bkingButton.setVisibility(View.INVISIBLE);
 
         Request request = new Request();
         request.setBookId(passedBook.getId());

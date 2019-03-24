@@ -73,6 +73,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private Firebase ref;
     private ArrayList<Book> bookList = new ArrayList<Book>();
     private User user = new User();
+    private Book book = new Book();
     private RecyclerView bookRecyclerView;
     private BorrowAdapter bookAdapter;
     private RecyclerView.LayoutManager bookLayoutManager;
@@ -81,7 +82,11 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private Spinner object_spinner;
     private String selected_object = new String();
 
+    private String currentUsername = new String();
     private SearchView searchView;
+
+
+
 
     /**
      * onCreateView
@@ -164,7 +169,11 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         return view;
     }
 
-
+    @Override
+    public void onResume() {
+        super.onResume();
+        getAvailableBooks();
+    }
 
     public void Filter(String filter, String object){
         if(object.equals("Book")){
@@ -292,6 +301,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
              */
             // Get user from the passed in username
 
+
             ref = new Firebase(link);
 
             // get reference to specific entry
@@ -338,6 +348,8 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         Firebase fb = db.connect(getContext());
         Firebase childRef = fb.child("Books");
 
+
+
         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -349,9 +361,17 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         Gson gson = new Gson();
                         Type tokenType = new TypeToken<Book>() {
                         }.getType();
-                        Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+                        book = gson.fromJson(jBook, tokenType); // here is where we get the user object
                         if (book.checkBorrowed() == false){
-                            bookList.add(book);
+                            currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+                            if(currentUsername==null){
+                            }
+                            else if(!currentUsername.equals(book.getOwner()))
+                            {
+                                bookList.add(book);
+                            }
+
                         }
                     } else {
                         Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
