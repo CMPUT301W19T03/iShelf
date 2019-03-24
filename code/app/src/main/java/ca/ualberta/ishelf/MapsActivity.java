@@ -2,6 +2,7 @@ package ca.ualberta.ishelf;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -50,10 +51,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        Intent intent = getIntent();
+
         // retrieve the passed in Request
-        if (this.getIntent().hasExtra("Request")) {
-            Bundle bundle = this.getIntent().getExtras();
-            request = (Request) bundle.getSerializable("Request");
+        if (intent.hasExtra("Request")) {
+            request = intent.getParcelableExtra("Request");
         } else {
             Log.d(TAG, "onCreate: Has no Request passed in");
             finish(); // return to previous activity because we have no request
@@ -65,7 +67,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
             // get the requested book's owner's username
-            //ownerUsername = request.getOwner();
+            ownerUsername = request.getOwner();
 
             // get the LatLng bookLocation from the passed in request
             if (request.hasLocation()) {
@@ -77,6 +79,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Log.d(TAG, "onCreate: nothing passed in");
             finish();
         }
+
+        Log.d(TAG, "onCreate: logged in username:" + currentUsername + " book owner's username:" + ownerUsername);
+
     }
 
 
