@@ -19,6 +19,14 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 /**
 * This is the adapter for the List of requests for the recycler view
@@ -84,7 +92,8 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         // Set the contents of each recycler view item
         holder.testText.setText(mImageNames.get(position));
         holder.bookName.setText(mBookNames.get(position));
-        holder.bRating.setRating(bRatings.get(position));
+        // holder.bRating.setRating(bRatings.get(position));
+        setRating(holder, mImageNames.get(position));
 
 
         /**
@@ -165,6 +174,42 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
             //acceptButton.setTag(2, itemView);
         }
 
+    }
+
+    /**
+     * given a username and a list cell UI object, get the user object
+     * from firebase and show the user rating in the list cell ratingBar
+     * @author rmnattas
+     */
+    private void setRating (final ViewHolder viewHolder, final String username){
+        // connect to firebase
+        final Database db = new Database(mContext);
+        final Firebase ref = db.connect(mContext);
+
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Users").child(username);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+
+                    viewHolder.bRating.setRating(user.getOverallRating());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
     }
 
 }
