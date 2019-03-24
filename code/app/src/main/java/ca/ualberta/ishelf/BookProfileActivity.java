@@ -514,6 +514,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void Booking(View v){
+        Button bkingButton = findViewById(R.id.bking);
+        bkingButton.setVisibility(View.INVISIBLE);
 
         Request request = new Request();
         request.setBookId(passedBook.getId());
