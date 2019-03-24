@@ -118,6 +118,8 @@ public class Book implements Parcelable{
         this.author = author;
     }
 
+
+
     public String getYear() {
         return year;
     }
@@ -215,6 +217,18 @@ public class Book implements Parcelable{
         this.holder = name;
     }
     // Public Methods
+    public float getAvgRating(){
+        float sum=0;
+        for(int i=0; i < this.ratings.size(); i++)
+        {
+            sum += this.ratings.get(i).getRating();
+        }
+
+        return (sum/this.ratings.size());
+    }
+
+
+
 
     /**
      * setBorrowed() sets the status of the book to borrowed, so that others can't borrow it
