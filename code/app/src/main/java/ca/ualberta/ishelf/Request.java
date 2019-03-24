@@ -62,12 +62,14 @@ public class Request implements Parcelable {
     protected Request(Parcel in) {
         requester = in.readString();
         status = in.readInt();
+        owner = in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(requester);
         dest.writeInt(status);
+        dest.writeString(owner);
     }
 
     @Override

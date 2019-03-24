@@ -168,6 +168,13 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             }
         }
         */
+
+        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        mapIntent.putExtra("Request", selectedRequest);
+        Log.d(TAG, "acceptRequest: selectedRequest owner:" + selectedRequest.getOwner());
+        startActivity(mapIntent);
+
         // Accept Request
         selectedRequest.accept();
         db.addRequest(selectedRequest);
@@ -195,10 +202,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         safeNotify();
 
 
-        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
-        Intent mapIntent = new Intent(this, MapsActivity.class);
-        mapIntent.putExtra("Request", selectedRequest);
-        startActivity(mapIntent);
+
     }
 
 

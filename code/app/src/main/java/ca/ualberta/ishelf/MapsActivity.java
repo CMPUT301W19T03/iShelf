@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -36,6 +37,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private String bookName;
     private String currentUsername;
     private Marker marker;
+    private Button saveButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +76,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 bookLocation = request.getLocation();
             }
             // retrieve the book name?
+            saveButton = findViewById(R.id.saveButton);
+
+            if (ownerUsername.equals(currentUsername)){
+                saveButton.setText("Save");
+            } else {
+                saveButton.setVisibility(View.GONE);
+            }
 
         } else {
             Log.d(TAG, "onCreate: nothing passed in");
