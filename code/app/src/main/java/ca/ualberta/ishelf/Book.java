@@ -31,6 +31,14 @@ public class Book implements Parcelable{
     private String genre;
     private String author;
     private int transition;
+    /*
+    0 is its available for booking
+    1 is when u have accept someones request.
+    2 is when u meet up with the person and pressed the lend button to hand over the book to that person
+    3 is when the borrower presses accept to receive the book
+    4 is when the borrower presses return to hand the book back to you
+    It is set back to 0, when u press the accept to get the book back from the borrower, as the book becomes available again
+     */
 
     public  Book(){
         this.status = 1;
@@ -109,6 +117,8 @@ public class Book implements Parcelable{
     public void setAuthor(String author) {
         this.author = author;
     }
+
+
 
     public String getYear() {
         return year;
@@ -203,10 +213,22 @@ public class Book implements Parcelable{
         return holder;
     }
 
-    public void setHolder(String holder) {
-        this.holder = holder;
+    public void setHolder(String name) {
+        this.holder = name;
     }
     // Public Methods
+    public float getAvgRating(){
+        float sum=0;
+        for(int i=0; i < this.ratings.size(); i++)
+        {
+            sum += this.ratings.get(i).getRating();
+        }
+
+        return (sum/this.ratings.size());
+    }
+
+
+
 
     /**
      * setBorrowed() sets the status of the book to borrowed, so that others can't borrow it
@@ -268,8 +290,9 @@ public class Book implements Parcelable{
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(owner);
-        dest.writeString(holder);
         dest.writeString(next_holder);
+        dest.writeString(holder);
+
         dest.writeString(name);
         dest.writeString(description);
         if (ISBN == null) {

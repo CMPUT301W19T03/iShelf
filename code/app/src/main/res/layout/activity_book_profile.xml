@@ -101,26 +101,23 @@
         android:id="@+id/acpt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="ACCEPT"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
         android:onClick="accept"
+        android:text="ACCEPT"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/ret"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toEndOf="@+id/editGenre"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
     <Button
         android:id="@+id/ret"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="36dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48dp"
+        android:onClick="returnClicked"
         android:text="RETURN"
         android:visibility="invisible"
-        android:onClick="returnClicked"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
@@ -128,11 +125,14 @@
         android:id="@+id/lend"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="16dp"
-        android:text="LEND"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
         android:onClick="lend"
+        android:text="LEND"
         android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/acpt"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
@@ -140,13 +140,14 @@
         android:id="@+id/bking"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="BOOKING"
         android:onClick="Booking"
+        android:text="Request"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintEnd_toStartOf="@+id/map"
+        app:layout_constraintHorizontal_bias="0.713"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/req" />
 
@@ -154,8 +155,8 @@
         android:id="@+id/edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="100dp"
         android:onClick="edit"
@@ -163,14 +164,16 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/del"
+        app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/acpt" />
+        app:layout_constraintTop_toBottomOf="@+id/acpt"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/del"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="100dp"
         android:layout_marginBottom="100dp"
         android:onClick="delete"
@@ -178,7 +181,8 @@
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/acpt" />
+        app:layout_constraintTop_toBottomOf="@+id/acpt"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/status"
@@ -271,8 +275,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:onClick="requestClicked"
-        android:text="Requests For Book"
 
+        android:text="Requests For Book"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.478"
@@ -297,5 +301,16 @@
         android:text="VIEW GALLERY"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <Button
+        android:id="@+id/map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="100dp"
+        android:text="MAP"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/req" />
 
 </android.support.constraint.ConstraintLayout>

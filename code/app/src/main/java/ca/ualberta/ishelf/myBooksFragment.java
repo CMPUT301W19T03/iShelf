@@ -115,7 +115,7 @@ public class myBooksFragment extends Fragment implements SwipeRefreshLayout.OnRe
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(recyclerView.getContext(),
                 LinearLayoutManager.VERTICAL);
         recyclerView.addItemDecoration(dividerItemDecoration);
-        getUserBooks();
+        //getUserBooks();
 
         searchView = (SearchView) getActivity().findViewById(R.id.searchView1);
 
@@ -181,28 +181,24 @@ public class myBooksFragment extends Fragment implements SwipeRefreshLayout.OnRe
 
 //    }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//
-//        // clear myBooks listView
-//        ArrayList<Book> cleanList = new ArrayList<>();
-//        myAdapter.updateList(cleanList);
-//        myAdapter.notifyDataSetChanged();
-//
-//        // update list of books
-//        getUserBooks();
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        // clear myBooks listView
+        ArrayList<Book> cleanList = new ArrayList<>();
+        myAdapter.updateList(cleanList);
+        myAdapter.notifyDataSetChanged();
+
+        // update list of books
+        getUserBooks();
+    }
 
     /**
      * Get the logged in user books from firebase
      * @author rmnattas
      */
     private void getUserBooks(){
-
-        // clear previous lists
-        myOwnedBooks.clear();
-        myBorrowedBooks.clear();
 
         // get logged in user username
         final String currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -245,11 +241,17 @@ public class myBooksFragment extends Fragment implements SwipeRefreshLayout.OnRe
      * @param borrowedBooksIds list of borrowed books ids
      */
     private void getBooks(final ArrayList<UUID> ownedBooksIds, final ArrayList<UUID> borrowedBooksIds){
+        // get logged in user username
+        final String currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
         Firebase ref = new Database(getContext()).connect(getContext());
         Firebase childRef = ref.child("Books");
         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                // clear previous lists
+                myOwnedBooks.clear();
+                myBorrowedBooks.clear();
                 for(DataSnapshot d: dataSnapshot.getChildren()) {
                     String jBook = d.getValue(String.class);
                     //Log.d("jBook", jBook);
@@ -258,7 +260,7 @@ public class myBooksFragment extends Fragment implements SwipeRefreshLayout.OnRe
                         Gson gson = new Gson();
                         Type tokenType = new TypeToken<Book>() {}.getType();
                         Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
-                        if (ownedBooksIds.contains(book.getId())){
+                        if (ownedBooksIds.contains(book.getId()) || book.getOwner().equals(currentUsername)){
                             myOwnedBooks.add(book);
                         } else if (borrowedBooksIds.contains(book.getId())){
                             myBorrowedBooks.add(book);
