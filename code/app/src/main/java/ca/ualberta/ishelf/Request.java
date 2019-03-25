@@ -63,6 +63,9 @@ public class Request implements Parcelable {
         requester = in.readString();
         status = in.readInt();
         owner = in.readString();
+        double lat = in.readDouble();
+        double lng = in.readDouble();
+        location = new LatLng(lat, lng);
     }
 
     @Override
@@ -70,6 +73,10 @@ public class Request implements Parcelable {
         dest.writeString(requester);
         dest.writeInt(status);
         dest.writeString(owner);
+        double lat = location.latitude;
+        double lng = location.longitude;
+        dest.writeDouble(lat);
+        dest.writeDouble(lng);
     }
 
     @Override
