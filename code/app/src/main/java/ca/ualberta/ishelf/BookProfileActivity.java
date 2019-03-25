@@ -557,6 +557,7 @@ public class BookProfileActivity extends AppCompatActivity {
         request.setLocation(edmonton);
         request.setOwner("Tom");
         mapIntent.putExtra("Request", request);
+        Log.d(TAG, "MapButton: here");
         startActivity(mapIntent);
     }
 

@@ -168,6 +168,16 @@ public class Database extends Application {
     }
 
     /**
+     * Given a request object, finds that object in the database and replaces it
+     * @param request the book object edit
+     * @author : Randal Kimpinski
+     */
+    public void editRequest(Request request) {
+        deleteRequest(request.getId().toString());
+        addRequest(request);
+    }
+
+    /**
      * Given a user object, finds that object in the database and replaces it
      * @param request the request object to edit
      * @author : Randal Kimpinski

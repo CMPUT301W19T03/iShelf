@@ -3,11 +3,14 @@ package ca.ualberta.ishelf;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 import java.util.UUID;
+
+import static android.support.constraint.Constraints.TAG;
 
 /**
  * A request object represents one user requesting to borrow a book from its owner
@@ -60,23 +63,41 @@ public class Request implements Parcelable {
     }
 
     protected Request(Parcel in) {
+        bookId = UUID.fromString(in.readString());
         requester = in.readString();
         status = in.readInt();
         owner = in.readString();
         double lat = in.readDouble();
         double lng = in.readDouble();
-        location = new LatLng(lat, lng);
+        if (lat == 0.0 || lng == 0.0) {
+            location = new LatLng(lat, lng);
+        } else {
+            location = null;
+        }
+        id = UUID.fromString(in.readString());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(bookId.toString());
         dest.writeString(requester);
         dest.writeInt(status);
         dest.writeString(owner);
-        double lat = location.latitude;
-        double lng = location.longitude;
+        // need to check if lat and lng are null
+        double lat;
+        double lng;
+        try {
+            lat = location.latitude;
+            lng = location.longitude;
+
+        } catch (Exception e) {
+            Log.d(TAG, "writeToParcel: " + e.toString());
+            lat = 0.0;
+            lng = 0.0;
+        }
         dest.writeDouble(lat);
         dest.writeDouble(lng);
+        dest.writeString(id.toString());
     }
 
     @Override
