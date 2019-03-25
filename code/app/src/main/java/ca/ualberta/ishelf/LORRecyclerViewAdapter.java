@@ -111,9 +111,9 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
             holder.declineButton.setClickable(true);
         } else {
             // If the request has been accepted, display location button
-            holder.locationButton.setVisibility(View.VISIBLE);
+            holder.locationButton.setVisibility(View.INVISIBLE);
             //holder.locationButton.setEnabled(true);
-            holder.locationButton.setClickable(true);
+            holder.locationButton.setClickable(false);
             holder.acceptButton.setVisibility(View.INVISIBLE);
             //holder.acceptButton.setEnabled(false);
             holder.acceptButton.setClickable(false);

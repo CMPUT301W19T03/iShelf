@@ -127,15 +127,12 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     void locationButton(int position) {
         Log.d(TAG+" locationButton", "Called with " + position);
-        // Call locationActivity and pass request UUID as an extra string
-        /*
         Request selectedRequest = requests.get(position);
-        //This might just be a button
-        Intent myIntent = new Intent(this, LocationActivity.class);
-        String requestId = selectedRequest.getId().toString();
-        myIntent.putExtra("RequestId", requestId);
-        startActivity(myIntent);
-        */
+        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        mapIntent.putExtra("Request", selectedRequest);
+        Log.d(TAG, "acceptRequest: selectedRequest owner:" + selectedRequest.getOwner());
+        startActivity(mapIntent);
     }
 
     /**
@@ -191,28 +188,17 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         int size = requests.size();
         Log.d("Size: ", String.valueOf(size));
 
-        /* Decline and delete all other requests
-        for (int i = 0; i < size; i++) {
+        for (Request tempRequest : requests) {
             Log.d("Size: ", String.valueOf(size));
-            Log.d("i: ", String.valueOf(i));
-            Request tempRequest = requests.get(i);
+            // Log.d("i: ", String.valueOf(i));
             tempRequest.decline();
             // Delete the requests instead of just declining it
             db.deleteRequest(tempRequest.getId().toString());
             // Create and add notification to firebase
             Notification notification = new Notification(new Date(),
-                    username + " has declined your request for "+ mBookNames.get(i), tempRequest.getOwner());
+                    username + " has declined your request for " + selectedBookName, tempRequest.getRequester());
             db.addNotification(notification);
-            safeNotify();
         }
-        */
-
-
-        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
-        Intent mapIntent = new Intent(this, MapsActivity.class);
-        mapIntent.putExtra("Request", selectedRequest);
-        Log.d(TAG, "acceptRequest: selectedRequest owner:" + selectedRequest.getOwner());
-        startActivity(mapIntent);
 
         // Accept Request
         selectedRequest.accept();
@@ -234,9 +220,15 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         requests.clear();
         requests.add(selectedRequest);
 
-
         // Update display
         safeNotify();
+
+        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        mapIntent.putExtra("Request", selectedRequest);
+        Log.d(TAG, "acceptRequest: selectedRequest owner:" + selectedRequest.getOwner());
+        startActivity(mapIntent);
+
 
 
 
