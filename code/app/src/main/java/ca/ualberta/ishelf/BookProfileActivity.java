@@ -24,6 +24,7 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -543,6 +544,13 @@ public class BookProfileActivity extends AppCompatActivity {
         // add the request to the book owner listOfRequests
         Database db = new Database(this);
         db.addRequest(request);
+
+        // create a notification and add it to Firebase
+        Notification notification = new Notification(new Date(),
+                currentUsername + " has requested " + passedBook.getName(),
+                passedBook.getOwner());
+        db.addNotification(notification);
+
         Toast toast = Toast.makeText(getApplicationContext(),
                 "Book Requested",
                 Toast.LENGTH_LONG);
