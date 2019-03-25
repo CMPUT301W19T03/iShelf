@@ -349,10 +349,10 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         Firebase childRef = fb.child("Books");
 
 
-
         childRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                bookList.clear();
                 for(DataSnapshot d: dataSnapshot.getChildren()) {
                     String jBook = d.getValue(String.class);
                     //Log.d("jBook", jBook);
@@ -369,7 +369,10 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                             }
                             else if(!currentUsername.equals(book.getOwner()))
                             {
-                                bookList.add(book);
+                                if(book.getTransition()>0){
+                                    bookList.add(book);
+                                }
+
                             }
 
                         }
