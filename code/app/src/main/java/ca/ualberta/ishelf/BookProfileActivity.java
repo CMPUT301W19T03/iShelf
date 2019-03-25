@@ -16,6 +16,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -61,6 +62,7 @@ public class BookProfileActivity extends AppCompatActivity {
     private Firebase ref;
     private Book passedBook = null;
     final String TAG = "BookProfileActivity";
+    private Button mapButton;
 
     // to see a gallery of books
     private Button galleryButton;
@@ -187,6 +189,8 @@ public class BookProfileActivity extends AppCompatActivity {
 
         getOwner();
 
+        mapButton = findViewById(R.id.map);
+
     }
 
     /**
@@ -270,6 +274,8 @@ public class BookProfileActivity extends AppCompatActivity {
             // Remove the book ID to the new holder borrowedBooks list
             removeToUserBorrowList(passedBook.getHolder(), passedBook.getId());
 
+
+
             passedBook.setBorrowedBook(false);
             passedBook.setAvailable();
             passedBook.setTransition(0);
@@ -279,6 +285,9 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setNext_holder(null);
             Database db =new Database(this );
             db.editBook(passedBook);
+
+            // Get the Owner to review the Borrower
+
         }
 
     }
@@ -539,6 +548,16 @@ public class BookProfileActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG);
         toast.show();
 
+    }
+
+    public void MapButton(View v){
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        Request request = new Request();
+        LatLng edmonton = new LatLng(53.537398, -113.513158);
+        request.setLocation(edmonton);
+        request.setOwner("Tom");
+        mapIntent.putExtra("Request", request);
+        startActivity(mapIntent);
     }
 
 }
