@@ -127,6 +127,15 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     void locationButton(int position) {
         Log.d(TAG+" locationButton", "Called with " + position);
+        // Call locationActivity and pass request UUID as an extra string
+        /*
+        Request selectedRequest = requests.get(position);
+        //This might just be a button
+        Intent myIntent = new Intent(this, LocationActivity.class);
+        String requestId = selectedRequest.getId().toString();
+        myIntent.putExtra("RequestId", requestId);
+        startActivity(myIntent);
+        */
     }
 
     /**
@@ -168,20 +177,21 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         String selectedName = mNames.get(position);
         mNames.remove(position);
         // Save and remove the request status
-        int selectedStatus = mStatus.get(position);
+        //int selectedStatus = mStatus.get(position);
+        int selectedStatus = 1;
         mStatus.remove(position);
         // Save and remove the rating
         float selectedRating = mRatings.get(position);
         mRatings.remove(position);
 
-        // Decline all other requests by looping backwards through the array and deleting them
-        // Log.d("declineRequests", "requests: " + requests.size());
-        // Log.d("declineRequests", "mNames: " + mNames.size());
-        // Log.d("declineRequests", "mBookNames: " + mBookNames.size());
-        // Log.d("declineRequests", "mRatings: " + mRatings.size());
+        Log.d("declineRequests", "requests: " + requests.size());
+        Log.d("declineRequests", "mNames: " + mNames.size());
+        Log.d("declineRequests", "mBookNames: " + mBookNames.size());
+        Log.d("declineRequests", "mRatings: " + mRatings.size());
         int size = requests.size();
         Log.d("Size: ", String.valueOf(size));
-        //TODO why does this go out of range?
+
+        /* Decline and delete all other requests
         for (int i = 0; i < size; i++) {
             Log.d("Size: ", String.valueOf(size));
             Log.d("i: ", String.valueOf(i));
@@ -195,6 +205,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             db.addNotification(notification);
             safeNotify();
         }
+        */
 
         // Accept Request
         selectedRequest.accept();
@@ -203,18 +214,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         Notification notification = new Notification(new Date(),
                 username + " has accepted your request", selectedRequest.getRequester());
         db.addNotification(notification);
-
-        /*
-        Might just add a button for this
-        // Save the specific request object
-        Request selectedRequest = requests.get(position);
-        // Save the specific bookName
-        String selectedBookName = mBookNames.get(position);
-        // Save the requester name
-        String selectedName = mNames.get(position);
-        // Save the rating
-        float selectedRating = mRatings.get(position);
-        */
 
         // Re-add our items to the array
         mRatings.clear();
@@ -225,17 +224,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         mStatus.add(selectedStatus);
         mBookNames.clear();
         mBookNames.add(selectedBookName);
+        requests.clear();
         requests.add(selectedRequest);
-        safeNotify();
 
-        // Call locationActivity and pass request UUID as an extra string
-        /*
-        This might just be a button
-        Intent myIntent = new Intent(this, LocationActivity.class);
-        String requestId = selectedReqeust.getId().toString();
-        myIntent.puExtra("RequestId", requestId);
-        startActivity(myIntent);
-         */
 
         // Update display
         safeNotify();
@@ -412,6 +403,19 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     private void safeNotify() {
         initRecyclerView();
+        // Print out a bunch of error messages
+        for (String x: mBookNames) {
+            Log.d("current data", x);
+        }
+        for (String x: mNames) {
+            Log.d("current data", x);
+        }
+        for (int x: mStatus) {
+            Log.d("current status", String.valueOf(x));
+        }
+        for (float x: mRatings) {
+            Log.d("current data", Float.toString(x));
+        }
     }
 
     /**

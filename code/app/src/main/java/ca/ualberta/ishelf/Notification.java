@@ -4,7 +4,13 @@ import java.util.Date;
 import java.util.UUID;
 
 /**
- * display notifications
+ * The Notification is used to store all the information relevent to
+ * a single notification. This object is stored in firebase, and is how user's
+ * communicate when books have been requested, when requests have been
+ * accepted or declined, when a location has been set for a meeting, etc.
+ * Notification acts as a kind of conduit between Android Studios'
+ * notifications (the pop-ups that you can get outside) and how firebase interacts
+ * with notifications, and how we wanted to store them
  */
 public class Notification implements Comparable<Notification> {
     private Date date;
@@ -102,8 +108,9 @@ public class Notification implements Comparable<Notification> {
      * Notifications are sorted in order of date created, aka
      * Older notifications are sorted in front of Newer notifications
      * This is reversed when they are displayed
-     * @param o
-     * @return
+     * @param o the notification object to compare
+     * @return int 0 when equal, 1 when greater than, -1 when less than
+     * @author : Randal Kimpinski
      */
     @Override
     public int compareTo(Notification o) {

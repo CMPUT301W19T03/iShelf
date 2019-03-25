@@ -91,15 +91,27 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         holder.bRating.setRating(bRatings.get(position));
         //TODO set location button to visible or invisible
         if (mStatus.get(position) == 0) {
-            // If the request hasn't been accepted, disaply the accept/decline buttons
+            // If the request hasn't been accepted, display the accept/decline buttons
             holder.locationButton.setVisibility(View.INVISIBLE);
+            //holder.locationButton.setEnabled(false);
+            holder.locationButton.setClickable(false);
             holder.acceptButton.setVisibility(View.VISIBLE);
+            //holder.acceptButton.setEnabled(true);
+            holder.acceptButton.setClickable(true);
             holder.declineButton.setVisibility(View.VISIBLE);
+            //holder.declineButton.setEnabled(true);
+            holder.declineButton.setClickable(true);
         } else {
             // If the request has been accepted, display location button
             holder.locationButton.setVisibility(View.VISIBLE);
+            //holder.locationButton.setEnabled(true);
+            holder.locationButton.setClickable(true);
             holder.acceptButton.setVisibility(View.INVISIBLE);
+            //holder.acceptButton.setEnabled(false);
+            holder.acceptButton.setClickable(false);
             holder.declineButton.setVisibility(View.INVISIBLE);
+            //holder.declineButton.setEnabled(false);
+            holder.declineButton.setClickable(false);
         }
 
         /**
@@ -139,10 +151,10 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
          * This is called when the decline button is pressed
          * @author : Randal Kimpinski
          */
-        holder.declineButton.setOnClickListener(new View.OnClickListener() {
+        holder.locationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.d(TAG, "onClick locationBUtton: clicked on: " + fposition);
+                Log.d(TAG, "onClick locationButton: clicked on: " + fposition);
                 ((ListOfRequestsActivity) mContext).locationButton(fposition);
             }
         });
