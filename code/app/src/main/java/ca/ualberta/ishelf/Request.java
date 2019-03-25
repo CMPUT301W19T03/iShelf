@@ -70,9 +70,9 @@ public class Request implements Parcelable {
         double lat = in.readDouble();
         double lng = in.readDouble();
         if (lat == 0.0 || lng == 0.0) {
-            location = new LatLng(lat, lng);
-        } else {
             location = null;
+        } else {
+            location = new LatLng(lat, lng);
         }
         id = UUID.fromString(in.readString());
     }
