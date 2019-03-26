@@ -111,7 +111,7 @@ public class ScanActivity extends AppCompatActivity {
     private String description = "";
 
 
-    private boolean testing = true;
+    private boolean testing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -276,6 +276,7 @@ public class ScanActivity extends AppCompatActivity {
         super.onStop();
         closeCamera();
         closeBackgroundThread();
+        Log.d("cam","camStop");
     }
 
     @Override
@@ -337,13 +338,13 @@ public class ScanActivity extends AppCompatActivity {
                         }
                     }, backgroundHandler);
         } catch (CameraAccessException e) {
+            Log.d("cam","cam3");
             e.printStackTrace();
         }
     }
 
     // sets up the camera
     private void initializeCamera() {
-        do {
             try {
                 for (String cameraId : cameraManager.getCameraIdList()) {
                     CameraCharacteristics cameraCharacteristics =
@@ -357,25 +358,22 @@ public class ScanActivity extends AppCompatActivity {
                     }
                 }
             } catch (CameraAccessException e) {
+                Log.d("cam","cam1");
                 e.printStackTrace();
-                continue;
             }
-        } while (false);
     }
 
     // opens the camera
     private void openCamera() {
-        do {
             try {
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                         == PackageManager.PERMISSION_GRANTED) {
                     cameraManager.openCamera(cameraId, stateCallback, backgroundHandler);
                 }
             } catch (CameraAccessException e) {
+                Log.d("cam","cam2");
                 e.printStackTrace();
-                continue;
             }
-        } while (false);
     }
 
     // opens background thread
