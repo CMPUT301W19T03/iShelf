@@ -105,6 +105,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else {
             // pending
             requestHolder.state.setText("Pending");
+            requestHolder.state.setTextColor(requestHolder.type.getTextColors());
         }
 
         final String username = requestContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
