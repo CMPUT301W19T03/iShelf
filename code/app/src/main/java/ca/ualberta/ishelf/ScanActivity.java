@@ -43,9 +43,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
@@ -118,8 +115,6 @@ public class ScanActivity extends AppCompatActivity {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        //textureView.setOpaque(false);
 
         // need to use camera
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
@@ -276,14 +271,15 @@ public class ScanActivity extends AppCompatActivity {
         super.onStop();
         closeCamera();
         closeBackgroundThread();
+        Log.d("cam","camStop");
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        closeCamera();
-        closeBackgroundThread();
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        closeCamera();
+//        closeBackgroundThread();
+//    }
 
     private void closeCamera() {
         if (scanSession != null) {
@@ -337,13 +333,13 @@ public class ScanActivity extends AppCompatActivity {
                         }
                     }, backgroundHandler);
         } catch (CameraAccessException e) {
+            Log.d("cam","cam3");
             e.printStackTrace();
         }
     }
 
     // sets up the camera
     private void initializeCamera() {
-        do {
             try {
                 for (String cameraId : cameraManager.getCameraIdList()) {
                     CameraCharacteristics cameraCharacteristics =
@@ -357,25 +353,22 @@ public class ScanActivity extends AppCompatActivity {
                     }
                 }
             } catch (CameraAccessException e) {
+                Log.d("cam","cam1");
                 e.printStackTrace();
-                continue;
             }
-        } while (false);
     }
 
     // opens the camera
     private void openCamera() {
-        do {
             try {
                 if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
                         == PackageManager.PERMISSION_GRANTED) {
                     cameraManager.openCamera(cameraId, stateCallback, backgroundHandler);
                 }
             } catch (CameraAccessException e) {
+                Log.d("cam","cam2");
                 e.printStackTrace();
-                continue;
             }
-        } while (false);
     }
 
     // opens background thread
