@@ -105,6 +105,7 @@ public class ScanActivity extends AppCompatActivity {
     private FrameLayout shutter;
     private final AlphaAnimation fade = new AlphaAnimation(1, 0);
 
+
     String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
     private final OkHttpClient client = new OkHttpClient();
     private String description = "";
@@ -394,7 +395,6 @@ public class ScanActivity extends AppCompatActivity {
             @Override public void onFailure(Call call, IOException e) {
                 Log.e(TAG, "error in getting response using async okhttp call");
             }
-
             @Override public void onResponse(Call call, Response response) throws IOException {
                 ResponseBody responseBody = response.body();
                 String string = responseBody.string();
@@ -409,7 +409,6 @@ public class ScanActivity extends AppCompatActivity {
                 }
                 catch (JSONException e) {
                 }
-
                 if (!response.isSuccessful()) {
                     throw new IOException("Error response " + response);
                 }
