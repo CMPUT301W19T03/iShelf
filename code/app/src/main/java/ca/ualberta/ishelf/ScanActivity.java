@@ -110,6 +110,7 @@ public class ScanActivity extends AppCompatActivity {
     private final OkHttpClient client = new OkHttpClient();
     private String description = "";
 
+
     private boolean testing = true;
 
     @Override
@@ -118,7 +119,7 @@ public class ScanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
-
+        //textureView.setOpaque(false);
 
         // need to use camera
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
@@ -166,7 +167,6 @@ public class ScanActivity extends AppCompatActivity {
             @Override
             public void onAnimationStart(Animation anim) {
             }
-
         });
 
         // basic camera setup
@@ -206,15 +206,11 @@ public class ScanActivity extends AppCompatActivity {
                             public void onFailure(@NonNull Exception e) {
                             }
                         });
-
                 if (testing) {
                     outputISBN = "9781770893702";
                     lastISBN.setText(outputISBN);
                     getAsyncCall();
                 }
-
-
-
             }
         });
 
@@ -347,33 +343,39 @@ public class ScanActivity extends AppCompatActivity {
 
     // sets up the camera
     private void initializeCamera() {
-        try {
-            for (String cameraId : cameraManager.getCameraIdList()) {
-                CameraCharacteristics cameraCharacteristics =
-                        cameraManager.getCameraCharacteristics(cameraId);
-                if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) ==
-                        cameraFacing) {
-                    StreamConfigurationMap streamConfigurationMap = cameraCharacteristics.get(
-                            CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
-                    Size = streamConfigurationMap.getOutputSizes(SurfaceTexture.class)[0];
-                    this.cameraId = cameraId;
+        do {
+            try {
+                for (String cameraId : cameraManager.getCameraIdList()) {
+                    CameraCharacteristics cameraCharacteristics =
+                            cameraManager.getCameraCharacteristics(cameraId);
+                    if (cameraCharacteristics.get(CameraCharacteristics.LENS_FACING) ==
+                            cameraFacing) {
+                        StreamConfigurationMap streamConfigurationMap = cameraCharacteristics.get(
+                                CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
+                        Size = streamConfigurationMap.getOutputSizes(SurfaceTexture.class)[0];
+                        this.cameraId = cameraId;
+                    }
                 }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+                continue;
             }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
+        } while (false);
     }
 
     // opens the camera
     private void openCamera() {
-        try {
-            if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
-                    == PackageManager.PERMISSION_GRANTED) {
-                cameraManager.openCamera(cameraId, stateCallback, backgroundHandler);
+        do {
+            try {
+                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CAMERA)
+                        == PackageManager.PERMISSION_GRANTED) {
+                    cameraManager.openCamera(cameraId, stateCallback, backgroundHandler);
+                }
+            } catch (CameraAccessException e) {
+                e.printStackTrace();
+                continue;
             }
-        } catch (CameraAccessException e) {
-            e.printStackTrace();
-        }
+        } while (false);
     }
 
     // opens background thread
@@ -382,9 +384,6 @@ public class ScanActivity extends AppCompatActivity {
         backgroundThread.start();
         backgroundHandler = new Handler(backgroundThread.getLooper());
     }
-
-
-
 
     public void getAsyncCall(){
         Request request = new Request.Builder()

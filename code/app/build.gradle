@@ -16,6 +16,15 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/DEPENDENCIES'
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+
 }
 
 dependencies {
@@ -65,6 +74,11 @@ dependencies {
     implementation 'com.google.android.gms:play-services-maps:16.1.0'
 
     // Google Plays Services for Google Maps integration
+
+    // for scanning
+    implementation 'com.google.apis:google-api-services-books:v1-rev20181212-1.28.0'
+    implementation 'com.squareup.okhttp3:okhttp:3.14.0'
+    implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
 
 }
 apply plugin: 'com.google.gms.google-services'
