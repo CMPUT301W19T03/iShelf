@@ -23,8 +23,6 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
-
 }
 
 dependencies {
@@ -61,6 +59,14 @@ dependencies {
         exclude module: 'recyclerview-v7'
     }
 
+    implementation (
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.4.1'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.4.1'],
+            [group: 'com.fasterxml.jackson.core', name: 'jackson-databind', version: '2.4.1'],
+            [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-base', version: '2.4.1'],
+            [group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.4.1'],
+            [group: 'com.fasterxml.jackson.module', name: 'jackson-module-jaxb-annotations', version: '2.4.1']
+    )
 
     androidTestImplementation "com.android.support:support-annotations:28.0.0"
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
@@ -78,9 +84,10 @@ dependencies {
 
 
     // for scanning
-    implementation 'com.google.apis:google-api-services-books:v1-rev20181212-1.28.0'
+
     implementation 'com.squareup.okhttp3:okhttp:3.14.0'
     implementation 'com.google.firebase:firebase-ml-vision:19.0.2'
+    implementation 'com.google.apis:google-api-services-books:v1-rev106-1.25.0'
 
 }
 apply plugin: 'com.google.gms.google-services'

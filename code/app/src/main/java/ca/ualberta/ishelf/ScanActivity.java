@@ -43,9 +43,6 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.barcode.Barcode;
-import com.google.android.gms.vision.barcode.BarcodeDetector;
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode;
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector;
@@ -111,15 +108,13 @@ public class ScanActivity extends AppCompatActivity {
     private String description = "";
 
 
-    private boolean testing = false;
+    private boolean testing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
-        getWindow().setStatusBarColor(Color.TRANSPARENT);
-        //textureView.setOpaque(false);
 
         // need to use camera
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
@@ -279,12 +274,12 @@ public class ScanActivity extends AppCompatActivity {
         Log.d("cam","camStop");
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        closeCamera();
-        closeBackgroundThread();
-    }
+//    @Override
+//    protected void onPause() {
+//        super.onPause();
+//        closeCamera();
+//        closeBackgroundThread();
+//    }
 
     private void closeCamera() {
         if (scanSession != null) {
