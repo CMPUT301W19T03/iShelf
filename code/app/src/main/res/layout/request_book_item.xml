@@ -4,7 +4,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="88dp">
+    android:layout_height="160dp"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@color/black"
+    android:backgroundTint="#80FFFFFF">
 
     <TextView
         android:id="@+id/title1"
@@ -14,19 +20,23 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:text="Title"
+        android:textColor="@color/black"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
-        android:textSize="17sp"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/user_name"
-        android:layout_width="59dp"
-        android:layout_height="21dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="TextView"
+        android:textColor="@color/black"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/lableType"
         app:layout_constraintTop_toBottomOf="@+id/title1" />
 
@@ -38,6 +48,9 @@
         android:layout_marginBottom="8dp"
         android:text="TextView"
         android:textAlignment="textEnd"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -49,7 +62,9 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:text="TextView"
+        android:textSize="20sp"
         android:textAlignment="textEnd"
+        android:textColor="@color/black"
         app:layout_constraintBottom_toTopOf="@+id/request_state"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/title1" />
@@ -60,19 +75,28 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
-        android:text="Requested From:"
+        android:text="Requested By:"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/black"
         app:layout_constraintTop_toBottomOf="@+id/title1" />
 
     <RatingBar
         android:id="@+id/requesterRatingBar"
-        style="?android:attr/ratingBarStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+        android:layout_width="187dp"
+        android:layout_height="40dp"
         android:layout_marginTop="8dp"
-        app:layout_constraintStart_toEndOf="@+id/lableType"
-        app:layout_constraintTop_toBottomOf="@+id/user_name" />
+        android:layout_marginBottom="8dp"
+        android:numStars="5"
+        android:progressTint="@android:color/holo_orange_light"
+        android:rating="0.0"
+        android:secondaryProgressTint="@android:color/holo_orange_light"
+        android:stepSize="1.0"
+        android:textColor="@color/black"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/lableType"
+        app:layout_constraintTop_toBottomOf="@+id/lableType" />
 
 
 </android.support.constraint.ConstraintLayout>

@@ -4,7 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/LORParent"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="5dp"
+    android:layout_marginTop="0dp"
+    android:layout_marginRight="5dp"
+    android:layout_marginBottom="5dp"
+    android:background="@color/black"
+    android:backgroundTint="#80FFFFFF">
 
     <RatingBar
         android:id="@+id/ratingBar2"
@@ -14,6 +20,10 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:numStars="5"
+        android:progressTint="@android:color/holo_orange_light"
+        android:rating="0.0"
+        android:secondaryProgressTint="@android:color/holo_orange_light"
+        android:stepSize="1.0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -24,6 +34,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="testText"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView13"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="testText" />
@@ -32,8 +43,11 @@
         android:id="@+id/AButton"
         android:layout_width="180dp"
         android:layout_height="0dp"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/roundedbutton"
         android:text="Accept"
+        android:textColor="@color/ghost_white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
@@ -41,10 +55,12 @@
         android:id="@+id/DButton"
         android:layout_width="180dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/roundedbutton"
+        android:textColor="@color/ghost_white"
         android:text="Decline"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12" />
+        app:layout_constraintTop_toTopOf="@+id/AButton" />
 
     <TextView
         android:id="@+id/textView11"
@@ -52,6 +68,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:textSize="20sp"
         android:text="Rating"
         app:layout_constraintEnd_toStartOf="@+id/ratingBar2"
         app:layout_constraintTop_toTopOf="parent"
@@ -64,6 +81,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Requests:"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView13"
         tools:text="Requests:" />
@@ -74,6 +92,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:textSize="20sp"
         android:text="User:"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -87,6 +106,7 @@
         android:layout_marginTop="8dp"
         android:lines="1"
         android:text="TextView"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView12"
         app:layout_constraintTop_toBottomOf="@+id/textView13" />
 
@@ -100,9 +120,12 @@
         android:layout_marginBottom="8dp"
         android:onClick="buttonLocation"
         android:text="Location"
+        android:background="@drawable/roundedbutton"
+        android:textColor="@color/ghost_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView12"
+        app:layout_constraintTop_toBottomOf="@+id/AButton"
         tools:text="Location" />
 </android.support.constraint.ConstraintLayout>
