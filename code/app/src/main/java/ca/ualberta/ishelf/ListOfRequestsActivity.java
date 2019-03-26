@@ -100,6 +100,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         //TODO do I need to get User Object?
         getUser();
         // Add test data to test getRequestInformation
+        // TODO remove
         //addTestData();
         getRequests();
         getRequestInformation();
@@ -114,9 +115,24 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     private void initRecyclerView(){
         Log.d(TAG, "initRecyclerView: init recyclerview.");
         RecyclerView recyclerView = findViewById(R.id.listOfRequestsRecycler);
-        LORRecyclerViewAdapter adapter = new LORRecyclerViewAdapter(this, mNames, mRatings, mBookNames);
+        LORRecyclerViewAdapter adapter = new LORRecyclerViewAdapter(this, mNames, mRatings, mBookNames, mStatus);
         recyclerView.setAdapter(adapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+
+    /**
+     *
+     * @param position the position in the recycler view of the clicked button
+     */
+    void locationButton(int position) {
+        Log.d(TAG+" locationButton", "Called with " + position);
+        Request selectedRequest = requests.get(position);
+        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        mapIntent.putExtra("Request", selectedRequest);
+        Log.d(TAG, "acceptRequest: selectedRequest owner:" + selectedRequest.getOwner());
+        startActivity(mapIntent);
     }
 
     /**
@@ -135,11 +151,6 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         Intent intent = getIntent();
         String bookID  = intent.getStringExtra("ID");
 
-
-        //TODO replace with actual code
-//        String stringBookId = "02f36eb7-12c4-40f1-89dc-68f0ab21a900";
-
-
         bookId = UUID.fromString(bookID);
 
         Book book = new Book();
@@ -153,27 +164,41 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         db.editBook(book);
 
 
-        // The specific request object
+        // Save the specific request object
         Request selectedRequest = requests.get(position);
-        // Decline all other requests
-        /*
-        for (int i = 0; i < requests.size(); i++) {
-            if (i != position) {
-                Request tempRequest = requests.get(i);
-                tempRequest.decline();
-                db.addRequest(tempRequest);
-                Notification notification = new Notification(new Date(),
-                        username + " has declined your request for "+ mBookNames.get(i), tempRequest.getOwner());
-                db.addNotification(notification);
-            }
-        }
-        */
+        requests.remove(position);
+        // Save and remove the specific bookName
+        String selectedBookName = mBookNames.get(position);
+        mBookNames.remove(position);
+        // Save and remove the requester name
+        String selectedName = mNames.get(position);
+        mNames.remove(position);
+        // Save and remove the request status
+        //int selectedStatus = mStatus.get(position);
+        int selectedStatus = 1;
+        mStatus.remove(position);
+        // Save and remove the rating
+        float selectedRating = mRatings.get(position);
+        mRatings.remove(position);
 
-        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
-        Intent mapIntent = new Intent(this, MapsActivity.class);
-        mapIntent.putExtra("Request", selectedRequest);
-        Log.d(TAG, "acceptRequest: selectedRequest owner:" + selectedRequest.getOwner());
-        startActivity(mapIntent);
+        Log.d("declineRequests", "requests: " + requests.size());
+        Log.d("declineRequests", "mNames: " + mNames.size());
+        Log.d("declineRequests", "mBookNames: " + mBookNames.size());
+        Log.d("declineRequests", "mRatings: " + mRatings.size());
+        int size = requests.size();
+        Log.d("Size: ", String.valueOf(size));
+
+        for (Request tempRequest : requests) {
+            Log.d("Size: ", String.valueOf(size));
+            // Log.d("i: ", String.valueOf(i));
+            tempRequest.decline();
+            // Delete the requests instead of just declining it
+            db.deleteRequest(tempRequest.getId().toString());
+            // Create and add notification to firebase
+            Notification notification = new Notification(new Date(),
+                    username + " has declined your request for " + selectedBookName, tempRequest.getRequester());
+            db.addNotification(notification);
+        }
 
         // Accept Request
         selectedRequest.accept();
@@ -183,32 +208,33 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                 username + " has accepted your request", selectedRequest.getRequester());
         db.addNotification(notification);
 
-        // Remove appropriate array items
-        //TODO make this CLEAR then re-add our request (so save all the values)
-        //TODO or iterate over it backwards, and remove all except position
-        //mRatings.remove(position);
-        //mNames.remove(position);
-        //mBookNames.remove(position);
-
-        // Call locationActivity and pass request UUID as an extra string
-        /*
-        Intent myIntent = new Intent(this, LocationActivity.class);
-        String requestId = selectedReqeust.getId().toString();
-        myIntent.puExtra("RequestId", requestId);
-        startActivity(myIntent);
-         */
+        // Re-add our items to the array
+        mRatings.clear();
+        mRatings.add(selectedRating);
+        mNames.clear();
+        mNames.add(selectedName);
+        mStatus.clear();
+        mStatus.add(selectedStatus);
+        mBookNames.clear();
+        mBookNames.add(selectedBookName);
+        requests.clear();
+        requests.add(selectedRequest);
 
         // Update display
         safeNotify();
+
+        // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
+        Intent mapIntent = new Intent(this, MapsActivity.class);
+        mapIntent.putExtra("Request", selectedRequest);
+        Log.d(TAG, "acceptRequest: selectedRequest owner:" + selectedRequest.getOwner());
+        startActivity(mapIntent);
+
 
 
 
     }
 
-
-
-
-            /**
+    /**
      * Decline a requesters request
      * This method is called from LORRecyclerViewAdapter when the accept button is pressed
      * This function updates the display, updates the users requests,
@@ -234,6 +260,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         // Remove appropriate array items
         mRatings.remove(position);
         mNames.remove(position);
+        mStatus.remove(position);
         mBookNames.remove(position);
         requests.remove(position);
 
@@ -331,6 +358,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
                 for (Request tempRequest: requests) {
                     // Add requester to array
                     mNames.add(tempRequest.getRequester());
+                    mStatus.add(tempRequest.getStatus());
                     // Get the requester rating
                     String jUser = dataSnapshot.child("Users").
                             child(tempRequest.getRequester()).getValue(String.class);
@@ -377,6 +405,19 @@ public class ListOfRequestsActivity extends AppCompatActivity {
      */
     private void safeNotify() {
         initRecyclerView();
+        // Print out a bunch of error messages
+        for (String x: mBookNames) {
+            Log.d("current data", x);
+        }
+        for (String x: mNames) {
+            Log.d("current data", x);
+        }
+        for (int x: mStatus) {
+            Log.d("current status", String.valueOf(x));
+        }
+        for (float x: mRatings) {
+            Log.d("current data", Float.toString(x));
+        }
     }
 
     /**
@@ -396,6 +437,9 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         for (String x: mNames) {
             Log.d("current data", x);
         }
+        for (int x: mStatus) {
+            Log.d("current status", String.valueOf(x));
+        }
         for (float x: mRatings) {
             Log.d("current data", Float.toString(x));
         }
@@ -411,7 +455,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
     public void addTestData() {
         // Create test Request objects that refer to real Firebase items
         UUID id;
-        id = UUID.fromString("e1afab89-77e9-49d6-afdd-ab98e4e245d4");
+        id = UUID.fromString("i1afag89-77e9-49d6-afdd-ab98e4e245d4");
         Request r1 = new Request(id, "Evan", username);
         Request r2 = new Request(id, "aalattas", username);
         Request r3 = new Request(id, "jsgray1", username);
