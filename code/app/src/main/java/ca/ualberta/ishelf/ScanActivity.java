@@ -115,7 +115,7 @@ public class ScanActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         setTheme(R.style.AppTheme);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_scan2);
+        setContentView(R.layout.activity_scan);
         getWindow().setStatusBarColor(Color.TRANSPARENT);
 
 
