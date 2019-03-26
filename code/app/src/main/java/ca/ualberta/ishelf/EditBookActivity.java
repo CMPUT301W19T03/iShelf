@@ -1,6 +1,5 @@
 package ca.ualberta.ishelf;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.provider.ContactsContract;
@@ -64,8 +63,6 @@ public class EditBookActivity extends AppCompatActivity {
     private static final String FILENAME = "book1.sav";
     private Book passedBook = null;
 
-    private final int SCAN_AND_GET_DESCRIPTION = 212;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,18 +82,6 @@ public class EditBookActivity extends AppCompatActivity {
 
         Button clearButton = (Button) findViewById(R.id.cancel);
         Button saveButton = (Button) findViewById(R.id.save);
-        Button scanButton = (Button) findViewById(R.id.scan);
-
-        scanButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // convert imageView to a bitMap
-
-                Intent intent = new Intent(EditBookActivity.this, ScanActivity.class);
-                startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
-            }
-        });
-
 
         loadFromFile();
 //if its a book being edited set all text views to the preset data of the book object
@@ -297,18 +282,6 @@ public class EditBookActivity extends AppCompatActivity {
         } catch (IOException e) {
 
             e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == SCAN_AND_GET_DESCRIPTION && resultCode == Activity.RESULT_OK) {
-            String ISBN = data.getStringExtra("ISBN");
-            String description = data.getStringExtra("description");
-            DescriptionText.setText(description);
-            ISBNText.setText(ISBN);
         }
     }
 
