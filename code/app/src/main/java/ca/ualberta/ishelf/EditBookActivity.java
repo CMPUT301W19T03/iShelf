@@ -44,6 +44,9 @@ import java.util.UUID;
  * this  also allows the user to
  * edit the book info
  *
+ *
+ * can only edit the book while it is in your possession - Evan
+ *
  * @author : Mehrab
  */
 
@@ -69,7 +72,6 @@ public class EditBookActivity extends AppCompatActivity {
         //if its an edit book then true otherwise false
         Intent intent = getIntent();
         Boolean check = intent.getBooleanExtra("Check Data", false );
-//assign all the edit texts to variables
         TitleText = (EditText) findViewById(R.id.editTitle);
         AuthorText = (EditText) findViewById(R.id.editAuthor);
         ISBNText = (EditText) findViewById(R.id.editISBN);

@@ -41,6 +41,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
     // Array holding the names of the books being requested
     private ArrayList<String> mBookNames = new ArrayList<>();
     // potentially add new array list here
+    private ArrayList<Integer> mStatus = new ArrayList<>();
     private Context mContext;
 
     /**
@@ -50,14 +51,17 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
      * @param imageNames the names of the requesters
      * @param myRatings the value of the requester ratings
      * @param bookNames the name of the book they are requesting
+     * @param myStatus the status of the book they are requesting
      * @author : Randal Kimpinski
      */
     public LORRecyclerViewAdapter(Context context, ArrayList<String> imageNames,
-                                  ArrayList<Float> myRatings, ArrayList<String> bookNames) {
+                              ArrayList<Float> myRatings, ArrayList<String> bookNames
+                            , ArrayList<Integer> myStatus) {
         mContext = context;
         mImageNames = imageNames;
         bRatings = myRatings;
         mBookNames = bookNames;
+        mStatus = myStatus;
     }
 
     /**
@@ -92,9 +96,31 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         // Set the contents of each recycler view item
         holder.testText.setText(mImageNames.get(position));
         holder.bookName.setText(mBookNames.get(position));
-        // holder.bRating.setRating(bRatings.get(position));
-        setRating(holder, mImageNames.get(position));
-
+        holder.bRating.setRating(bRatings.get(position));
+        //TODO set location button to visible or invisible
+        if (mStatus.get(position) == 0) {
+            // If the request hasn't been accepted, display the accept/decline buttons
+            holder.locationButton.setVisibility(View.INVISIBLE);
+            //holder.locationButton.setEnabled(false);
+            holder.locationButton.setClickable(false);
+            holder.acceptButton.setVisibility(View.VISIBLE);
+            //holder.acceptButton.setEnabled(true);
+            holder.acceptButton.setClickable(true);
+            holder.declineButton.setVisibility(View.VISIBLE);
+            //holder.declineButton.setEnabled(true);
+            holder.declineButton.setClickable(true);
+        } else {
+            // If the request has been accepted, display location button
+            holder.locationButton.setVisibility(View.INVISIBLE);
+            //holder.locationButton.setEnabled(true);
+            holder.locationButton.setClickable(false);
+            holder.acceptButton.setVisibility(View.INVISIBLE);
+            //holder.acceptButton.setEnabled(false);
+            holder.acceptButton.setClickable(false);
+            holder.declineButton.setVisibility(View.INVISIBLE);
+            //holder.declineButton.setEnabled(false);
+            holder.declineButton.setClickable(false);
+        }
 
         /**
          * This is called when anywhere in the recyclerView item is pressed
@@ -129,7 +155,17 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
                 ((ListOfRequestsActivity) mContext).declineRequest(fposition);
             }
         });
-        // I think I need to add the button stuff here
+        /**
+         * This is called when the decline button is pressed
+         * @author : Randal Kimpinski
+         */
+        holder.locationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "onClick locationButton: clicked on: " + fposition);
+                ((ListOfRequestsActivity) mContext).locationButton(fposition);
+            }
+        });
     }
 
     /**
@@ -153,6 +189,7 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
         TextView bookName;
         Button acceptButton;
         Button declineButton;
+        Button locationButton;
         RatingBar bRating;
         ConstraintLayout parentLayout;
         //RelativeLayout parentLayout;
@@ -168,48 +205,13 @@ public class LORRecyclerViewAdapter extends RecyclerView.Adapter<LORRecyclerView
             bookName = itemView.findViewById(R.id.bookNameView);
             acceptButton = itemView.findViewById(R.id.AButton);
             declineButton = itemView.findViewById(R.id.DButton);
+            locationButton = itemView.findViewById(R.id.locationButton);
             bRating = itemView.findViewById(R.id.ratingBar2);
             parentLayout = itemView.findViewById(R.id.LORParent);
             //declineButton.setTag(1, itemView);
             //acceptButton.setTag(2, itemView);
         }
 
-    }
-
-    /**
-     * given a username and a list cell UI object, get the user object
-     * from firebase and show the user rating in the list cell ratingBar
-     * @author rmnattas
-     */
-    private void setRating (final ViewHolder viewHolder, final String username){
-        // connect to firebase
-        final Database db = new Database(mContext);
-        final Firebase ref = db.connect(mContext);
-
-        // get reference to specific entry
-        Firebase tempRef = ref.child("Users").child(username);
-        // create a one time use listener to immediately access datasnapshot
-        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                String jUser = dataSnapshot.getValue(String.class);
-                if (jUser != null) {
-                    // Get user object from Gson
-                    Gson gson = new Gson();
-                    Type tokenType = new TypeToken<User>() {
-                    }.getType();
-                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
-
-                    viewHolder.bRating.setRating(user.getOverallRating());
-
-                }
-            }
-
-            @Override
-            public void onCancelled(FirebaseError firebaseError) {
-                return;
-            }
-        });
     }
 
 }
