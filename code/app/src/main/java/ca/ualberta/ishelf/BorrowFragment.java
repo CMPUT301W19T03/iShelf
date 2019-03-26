@@ -364,12 +364,10 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         book = gson.fromJson(jBook, tokenType); // here is where we get the user object
                         if (book.checkBorrowed() == false){
                             currentUsername = getActivity().getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-
                             if(currentUsername==null){
                             }
                             else if(!currentUsername.equals(book.getOwner()))
-                            {
-                                if(book.getTransition()>0){
+                            { if(book.getTransition()==0){
                                     bookList.add(book);
                                 }
 
