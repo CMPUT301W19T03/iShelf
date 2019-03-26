@@ -97,6 +97,17 @@
         app:layout_constraintTop_toBottomOf="@+id/des" />
 
     <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="60dp"
+        android:text="Book Rating"
+        android:textColor="@color/midnight_blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/des" />
+
+    <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -224,8 +235,9 @@
         android:layout_marginTop="8dp"
         android:onClick="viewProfile"
         android:text="TextView"
-        android:textColor="@color/midnight_blue"
+        android:textAllCaps="false"
         android:textColorLink="@color/ColorPrimary"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/textView9"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
@@ -324,6 +336,18 @@
         android:textColor="@color/azure"
         app:layout_constraintStart_toEndOf="@+id/ownerUsername"
         app:layout_constraintTop_toBottomOf="@+id/status" />
+
+    <RatingBar
+        android:id="@+id/bookRatingBar"
+        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+        android:layout_width="179dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="8dp"
+        android:isIndicator="true"
+        android:textColor="@color/azure"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
     <Button
         android:id="@+id/gallery_button"

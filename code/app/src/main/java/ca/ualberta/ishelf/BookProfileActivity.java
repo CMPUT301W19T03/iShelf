@@ -2,6 +2,7 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.util.Linkify;
@@ -185,7 +186,11 @@ public class BookProfileActivity extends AppCompatActivity {
         }
 
         TextView ownerUsername = findViewById(R.id.ownerUsername);
+        ownerUsername.setPaintFlags(ownerUsername.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         ownerUsername.setText(owner);
+
+        RatingBar bookRating = findViewById(R.id.bookRatingBar);
+        bookRating.setRating(passedBook.getAvgRating());
 
         getOwner();
 
@@ -205,11 +210,9 @@ public class BookProfileActivity extends AppCompatActivity {
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Boolean found = false;  // true if user found in firebase
-
                 // look for user in firebase
                 for(DataSnapshot d: dataSnapshot.getChildren()) {
-                    if (d.getKey().equals(passedBook)){    // user found
+                    if (d.getKey().equals(passedBook.getOwner())){    // user found
                         /**
                          * If the Owner is in Firebase
                          * retrieves the Owner object
@@ -220,20 +223,11 @@ public class BookProfileActivity extends AppCompatActivity {
                         Type tokenType = new TypeToken<User>(){}.getType();
                         User user = gson.fromJson(d.getValue().toString(), tokenType);
                         final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
+                        ownerRatingBar.setVisibility(View.VISIBLE);
+                        ownerRatingBar.setIsIndicator(true);
                         float rating = user.getOverallRating();
                         ownerRatingBar.setRating(rating);
                     }
-                }
-
-                if (!found) {
-                    /**
-                     * If the Owner is not in Firebase
-                     * Prints a debug log
-                     * Hide the RatingBar
-                     */
-                    Log.d(TAG, "Username: [" + passedBook.getOwner() + "] is not in firebase");
-                    final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
-                    ownerRatingBar.setVisibility(View.GONE);
                 }
             }
             @Override
