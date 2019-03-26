@@ -31,7 +31,6 @@
         android:ems="10"
         android:hint="Username"
         android:inputType="textPersonName"
-        android:textColor="@color/azure"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -48,7 +47,6 @@
         android:ems="10"
         android:hint="Phone Number"
         android:inputType="phone"
-        android:textColor="@color/azure"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editEmail" />
@@ -65,7 +63,6 @@
         android:ems="10"
         android:hint="Email"
         android:inputType="textEmailAddress"
-        android:textColor="@color/azure"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editName" />
