@@ -15,11 +15,19 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,6 +66,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         public TextView description;
         public TextView title;
         public ConstraintLayout parentLayout;
+        public RatingBar ratingBar;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -67,7 +76,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
             title = (TextView) itemView.findViewById(R.id.title);
             owner = (TextView) itemView.findViewById(R.id.owner_borrow);
             description = (TextView) itemView.findViewById(R.id.description);
-
+            ratingBar = itemView.findViewById(R.id.ratingBar1);
         }
     }
 
@@ -94,6 +103,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         mholder.title.setText(filterList.get(position).getName());
         mholder.owner.setText(filterList.get(position).getOwner());
         mholder.description.setText(filterList.get(position).getDescription());
+        setRating(mholder, filterList.get(position).getId().toString());
         //Glide.with(mContext).asBitmap().load(tempImgs.get(randomImg)).into(mholder.image);
         //mholder.imageName.setText(booksList.get(position).getName());
         mholder.parentLayout.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +112,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
                 Intent intent = new Intent( mContext, BookProfileActivity.class);
                 Book book = booksList.get(position);
                 intent.putExtra("Book Data", book);
+                //intent.putExtra("Book ID", book.getId().toString());
                 intent.putExtra("pos data", position);
                 intent.putExtra("Button Visible", true);
 
@@ -111,7 +122,42 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
             }
         });
 
+    }
 
+    /**
+     * given a bookId and a list cell UI object, get the book object
+     * from firebase and show the book rating in the list cell rating bar
+     * @author rmnattas
+     */
+    private void setRating (final ViewHolder viewHolder, final String bookId){
+        // connect to firebase
+        final Database db = new Database(mContext);
+        final Firebase ref = db.connect(mContext);
+
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Books").child(bookId);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jBook = dataSnapshot.getValue(String.class);
+                if (jBook != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<Book>() {
+                    }.getType();
+                    Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+
+                    viewHolder.ratingBar.setRating(book.getAvgRating());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
     }
 
 

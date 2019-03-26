@@ -16,16 +16,23 @@ import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.RatingBar;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,6 +76,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
         public TextView description;
         public TextView title;
         public ConstraintLayout borrowBody;
+        public RatingBar ratingBar;
 
         public BorrowViewHolder(View view) {
             super(view);
@@ -76,6 +84,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             owner = (TextView) view.findViewById(R.id.owner_borrow);
             description = (TextView) view.findViewById(R.id.description);
             borrowBody = (ConstraintLayout) view.findViewById(R.id.borrow_body);
+            ratingBar = view.findViewById(R.id.ratingBar1);
         }
     }
 
@@ -115,6 +124,8 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             borrowHolder.owner.setText(filterList.get(position).getOwner());
             borrowHolder.description.setText(filterList.get(position).getDescription());
 
+            setRating(borrowHolder, filterList.get(position).getId().toString());
+
             borrowHolder.borrowBody.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -126,7 +137,44 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                     bookActivity.startActivity(intent);
                 }
             });
-        }
+    }
+
+
+    /**
+     * given a bookId and a list cell UI object, get the book object
+     * from firebase and show the book rating in the list cell rating bar
+     * @author rmnattas
+     */
+    private void setRating (final BorrowViewHolder borrowViewHolder, final String bookId){
+        // connect to firebase
+        final Database db = new Database(bookContext);
+        final Firebase ref = db.connect(bookContext);
+
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Books").child(bookId);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jBook = dataSnapshot.getValue(String.class);
+                if (jBook != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<Book>() {
+                    }.getType();
+                    Book book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+
+                    borrowViewHolder.ratingBar.setRating(book.getAvgRating());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
 
     /**
      * getItemCount

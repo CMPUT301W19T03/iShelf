@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/shapesign"
     tools:context=".BookProfileActivity">
 
     <ImageView
@@ -12,6 +13,7 @@
         android:layout_height="150sp"
         android:layout_marginTop="24dp"
         android:layout_marginEnd="24dp"
+        android:textColor="@color/midnight_blue"
         android:clickable="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -24,6 +26,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Author:"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView6" />
 
@@ -34,6 +38,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Year: "
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
@@ -44,6 +50,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="ISBN: "
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView2" />
 
@@ -54,6 +62,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Genre: "
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
@@ -64,6 +74,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:text="Title:"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -74,6 +86,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Description:"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
@@ -84,101 +98,131 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="Current Status:"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/des" />
+
+    <TextView
+        android:id="@+id/textView14"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="60dp"
+        android:text="Book Rating"
+        android:textColor="@color/midnight_blue"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/des" />
 
     <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
         android:text="Owner:"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <Button
         android:id="@+id/acpt"
-        android:layout_width="wrap_content"
+        android:layout_width="97dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
-        android:text="ACCEPT"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
         android:onClick="accept"
+        android:text="ACCEPT"
+        android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/ret"
-        app:layout_constraintHorizontal_bias="0.492"
-        app:layout_constraintStart_toEndOf="@+id/editGenre"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
     <Button
         android:id="@+id/ret"
-        android:layout_width="wrap_content"
+        android:layout_width="93dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="36dp"
-        android:text="RETURN"
-        android:visibility="invisible"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48dp"
+        android:background="@drawable/roundedbutton"
         android:onClick="returnClicked"
+        android:text="RETURN"
+        android:textColor="@color/azure"
+        android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
     <Button
         android:id="@+id/lend"
-        android:layout_width="wrap_content"
+        android:layout_width="104dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="36dp"
-        android:layout_marginTop="16dp"
-        android:text="LEND"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/roundedbutton"
         android:onClick="lend"
+        android:text="LEND"
+        android:textColor="@color/azure"
         android:visibility="invisible"
+        app:layout_constraintEnd_toStartOf="@+id/acpt"
+        app:layout_constraintHorizontal_bias="0.4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bking" />
 
     <Button
         android:id="@+id/bking"
-        android:layout_width="wrap_content"
+        android:layout_width="96dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:text="BOOKING"
+        android:background="@drawable/roundedbutton"
         android:onClick="Booking"
+        android:text="Request"
+        android:textColor="@color/azure"
         android:visibility="invisible"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintEnd_toStartOf="@+id/map"
+        app:layout_constraintHorizontal_bias="0.037"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/req" />
 
     <Button
         android:id="@+id/edit"
-        android:layout_width="wrap_content"
+        android:layout_width="102dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="96dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="32dp"
         android:layout_marginBottom="100dp"
+        android:background="@drawable/roundedbutton"
         android:onClick="edit"
         android:text="EDIT"
+        android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/del"
+        app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/acpt" />
+        app:layout_constraintTop_toBottomOf="@+id/acpt"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/del"
-        android:layout_width="wrap_content"
+        android:layout_width="98dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:layout_marginEnd="100dp"
         android:layout_marginBottom="100dp"
+        android:background="@drawable/roundedbutton"
         android:onClick="delete"
         android:text="DELETE"
+        android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/acpt" />
+        app:layout_constraintTop_toBottomOf="@+id/acpt"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/status"
@@ -187,6 +231,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView8"
         app:layout_constraintTop_toBottomOf="@+id/des" />
 
@@ -194,12 +240,15 @@
         android:id="@+id/ownerUsername"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="20dp"
         android:onClick="viewProfile"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
         android:textColorLink="@color/ColorPrimary"
-        app:layout_constraintBaseline_toBaselineOf="@+id/textView9"
-        app:layout_constraintStart_toEndOf="@+id/textView9" />
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textView9"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
     <TextView
         android:id="@+id/des"
@@ -209,6 +258,8 @@
         android:layout_marginTop="16dp"
         android:layout_marginEnd="8dp"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="24sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
@@ -220,6 +271,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="24dp"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView6"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -230,6 +283,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView2"
         app:layout_constraintTop_toBottomOf="@+id/Title" />
 
@@ -240,6 +295,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView4"
         app:layout_constraintTop_toBottomOf="@+id/Author" />
 
@@ -250,6 +307,8 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView3"
         app:layout_constraintTop_toBottomOf="@+id/ISBN" />
 
@@ -260,42 +319,79 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/Year" />
 
     <Button
         android:id="@+id/req"
-        android:layout_width="wrap_content"
+        android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
+        android:background="@drawable/roundedbutton"
         android:onClick="requestClicked"
         android:text="Requests For Book"
-
+        android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.478"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/ownerUsername" />
 
     <RatingBar
         android:id="@+id/ownerRatingBar"
-        style="@style/Widget.AppCompat.RatingBar.Small"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
+        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+        android:layout_width="184dp"
+        android:layout_height="36dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="12dp"
+        android:numStars="5"
+        android:progressBackgroundTint="@color/common_google_signin_btn_text_dark_disabled"
+        android:progressTint="@android:color/holo_orange_light"
+        android:rating="0.0"
+        android:secondaryProgressTint="@android:color/holo_orange_light"
+        android:stepSize="1.0"
         app:layout_constraintStart_toEndOf="@+id/ownerUsername"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
+    <RatingBar
+        android:id="@+id/bookRatingBar"
+        style="@android:style/Widget.DeviceDefault.Light.RatingBar.Indicator"
+        android:layout_width="179dp"
+        android:layout_height="34dp"
+        android:layout_marginEnd="8dp"
+        android:isIndicator="true"
+        android:textColor="@color/azure"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+
     <Button
         android:id="@+id/gallery_button"
-        android:layout_width="wrap_content"
+        android:layout_width="119dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="40dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/roundedbutton"
         android:text="VIEW GALLERY"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:textColor="@color/azure"
+        app:layout_constraintEnd_toEndOf="@+id/imageView"
+        app:layout_constraintStart_toStartOf="@+id/imageView"
         app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+    <Button
+        android:id="@+id/map"
+        android:layout_width="94dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="100dp"
+        android:textColor="@color/azure"
+        android:onClick="MapButton"
+        android:text="MAP"
+        android:background="@drawable/roundedbutton"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/req" />
 
 </android.support.constraint.ConstraintLayout>

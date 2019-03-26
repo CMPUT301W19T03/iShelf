@@ -3,9 +3,14 @@ package ca.ualberta.ishelf;
 import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import java.util.Date;
 import java.util.UUID;
+
+import static android.support.constraint.Constraints.TAG;
 
 /**
  * A request object represents one user requesting to borrow a book from its owner
@@ -27,7 +32,8 @@ public class Request implements Parcelable {
     // when the book was requested
     private Date timeRequested;
     // Location set for meeting
-    private Location location;
+    //private Location location;
+    private LatLng location;
     // Status of the request
     private int status;
     // 1: accepted
@@ -57,14 +63,41 @@ public class Request implements Parcelable {
     }
 
     protected Request(Parcel in) {
+        bookId = UUID.fromString(in.readString());
         requester = in.readString();
         status = in.readInt();
+        owner = in.readString();
+        double lat = in.readDouble();
+        double lng = in.readDouble();
+        if (lat == 0.0 || lng == 0.0) {
+            location = null;
+        } else {
+            location = new LatLng(lat, lng);
+        }
+        id = UUID.fromString(in.readString());
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(bookId.toString());
         dest.writeString(requester);
         dest.writeInt(status);
+        dest.writeString(owner);
+        // need to check if lat and lng are null
+        double lat;
+        double lng;
+        try {
+            lat = location.latitude;
+            lng = location.longitude;
+
+        } catch (Exception e) {
+            Log.d(TAG, "writeToParcel: " + e.toString());
+            lat = 0.0;
+            lng = 0.0;
+        }
+        dest.writeDouble(lat);
+        dest.writeDouble(lng);
+        dest.writeString(id.toString());
     }
 
     @Override
@@ -173,16 +206,16 @@ public class Request implements Parcelable {
      * get the location that the owner designated to meet at
      * @return Location to pick up the book
      */
-    public Location getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
     /**
      * set the location for that owner and requester to meet at
      * set the location using a location object
-     * @param location the location to pick up the book
+     * @param location LatLng of the location to pick up the book
      */
-    public void setLocation(Location location) {
+    public void setLocation(LatLng location) {
         this.location = location;
     }
 
@@ -192,10 +225,22 @@ public class Request implements Parcelable {
      * @param latitude the latitude of the location
      * @param longitude the longitude of the location
      */
+    /*
     public void setLocation(double latitude, double longitude) {
         this.location = new Location("");
         this.location.setLatitude(latitude);
         this.location.setLongitude(longitude);
+    }
+    */
+
+    /**
+     * hasLocation
+     * returns true if location of pickup location has been set
+     * false if location has not been set
+     * @return
+     */
+    public boolean hasLocation(){
+        return this.location != null;
     }
 
     /**
