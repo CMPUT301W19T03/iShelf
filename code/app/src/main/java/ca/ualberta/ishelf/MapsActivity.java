@@ -218,5 +218,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 bookLocation.latitude,
                 bookLocation.longitude));
         // Save the new LatLong and return to next activity
+        request.setLocation(bookLocation);
+        Database db = new Database(this);
+        db.editRequest(request);
+        finish();
     }
 }

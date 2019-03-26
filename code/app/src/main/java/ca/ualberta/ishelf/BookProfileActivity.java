@@ -551,13 +551,50 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void MapButton(View v){
-        Intent mapIntent = new Intent(this, MapsActivity.class);
-        Request request = new Request();
-        LatLng edmonton = new LatLng(53.537398, -113.513158);
-        request.setLocation(edmonton);
-        request.setOwner("Tom");
-        mapIntent.putExtra("Request", request);
-        startActivity(mapIntent);
+        // set requester username
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        getRequest(currentUsername, passedBook.getId());
+    }
+
+    public void getRequest(final String username, final UUID bookId){
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+        Firebase childRef = fb.child("Requests");
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Request request = new Request();
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jRequest = d.getValue(String.class);
+                    if (jRequest != null) {
+                        // Get Requests object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Request>() {
+                        }.getType();
+                        Request newRequest = gson.fromJson(jRequest, tokenType);
+                        if (newRequest.getRequester().equals(username) && newRequest.getBookId().equals(bookId)) {
+                            request = newRequest;
+                            break;
+                        }
+                    } else {
+                        Log.d(TAG, "ERROR #123121");
+                    }
+                }
+
+                Intent mapIntent = new Intent(getBaseContext(), MapsActivity.class);
+                mapIntent.putExtra("Request", request);
+                startActivity(mapIntent);
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
     }
 
 }
