@@ -2,6 +2,7 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.util.Linkify;
@@ -16,6 +17,7 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -23,6 +25,7 @@ import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -61,6 +64,7 @@ public class BookProfileActivity extends AppCompatActivity {
     private Firebase ref;
     private Book passedBook = null;
     final String TAG = "BookProfileActivity";
+    private Button mapButton;
 
     // to see a gallery of books
     private Button galleryButton;
@@ -107,6 +111,11 @@ public class BookProfileActivity extends AppCompatActivity {
             lendButton.setVisibility(View.VISIBLE);
 
         }
+        if((isOwner || isHolder || isRequester)&& passedBook.getTransition()>0){
+            Button mapButton =findViewById(R.id.map);
+            canEdit=false;
+            mapButton.setVisibility(View.VISIBLE);
+        }
 
         if(!isHolder &&isRequester&& (passedBook.getTransition()==2||passedBook.getTransition()==4)){
             Button acptButton =findViewById(R.id.acpt);
@@ -136,7 +145,7 @@ public class BookProfileActivity extends AppCompatActivity {
             reqButton.setVisibility(View.VISIBLE);
         }
 
-        if (!isOwner && !passedBook.checkBorrowed() && !isHolder){
+        if (!isOwner && !passedBook.checkBorrowed() && !isHolder && !isRequester){
             Button bkingButton = findViewById(R.id.bking);
             bkingButton.setVisibility(View.VISIBLE);
         }
@@ -178,9 +187,15 @@ public class BookProfileActivity extends AppCompatActivity {
         }
 
         TextView ownerUsername = findViewById(R.id.ownerUsername);
+        ownerUsername.setPaintFlags(ownerUsername.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         ownerUsername.setText(owner);
 
+        RatingBar bookRating = findViewById(R.id.bookRatingBar);
+        bookRating.setRating(passedBook.getAvgRating());
+
         getOwner();
+
+        mapButton = findViewById(R.id.map);
 
     }
 
@@ -196,11 +211,9 @@ public class BookProfileActivity extends AppCompatActivity {
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                Boolean found = false;  // true if user found in firebase
-
                 // look for user in firebase
                 for(DataSnapshot d: dataSnapshot.getChildren()) {
-                    if (d.getKey().equals(passedBook)){    // user found
+                    if (d.getKey().equals(passedBook.getOwner())){    // user found
                         /**
                          * If the Owner is in Firebase
                          * retrieves the Owner object
@@ -211,20 +224,11 @@ public class BookProfileActivity extends AppCompatActivity {
                         Type tokenType = new TypeToken<User>(){}.getType();
                         User user = gson.fromJson(d.getValue().toString(), tokenType);
                         final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
+                        ownerRatingBar.setVisibility(View.VISIBLE);
+                        ownerRatingBar.setIsIndicator(true);
                         float rating = user.getOverallRating();
                         ownerRatingBar.setRating(rating);
                     }
-                }
-
-                if (!found) {
-                    /**
-                     * If the Owner is not in Firebase
-                     * Prints a debug log
-                     * Hide the RatingBar
-                     */
-                    Log.d(TAG, "Username: [" + passedBook.getOwner() + "] is not in firebase");
-                    final RatingBar ownerRatingBar = (RatingBar) findViewById(R.id.ownerRatingBar);
-                    ownerRatingBar.setVisibility(View.GONE);
                 }
             }
             @Override
@@ -265,6 +269,8 @@ public class BookProfileActivity extends AppCompatActivity {
             // Remove the book ID to the new holder borrowedBooks list
             removeToUserBorrowList(passedBook.getHolder(), passedBook.getId());
 
+
+
             passedBook.setBorrowedBook(false);
             passedBook.setAvailable();
             passedBook.setTransition(0);
@@ -274,6 +280,9 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setNext_holder(null);
             Database db =new Database(this );
             db.editBook(passedBook);
+
+            // Get the Owner to review the Borrower
+
         }
 
     }
@@ -514,6 +523,8 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void Booking(View v){
+        Button bkingButton = findViewById(R.id.bking);
+        bkingButton.setVisibility(View.INVISIBLE);
 
         Request request = new Request();
         request.setBookId(passedBook.getId());
@@ -527,11 +538,65 @@ public class BookProfileActivity extends AppCompatActivity {
         // add the request to the book owner listOfRequests
         Database db = new Database(this);
         db.addRequest(request);
+
+        // create a notification and add it to Firebase
+        Notification notification = new Notification(new Date(),
+                currentUsername + " has requested " + passedBook.getName(),
+                passedBook.getOwner());
+        db.addNotification(notification);
+
         Toast toast = Toast.makeText(getApplicationContext(),
                 "Book Requested",
                 Toast.LENGTH_LONG);
         toast.show();
 
+    }
+
+    public void MapButton(View v){
+        // set requester username
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        getRequest(currentUsername, passedBook.getId());
+    }
+
+    public void getRequest(final String username, final UUID bookId){
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+        Firebase childRef = fb.child("Requests");
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                Request request = new Request();
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jRequest = d.getValue(String.class);
+                    if (jRequest != null) {
+                        // Get Requests object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Request>() {
+                        }.getType();
+                        Request newRequest = gson.fromJson(jRequest, tokenType);
+                        if (newRequest.getRequester().equals(username) && newRequest.getBookId().equals(bookId)) {
+                            request = newRequest;
+                            break;
+                        }
+                    } else {
+                        Log.d(TAG, "ERROR #123121");
+                    }
+                }
+
+                Intent mapIntent = new Intent(getBaseContext(), MapsActivity.class);
+                mapIntent.putExtra("Request", request);
+                startActivity(mapIntent);
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
     }
 
 }

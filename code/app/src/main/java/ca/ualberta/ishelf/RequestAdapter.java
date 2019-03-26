@@ -48,6 +48,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         public TextView type;
         public TextView lblType;
         public ConstraintLayout requestBody;
+        public RatingBar requesterRatingBar;
 
 
         public RequestViewHolder(View view) {
@@ -58,7 +59,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             state = view.findViewById(R.id.request_state);
             type = view.findViewById(R.id.request_type);
             lblType = view.findViewById(R.id.lableType);
-//            requesterRatingBar = view.findViewById(R.id.requesterRatingBar);
+            requesterRatingBar = view.findViewById(R.id.requesterRatingBar);
         }
     }
 
@@ -104,6 +105,7 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         } else {
             // pending
             requestHolder.state.setText("Pending");
+            requestHolder.state.setTextColor(requestHolder.type.getTextColors());
         }
 
         final String username = requestContext.getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -112,8 +114,8 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
             requestHolder.type.setText("Requested");
             requestHolder.userName.setText(requestList.get(position).getOwner());
             requestHolder.lblType.setText("Book owner:");
-            // TODO show user rating
-            //requestHolder.requesterRatingBar.setRating(requestList.get(position).getOwner().getOverallRating());
+            setRating(requestHolder, requestList.get(position).getOwner());
+//            requestHolder.requesterRatingBar.setRating(requestList.get(position).getOwner().getOverallRating());
         }else if (requestList.get(position).getOwner().equals(username)){
             // the request is received from other user
             requestHolder.type.setText("Received");
@@ -125,8 +127,8 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
                 canEdit = true;
             }
 
-            // TODO show user rating
-            //requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
+            setRating(requestHolder, requestList.get(position).getRequester());
+//            requestHolder.requesterRatingBar.setRating(requestList.get(position).getRequester().getOverallRating());
         }
 
         requestHolder.requestBody.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +141,43 @@ class RequestAdapter extends RecyclerView.Adapter<ViewHolder> {
         });
 
 
-        }
+    }
+
+    /**
+     * given a username and a list cell UI object, get the user object
+     * from firebase and show the user rating in the list cell ratingBar
+     * @author rmnattas
+     */
+    private void setRating (final RequestViewHolder requestViewHolder, final String username){
+        // connect to firebase
+        final Database db = new Database(requestContext);
+        final Firebase ref = db.connect(requestContext);
+
+        // get reference to specific entry
+        Firebase tempRef = ref.child("Users").child(username);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    User user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+
+                    requestViewHolder.requesterRatingBar.setRating(user.getOverallRating());
+
+                }
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
+    }
 
     @Override
     public int getItemCount() {

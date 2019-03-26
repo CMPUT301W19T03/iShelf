@@ -93,7 +93,7 @@ public class ViewProfileActivity extends AppCompatActivity {
 
         // Retrieve the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        
+
         if (this.getIntent().hasExtra("Username")) {
             Log.d(TAG, "onCreate: USERNAME passed in");
             // If just a username is passed in
