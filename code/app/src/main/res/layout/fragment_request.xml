@@ -7,6 +7,14 @@
     android:layout_height="match_parent"
     >
 
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/request_recycler"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <Spinner
         android:id="@+id/spinner2"
         android:layout_width="30dp"
@@ -17,16 +25,9 @@
         android:backgroundTint="@color/common_google_signin_btn_text_dark_focused"
         android:dropDownWidth="wrap_content"
         android:entries="@array/requested_array"
-        android:spinnerMode="dropdown"
+        android:spinnerMode="dialog"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/request_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/spinner2" />
 
 
 </android.support.constraint.ConstraintLayout>
