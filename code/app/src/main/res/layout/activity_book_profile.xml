@@ -344,6 +344,7 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="100dp"
         android:textColor="@color/azure"
+        android:onClick="MapButton"
         android:text="MAP"
         android:background="@drawable/roundedbutton"
         android:visibility="invisible"
