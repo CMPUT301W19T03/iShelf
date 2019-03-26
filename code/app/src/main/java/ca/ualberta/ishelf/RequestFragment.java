@@ -82,7 +82,7 @@ public class RequestFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                Request_Filter(selectedItem);
+                Request_Filter(position);
             }
 
             @Override
@@ -190,7 +190,7 @@ public class RequestFragment extends Fragment {
                 assert (requestUserReceivedList.size() == requestUserReceivedBooksList.size());
                 assert (requestsUserMadeList.size() == requestsUserMadeBooksList.size());
 
-                Request_Filter("All");
+                Request_Filter(0);
 
             }
 
@@ -213,9 +213,9 @@ public class RequestFragment extends Fragment {
         requestUserReceivedBooksList.clear();
     }
 
-    public void Request_Filter(String filter) { //this is going to filter strings for now, but should work whenever we pass in book/user
+    public void Request_Filter(int filter) { //this is going to filter strings for now, but should work whenever we pass in book/user
 
-        if (filter.equals("All")){
+        if (filter == 0){
             ArrayList<Request> allRequests = new ArrayList<>();
             allRequests.addAll(requestsUserMadeList);
             allRequests.addAll(requestUserReceivedList);
@@ -223,10 +223,30 @@ public class RequestFragment extends Fragment {
             allBooks.addAll(requestsUserMadeBooksList);
             allBooks.addAll(requestUserReceivedBooksList);
             requestAdapter.updateList(allRequests, allBooks);
-        }else if(filter.equals("Requests Received")) {
-            requestAdapter.updateList(requestUserReceivedList, requestUserReceivedBooksList);
-        } else if (filter.equals(("Requests Made"))){
+        }else if(filter==1) {
             requestAdapter.updateList(requestsUserMadeList, requestsUserMadeBooksList);
+        } else if (filter==2){
+            ArrayList<Request> acceptedRequests = new ArrayList<>();
+            ArrayList<Book> acceptedBooks = new ArrayList<>();
+            for (int i=0; i < (requestsUserMadeList.size()); i++){
+                if(requestsUserMadeList.get(i).getStatus() == 1){
+                    acceptedRequests.add(requestsUserMadeList.get(i));
+                    acceptedBooks.add(requestsUserMadeBooksList.get(i));
+                }
+            }
+            requestAdapter.updateList(acceptedRequests, acceptedBooks);
+        } else if (filter==3){
+            requestAdapter.updateList(requestUserReceivedList, requestUserReceivedBooksList);
+        }else if (filter==4){
+            ArrayList<Request> acceptedRequests = new ArrayList<>();
+            ArrayList<Book> acceptedBooks = new ArrayList<>();
+            for (int i=0; i < (requestUserReceivedList.size()); i++){
+                if(requestUserReceivedList.get(i).getStatus() == 1){
+                    acceptedRequests.add(requestUserReceivedList.get(i));
+                    acceptedBooks.add(requestUserReceivedBooksList.get(i));
+                }
+            }
+            requestAdapter.updateList(acceptedRequests, acceptedBooks);
         }
 
     }
