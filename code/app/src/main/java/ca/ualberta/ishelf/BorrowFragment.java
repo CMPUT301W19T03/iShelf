@@ -369,7 +369,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                             }
                             else if(!currentUsername.equals(book.getOwner()))
                             {
-                                if(book.getTransition()>0){
+                                if(book.getTransition()==0){
                                     bookList.add(book);
                                 }
 
