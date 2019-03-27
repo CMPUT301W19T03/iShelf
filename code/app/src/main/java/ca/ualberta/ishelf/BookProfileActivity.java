@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Paint;
@@ -65,9 +66,11 @@ public class BookProfileActivity extends AppCompatActivity {
     private Book passedBook = null;
     final String TAG = "BookProfileActivity";
     private Button mapButton;
+    private final int SCAN_AND_GET_DESCRIPTION = 212;
 
     // to see a gallery of books
     private Button galleryButton;
+    private String ISBN = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -238,13 +241,14 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void lend(View v){
-        Button lendButton =findViewById(R.id.lend);
-        lendButton.setVisibility(View.INVISIBLE);
-        passedBook.setTransition(2);
-        Database db = new Database(this);
 
-        db.editBook(passedBook);
+    public void lend(View v){
+        ISBN = "";
+        Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("task", "lend");
+        intent.putExtras(extras);
+        startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
     }
 
     public void accept(View v){
@@ -599,4 +603,25 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SCAN_AND_GET_DESCRIPTION && resultCode == Activity.RESULT_OK) {
+            ISBN = data.getStringExtra("ISBN");
+            if(passedBook.getISBN().equals(Long.valueOf(ISBN).longValue())){
+                Button lendButton =findViewById(R.id.lend);
+                lendButton.setVisibility(View.INVISIBLE);
+                passedBook.setTransition(2);
+                Database db = new Database(this);
+                db.editBook(passedBook);
+                Toast.makeText(this, "Correct Book",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(this, "Wrong Book",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }
