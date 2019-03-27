@@ -576,7 +576,7 @@ public class BookProfileActivity extends AppCompatActivity {
                         Type tokenType = new TypeToken<Request>() {
                         }.getType();
                         Request newRequest = gson.fromJson(jRequest, tokenType);
-                        if (newRequest.getRequester().equals(username) && newRequest.getBookId().equals(bookId)) {
+                        if ((newRequest.getRequester().equals(username) || newRequest.getOwner().equals(username) ) && newRequest.getBookId().equals(bookId)) {
                             request = newRequest;
                             break;
                         }

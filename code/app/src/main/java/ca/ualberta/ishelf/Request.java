@@ -79,7 +79,7 @@ public class Request implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(bookId.toString());
+        dest.writeString(bookId.toString()); //this is null - Evan
         dest.writeString(requester);
         dest.writeInt(status);
         dest.writeString(owner);
