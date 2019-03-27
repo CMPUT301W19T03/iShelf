@@ -24,6 +24,7 @@ import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -370,9 +371,11 @@ public class BookProfileActivity extends AppCompatActivity {
         // get the borrower to rate the book owner and book condition
         String bookOwnerName = passedBook.getOwner();
         String bookName = passedBook.getName();
+        UUID bookID = passedBook.getId();
         Intent ratingIntent = new Intent(this, RatingActivity.class);
         ratingIntent.putExtra("User", bookOwnerName);
         ratingIntent.putExtra("Book", bookName);
+        ratingIntent.putExtra("BookID", bookID.toString());
         startActivity(ratingIntent);
     }
 

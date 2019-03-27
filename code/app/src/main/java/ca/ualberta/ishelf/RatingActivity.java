@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,6 +12,15 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.firebase.client.DataSnapshot;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+import com.firebase.client.ValueEventListener;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.Date;
 import java.util.UUID;
 
 
@@ -34,6 +44,7 @@ public class RatingActivity extends AppCompatActivity {
     private String bookname;
     private String TAG = "RatingActivity";
     private String bookID;
+    private String currentUsername;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,35 +67,26 @@ public class RatingActivity extends AppCompatActivity {
         username = intent.getStringExtra("User");
         Log.d(TAG, "onCreate: Username: " + username);
         // TODO: retrieve User from Firebase using username
+        getUser(username);
 
-        if (intent.hasExtra("Book")){
-            bookname = intent.getStringExtra("Book");
-            Log.d(TAG, "onCreate: Bookname: " + bookname);
-            // TODO: retrieve Book from Firebase using bookname
-        }
-        
+//        if (intent.hasExtra("Book")){
+//            bookname = intent.getStringExtra("Book");
+//            Log.d(TAG, "onCreate: Bookname: " + bookname);
+//            // TODO: retrieve Book from Firebase using bookname
+//        }
+
         if (intent.hasExtra("BookID")){
             bookID = intent.getStringExtra("BookID");
             Log.d(TAG, "onCreate: BookID: " + bookID);
+            getBook(bookID);
         }
 
-        // TODO: delete this block once Firebase is implemented
-        // retrieve user's name
-        user = new User();
-        user.setUsername("Username1");
-        user.setEmail("email@email.com");
-        user.setPhoneNum("123-456-0000");
-
-        //book = new Book();
-        //book.setName("Peppa Pig");
-
-        // update
-        tvUsername.setText("Please review " + user.getUsername());
+        // update the UI with the username that's passed in
+        tvUsername.setText("Please review " + username);
 
         // check if book exists, if it doesn't we need to hide it, else we need to set it
-        if (book != null) {
+        if (bookname != null) {
             // book exists, so update the relevant UI elements
-            bookname = book.getName();
             tvBookname.setText("Please review the book: " + bookname);
         } else {
             // book does not exist, so remove all relevant UI elements
@@ -93,10 +95,16 @@ public class RatingActivity extends AppCompatActivity {
             etBookComment.setVisibility(View.GONE);
         }
 
+        currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+
     }
 
     public void saveButton(View v){
         Rating userRating = new Rating(rbUser.getRating(), etUserComment.getText().toString());
+        userRating.setReviewer(currentUsername);
+        Date date = new Date();
+        //userRating.setDate(date.getTime());
         user.setRating(userRating);
         // TODO: update user with firebase
 
@@ -107,5 +115,83 @@ public class RatingActivity extends AppCompatActivity {
         }
         Toast.makeText(this, "Rating Saved", Toast.LENGTH_LONG).show();
         finish();
+    }
+
+    /**
+     * get User based on username from Firebase
+     */
+
+    /**
+     * get a book based on bookID from firebase
+     * @author rmnattas
+     */
+    public void getBook(String bookId){
+
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+        Firebase childRef = fb.child("Books").child(bookId);
+
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jBook = dataSnapshot.getValue(String.class);
+                    //Log.d("jBook", jBook);
+                    if (jBook != null) {
+                        // Get book object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Book>() {
+                        }.getType();
+                        book = gson.fromJson(jBook, tokenType); // here is where we get the user object
+                        // do something with the book here
+                        bookname = book.getName();
+                        tvBookname.setText("Please review the book: " + bookname);
+                    } else {
+                        Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
+                        tvBookname.setVisibility(View.GONE);
+                        rbBook.setVisibility(View.GONE);
+                        etBookComment.setVisibility(View.GONE);
+                    }
+            }
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
+    }
+
+    public void getUser(String username){
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+
+        // get reference to specific entry
+        Firebase tempRef = fb.child("Users").child(username);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                } else {
+                    Log.d("FBerror1", "User doesn't exist or string is empty");
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
     }
 }
