@@ -101,8 +101,11 @@ public class RatingActivity extends AppCompatActivity {
     }
 
     public void saveButton(View v){
+        Date date = new Date();
+
         Rating userRating = new Rating(rbUser.getRating(), etUserComment.getText().toString());
         userRating.setReviewer(currentUsername);
+        userRating.setDate(date);
         user.addRating(userRating);
         //userRating.setDate(date.getTime());
         // TODO: update user with firebase
@@ -112,6 +115,7 @@ public class RatingActivity extends AppCompatActivity {
         if (book != null){
             Rating bookRating = new Rating(rbBook.getRating(), etBookComment.getText().toString());
             bookRating.setReviewer(currentUsername);
+            bookRating.setDate(date);
             book.addRating(bookRating);
             // TODO: update book with firebase
             db.editBook(book);
