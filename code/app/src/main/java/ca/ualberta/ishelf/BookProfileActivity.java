@@ -3,13 +3,16 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Paint;
+import android.media.Image;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.util.Linkify;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +31,8 @@ import java.lang.reflect.Type;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
+
+import static ca.ualberta.ishelf.GalleryActivity.StringToBitMap;
 
 /**
  * BookProfileActivity
@@ -161,9 +166,14 @@ public class BookProfileActivity extends AppCompatActivity {
         String year = passedBook.getYear();
         String description = passedBook.getDescription();
         Long isbn = passedBook.getISBN();
+        String image = passedBook.getGalleryImages().get(0);
+        Bitmap img = StringToBitMap(image);
         final String owner = passedBook.getOwner();
 
         //sets them onto the text views of the activity
+        ImageView user_image = (ImageView) findViewById(R.id.imageView);
+        user_image.setImageBitmap(img);
+
         TextView textView = findViewById(R.id.Title);
         textView.setText(title);
 
