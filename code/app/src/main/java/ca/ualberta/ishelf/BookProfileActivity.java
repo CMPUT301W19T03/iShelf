@@ -26,6 +26,7 @@ import com.google.gson.reflect.TypeToken;
 import org.w3c.dom.Text;
 
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.UUID;
@@ -322,6 +323,7 @@ public class BookProfileActivity extends AppCompatActivity {
         }
         if(passedBook.getTransition()==4){
             // Remove the book ID to the new holder borrowedBooks list
+            String borrower = passedBook.getHolder(); // get the borrower's name
             removeToUserBorrowList(passedBook.getHolder(), passedBook.getId());
 
 
@@ -337,7 +339,9 @@ public class BookProfileActivity extends AppCompatActivity {
             db.editBook(passedBook);
 
             // Get the Owner to review the Borrower
-
+            Intent reviewUser = new Intent(this, RatingActivity.class);
+            reviewUser.putExtra("User", borrower);
+            startActivity(reviewUser);
         }
 
     }
@@ -419,6 +423,15 @@ public class BookProfileActivity extends AppCompatActivity {
         Database db =new Database(this );
         db.editBook(passedBook);
 
+        // get the borrower to rate the book owner and book condition
+        String bookOwnerName = passedBook.getOwner();
+        String bookName = passedBook.getName();
+        UUID bookID = passedBook.getId();
+        Intent ratingIntent = new Intent(this, RatingActivity.class);
+        ratingIntent.putExtra("User", bookOwnerName);
+        ratingIntent.putExtra("Book", bookName);
+        ratingIntent.putExtra("BookID", bookID.toString());
+        startActivity(ratingIntent);
     }
 
     //sends parcelable data into the edit book activity and goes the by intent
