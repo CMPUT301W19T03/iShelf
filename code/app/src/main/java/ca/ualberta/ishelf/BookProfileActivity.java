@@ -1,7 +1,9 @@
 package ca.ualberta.ishelf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -66,9 +68,11 @@ public class BookProfileActivity extends AppCompatActivity {
     private Book passedBook = null;
     final String TAG = "BookProfileActivity";
     private Button mapButton;
+    private final int SCAN_AND_GET_DESCRIPTION = 212;
 
     // to see a gallery of books
     private Button galleryButton;
+    private String ISBN = new String();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -198,6 +202,56 @@ public class BookProfileActivity extends AppCompatActivity {
 
         mapButton = findViewById(R.id.map);
 
+        // check if the logged in user have requested the book and disable the request button
+        if(!isOwner){
+            haveRequested();
+        }
+
+    }
+
+    /**
+     * check if the logged in user have requested the book and disable the request button
+     * @rmnattas
+     */
+    public void haveRequested(){
+        // get logged in username
+        final String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+        Firebase childRef = fb.child("Requests");
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jRequest = d.getValue(String.class);
+                    if (jRequest != null) {
+                        // Get Requests object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Request>() {
+                        }.getType();
+                        Request request = gson.fromJson(jRequest, tokenType);
+                        if(request.getBookId().equals(passedBook.getId()) && request.getRequester().equals(username)){
+                            Button bkingButton = findViewById(R.id.bking);
+                            bkingButton.setBackground(getDrawable(R.drawable.roundedbuttongray));
+                            bkingButton.setText("Requested");
+                            bkingButton.setEnabled(false);
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
+
     }
 
     /**
@@ -239,13 +293,14 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
-    public void lend(View v){
-        Button lendButton =findViewById(R.id.lend);
-        lendButton.setVisibility(View.INVISIBLE);
-        passedBook.setTransition(2);
-        Database db = new Database(this);
 
-        db.editBook(passedBook);
+    public void lend(View v){
+        ISBN = "";
+        Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("task", "lend");
+        intent.putExtras(extras);
+        startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
     }
 
     public void accept(View v){
@@ -536,8 +591,6 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void Booking(View v){
-        Button bkingButton = findViewById(R.id.bking);
-        bkingButton.setVisibility(View.INVISIBLE);
 
         Request request = new Request();
         request.setBookId(passedBook.getId());
@@ -563,6 +616,7 @@ public class BookProfileActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG);
         toast.show();
 
+        haveRequested();
     }
 
     public void MapButton(View v){
@@ -612,4 +666,25 @@ public class BookProfileActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SCAN_AND_GET_DESCRIPTION && resultCode == Activity.RESULT_OK) {
+            ISBN = data.getStringExtra("ISBN");
+            if(passedBook.getISBN().equals(Long.valueOf(ISBN).longValue())){
+                Button lendButton =findViewById(R.id.lend);
+                lendButton.setVisibility(View.INVISIBLE);
+                passedBook.setTransition(2);
+                Database db = new Database(this);
+                db.editBook(passedBook);
+                Toast.makeText(this, "Correct Book",
+                        Toast.LENGTH_LONG).show();
+            }
+            else {
+                Toast.makeText(this, "Wrong Book",
+                        Toast.LENGTH_LONG).show();
+            }
+        }
+    }
 }

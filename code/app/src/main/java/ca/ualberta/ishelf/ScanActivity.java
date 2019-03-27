@@ -102,6 +102,8 @@ public class ScanActivity extends AppCompatActivity {
     private FrameLayout shutter;
     private final AlphaAnimation fade = new AlphaAnimation(1, 0);
 
+    private String visit;
+
 
     String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
     private final OkHttpClient client = new OkHttpClient();
@@ -125,6 +127,9 @@ public class ScanActivity extends AppCompatActivity {
         lastISBN = (Button) findViewById(R.id.last_ISBN);
         shutter = (FrameLayout) findViewById(R.id.snapshot_effect);
 
+        Intent intent = getIntent();
+        visit = intent.getStringExtra("task");
+
         Button finishScanButton = (Button) findViewById(R.id.accept_scan_button);
         FloatingActionButton backScan = (FloatingActionButton) findViewById(R.id.back_button_camera);
 
@@ -134,7 +139,12 @@ public class ScanActivity extends AppCompatActivity {
                 Bundle extras = new Bundle();
                 extras.putString("ISBN", outputISBN);
                 extras.putString("description", description);
-                Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
+                if (visit.equals("get_description")) {
+                    Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
+                }
+                else if (visit.equals("lend")) {
+                    Intent intent = new Intent(ScanActivity.this, BookProfileActivity.class);
+                }
                 intent.putExtras(extras);
                 setResult(RESULT_OK, intent);
                 finish();
@@ -202,7 +212,7 @@ public class ScanActivity extends AppCompatActivity {
                             }
                         });
                 if (testing) {
-                    outputISBN = "9781770893702";
+                    outputISBN = "9780307401199";
                     lastISBN.setText(outputISBN);
                     getAsyncCall();
                 }
