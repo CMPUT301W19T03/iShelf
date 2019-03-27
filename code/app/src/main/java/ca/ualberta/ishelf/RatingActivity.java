@@ -103,15 +103,18 @@ public class RatingActivity extends AppCompatActivity {
     public void saveButton(View v){
         Rating userRating = new Rating(rbUser.getRating(), etUserComment.getText().toString());
         userRating.setReviewer(currentUsername);
-        Date date = new Date();
+        user.addRating(userRating);
         //userRating.setDate(date.getTime());
-        user.setRating(userRating);
         // TODO: update user with firebase
+        Database db = new Database(this);
+        db.editUser(user);
 
         if (book != null){
             Rating bookRating = new Rating(rbBook.getRating(), etBookComment.getText().toString());
+            bookRating.setReviewer(currentUsername);
             book.addRating(bookRating);
             // TODO: update book with firebase
+            db.editBook(book);
         }
         Toast.makeText(this, "Rating Saved", Toast.LENGTH_LONG).show();
         finish();
