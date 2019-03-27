@@ -27,17 +27,17 @@ android:backgroundTint="#80FFFFFF">
     app:layout_constraintStart_toEndOf="@+id/imageView2"
     app:layout_constraintTop_toTopOf="parent" />
 
-<ImageView
-    android:id="@+id/imageView2"
-    android:layout_width="86dp"
-    android:layout_height="141dp"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginBottom="8dp"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
-    app:srcCompat="@drawable/ic_launcher_background" />
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="86dp"
+        android:layout_height="141dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_launcher2" />
 
 <RatingBar
     android:id="@+id/ratingBar1"
@@ -47,7 +47,6 @@ android:backgroundTint="#80FFFFFF">
     android:layout_marginStart="24dp"
     android:layout_marginBottom="8dp"
     android:numStars="5"
-    android:progressBackgroundTint="@color/common_google_signin_btn_text_dark_disabled"
     android:progressTint="@android:color/holo_orange_light"
     android:rating="0.0"
     android:secondaryProgressTint="@android:color/holo_orange_light"
@@ -55,25 +54,31 @@ android:backgroundTint="#80FFFFFF">
     app:layout_constraintBottom_toBottomOf="parent"
     app:layout_constraintStart_toEndOf="@+id/imageView2" />
 
-<TextView
-    android:id="@+id/owner_borrow"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:layout_marginStart="24dp"
-    android:layout_marginTop="8dp"
-    android:text="Owner"
-    app:layout_constraintStart_toEndOf="@+id/imageView2"
-    app:layout_constraintTop_toBottomOf="@+id/title" />
+    <TextView
+        android:id="@+id/owner_borrow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Owner"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/title" />
 
-<TextView
-    android:id="@+id/description"
-    android:layout_width="wrap_content"
-    android:layout_height="20dp"
-    android:layout_marginStart="24dp"
-    android:layout_marginTop="8dp"
-    android:text="Description"
-    app:layout_constraintStart_toEndOf="@+id/imageView2"
-    app:layout_constraintTop_toBottomOf="@+id/owner_borrow" />
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="0dp"
+        android:layout_height="20dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
+        android:text="Description"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintTop_toBottomOf="@+id/owner_borrow" />
 
 
 </android.support.constraint.ConstraintLayout>
