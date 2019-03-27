@@ -11,6 +11,8 @@ import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.UUID;
+
 
 /**
  * Must pass in "User" extra
@@ -31,6 +33,7 @@ public class RatingActivity extends AppCompatActivity {
     private Book book;
     private String bookname;
     private String TAG = "RatingActivity";
+    private String bookID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,16 +53,20 @@ public class RatingActivity extends AppCompatActivity {
 
         // retrieve the user to be rated name
         Intent intent = this.getIntent();
-        username = intent.getParcelableExtra("User");
+        username = intent.getStringExtra("User");
         Log.d(TAG, "onCreate: Username: " + username);
         // TODO: retrieve User from Firebase using username
 
         if (intent.hasExtra("Book")){
-            bookname = intent.getParcelableExtra("Book");
+            bookname = intent.getStringExtra("Book");
             Log.d(TAG, "onCreate: Bookname: " + bookname);
             // TODO: retrieve Book from Firebase using bookname
         }
-
+        
+        if (intent.hasExtra("BookID")){
+            bookID = intent.getStringExtra("BookID");
+            Log.d(TAG, "onCreate: BookID: " + bookID);
+        }
 
         // TODO: delete this block once Firebase is implemented
         // retrieve user's name
