@@ -110,7 +110,7 @@ public class ScanActivity extends AppCompatActivity {
     private String description = "";
 
 
-    private boolean testing = true;
+    private boolean testing = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

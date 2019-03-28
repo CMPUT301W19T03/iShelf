@@ -69,6 +69,9 @@ public class BookProfileActivity extends AppCompatActivity {
     final String TAG = "BookProfileActivity";
     private Button mapButton;
     private final int SCAN_AND_GET_DESCRIPTION = 212;
+    private final int SCAN_AND_Accept_Borrower = 213;
+    private final int SCAN_AND_Return = 214;
+    private final int SCAN_AND_Accept_OWner = 215;
 
     // to see a gallery of books
     private Button galleryButton;
@@ -308,40 +311,21 @@ public class BookProfileActivity extends AppCompatActivity {
         acptButton.setVisibility(View.INVISIBLE);
         if(passedBook.getTransition()==2)
         {
-            passedBook.setBorrowedBook(true);
-            passedBook.setBorrowed();
-            passedBook.setTransition(3);
-            String temp = passedBook.getHolder();
-            //final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-
-            passedBook.setHolder(passedBook.getNext_holder());
-            passedBook.setNext_holder(temp);
-            Database db =new Database(this );
-            db.editBook(passedBook);
-            // Add the book ID to the new holder borrowedBooks list
-            addToUserBorrowList(passedBook.getHolder(), passedBook.getId());
+            ISBN = "";
+            Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString("task", "lend");
+            intent.putExtras(extras);
+            startActivityForResult(intent, SCAN_AND_Accept_Borrower);
         }
         if(passedBook.getTransition()==4){
-            // Remove the book ID to the new holder borrowedBooks list
-            String borrower = passedBook.getHolder(); // get the borrower's name
-            removeToUserBorrowList(passedBook.getHolder(), passedBook.getId());
+            ISBN = "";
+            Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
+            Bundle extras = new Bundle();
+            extras.putString("task", "lend");
+            intent.putExtras(extras);
+            startActivityForResult(intent, SCAN_AND_Accept_OWner);
 
-
-
-            passedBook.setBorrowedBook(false);
-            passedBook.setAvailable();
-            passedBook.setTransition(0);
-            final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-
-            passedBook.setHolder(passedBook.getOwner());
-            passedBook.setNext_holder(null);
-            Database db =new Database(this );
-            db.editBook(passedBook);
-
-            // Get the Owner to review the Borrower
-            Intent reviewUser = new Intent(this, RatingActivity.class);
-            reviewUser.putExtra("User", borrower);
-            startActivity(reviewUser);
         }
 
     }
@@ -417,21 +401,12 @@ public class BookProfileActivity extends AppCompatActivity {
     }
 
     public void returnClicked(View v){
-        Button retButton =findViewById(R.id.ret);
-        retButton.setVisibility(View.INVISIBLE);
-        passedBook.setTransition(4);
-        Database db =new Database(this );
-        db.editBook(passedBook);
-
-        // get the borrower to rate the book owner and book condition
-        String bookOwnerName = passedBook.getOwner();
-        String bookName = passedBook.getName();
-        UUID bookID = passedBook.getId();
-        Intent ratingIntent = new Intent(this, RatingActivity.class);
-        ratingIntent.putExtra("User", bookOwnerName);
-        ratingIntent.putExtra("Book", bookName);
-        ratingIntent.putExtra("BookID", bookID.toString());
-        startActivity(ratingIntent);
+        ISBN = "";
+        Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
+        Bundle extras = new Bundle();
+        extras.putString("task", "lend");
+        intent.putExtras(extras);
+        startActivityForResult(intent, SCAN_AND_Return);
     }
 
     //sends parcelable data into the edit book activity and goes the by intent
@@ -686,5 +661,84 @@ public class BookProfileActivity extends AppCompatActivity {
                         Toast.LENGTH_LONG).show();
             }
         }
+        else if(requestCode == SCAN_AND_Return && resultCode == Activity.RESULT_OK) {
+
+            ISBN = data.getStringExtra("ISBN");
+            if(passedBook.getISBN().equals(Long.valueOf(ISBN).longValue())){
+                Button retButton =findViewById(R.id.ret);
+                retButton.setVisibility(View.INVISIBLE);
+                passedBook.setTransition(4);
+                Database db =new Database(this );
+                db.editBook(passedBook);
+
+                // get the borrower to rate the book owner and book condition
+                String bookOwnerName = passedBook.getOwner();
+                String bookName = passedBook.getName();
+                UUID bookID = passedBook.getId();
+                Intent ratingIntent = new Intent(this, RatingActivity.class);
+                ratingIntent.putExtra("User", bookOwnerName);
+                ratingIntent.putExtra("Book", bookName);
+                ratingIntent.putExtra("BookID", bookID.toString());
+                startActivity(ratingIntent);
+            }
+            else {
+            Toast.makeText(this, "Wrong Book",
+                    Toast.LENGTH_LONG).show();
+            }
+
+        }
+        else if(requestCode == SCAN_AND_Accept_Borrower && resultCode == Activity.RESULT_OK){
+            ISBN = data.getStringExtra("ISBN");
+            if(passedBook.getISBN().equals(Long.valueOf(ISBN).longValue())){
+                passedBook.setBorrowedBook(true);
+                passedBook.setBorrowed();
+                passedBook.setTransition(3);
+                String temp = passedBook.getHolder();
+                //final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+                passedBook.setHolder(passedBook.getNext_holder());
+                passedBook.setNext_holder(temp);
+                Database db =new Database(this );
+                db.editBook(passedBook);
+                // Add the book ID to the new holder borrowedBooks list
+                addToUserBorrowList(passedBook.getHolder(), passedBook.getId());
+            }
+            else {
+                Toast.makeText(this, "Wrong Book",
+                        Toast.LENGTH_LONG).show();
+            }
+
+        }
+        else if(requestCode == SCAN_AND_Accept_OWner&& resultCode == Activity.RESULT_OK){
+            // Remove the book ID to the new holder borrowedBooks list
+
+
+            ISBN = data.getStringExtra("ISBN");
+            if(passedBook.getISBN().equals(Long.valueOf(ISBN).longValue())){
+                String borrower = passedBook.getHolder(); // get the borrower's name
+                removeToUserBorrowList(passedBook.getHolder(), passedBook.getId());
+                passedBook.setBorrowedBook(false);
+                passedBook.setAvailable();
+                passedBook.setTransition(0);
+                final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+                passedBook.setHolder(passedBook.getOwner());
+                passedBook.setNext_holder(null);
+                Database db =new Database(this );
+                db.editBook(passedBook);
+
+                // Get the Owner to review the Borrower
+                Intent reviewUser = new Intent(this, RatingActivity.class);
+                reviewUser.putExtra("User", borrower);
+                startActivity(reviewUser);
+            }
+            else {
+                Toast.makeText(this, "Wrong Book",
+                        Toast.LENGTH_LONG).show();
+            }
+
+        }
+
+
     }
 }
