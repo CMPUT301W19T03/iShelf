@@ -90,7 +90,6 @@ public class ViewProfileActivity extends AppCompatActivity {
         editProfileButton = (Button) findViewById(R.id.editProfileButton);
         signOutButton = (Button) findViewById(R.id.signOutButton);
 
-
         // Retrieve the signed-in user's username
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 

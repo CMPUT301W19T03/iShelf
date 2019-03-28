@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
-        android:text="Book Rating"
+        android:text="Book Rating:"
         android:textColor="@color/midnight_blue"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,12 +120,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:text="Owner:"
         android:textColor="@color/midnight_blue"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
     <Button
         android:id="@+id/acpt"
@@ -228,14 +228,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:onClick="viewProfile"
         android:text="TextView"
         android:textColor="@color/midnight_blue"
         android:textColorLink="@color/ColorPrimary"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
     <TextView
         android:id="@+id/des"
@@ -324,7 +324,7 @@
         android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/bking"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        app:layout_constraintTop_toBottomOf="@+id/bookRatingBar" />
 
     <RatingBar
         android:id="@+id/ownerRatingBar"
@@ -332,14 +332,14 @@
         android:layout_width="184dp"
         android:layout_height="36dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:numStars="5"
         android:progressTint="@android:color/holo_orange_light"
         android:rating="0.0"
         android:secondaryProgressTint="@android:color/holo_orange_light"
         android:stepSize="1.0"
         app:layout_constraintStart_toEndOf="@+id/ownerUsername"
-        app:layout_constraintTop_toBottomOf="@+id/status" />
+        app:layout_constraintTop_toBottomOf="@+id/current_holder" />
 
     <RatingBar
         android:id="@+id/bookRatingBar"
@@ -384,5 +384,29 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bookRatingBar" />
+
+    <TextView
+        android:id="@+id/current_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/status" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Current Holder:"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
 
 </android.support.constraint.ConstraintLayout>

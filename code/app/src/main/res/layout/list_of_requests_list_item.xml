@@ -17,15 +17,15 @@
         style="@style/Widget.AppCompat.RatingBar.Indicator"
         android:layout_width="179dp"
         android:layout_height="30dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:numStars="5"
         android:progressTint="@android:color/holo_orange_light"
         android:rating="0.0"
         android:secondaryProgressTint="@android:color/holo_orange_light"
         android:stepSize="1.0"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@+id/textView11"
+        app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <TextView
         android:id="@+id/textView"
@@ -45,9 +45,11 @@
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
+        android:layout_marginEnd="8dp"
         android:background="@drawable/roundedbutton"
         android:text="Accept"
         android:textColor="@color/ghost_white"
+        app:layout_constraintEnd_toStartOf="@+id/DButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView12" />
 
@@ -66,12 +68,12 @@
         android:id="@+id/textView11"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textSize="20sp"
         android:text="Rating"
-        app:layout_constraintEnd_toStartOf="@+id/ratingBar2"
-        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView13"
         tools:text="Rating" />
 
     <TextView
@@ -83,7 +85,7 @@
         android:text="Requests:"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView13"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar2"
         tools:text="Requests:" />
 
     <TextView
@@ -108,7 +110,7 @@
         android:text="TextView"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView12"
-        app:layout_constraintTop_toBottomOf="@+id/textView13" />
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar2" />
 
     <Button
         android:id="@+id/locationButton"

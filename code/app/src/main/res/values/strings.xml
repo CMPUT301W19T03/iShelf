@@ -17,9 +17,9 @@
     <string-array name="requested_array">
         <item name="All">All</item>
         <item name="Received">Requests Received</item>
-        <item name="ReceivedAccepted"> - Accepted</item>
+        <item name="ReceivedAccepted">  - Accepted</item>
         <item name="Made">Requests Made</item>
-        <item name="MadeAccepted"> - Accepted</item>
+        <item name="MadeAccepted">  - Accepted</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
     <string-array name="rating_array">
