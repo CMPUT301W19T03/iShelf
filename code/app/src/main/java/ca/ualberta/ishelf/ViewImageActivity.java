@@ -73,6 +73,20 @@ public class ViewImageActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Bundle extras = new Bundle();
                 extras.putInt("position", position);
+                StorageReference deleteRef = storageReference.child(URL);
+                // Delete the file
+                deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        // File deleted successfully
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Uh-oh, an error occurred!
+                    }
+                });
+
                 Intent intent = new Intent(view.getContext(), GalleryActivity.class);
                 intent.putExtras(extras);
                 setResult(RESULT_OK, intent);

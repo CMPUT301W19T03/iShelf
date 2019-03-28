@@ -3,7 +3,10 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TableLayout;
@@ -25,6 +29,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -49,6 +57,10 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
     private ArrayList<Book> originalList = new ArrayList<Book>();
     private Context bookContext;
 
+    // FireBase stuff
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
     /**
      * Constructor
      *
@@ -60,6 +72,10 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
         this.filterList = filterList;
         this.originalList = originalList;
         this.bookContext = bookContext;
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
+
     }
 
     /**
@@ -77,6 +93,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
         public TextView title;
         public ConstraintLayout borrowBody;
         public RatingBar ratingBar;
+        public ImageView imageCover;
 
         public BorrowViewHolder(View view) {
             super(view);
@@ -85,6 +102,7 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
             description = (TextView) view.findViewById(R.id.description);
             borrowBody = (ConstraintLayout) view.findViewById(R.id.borrow_body);
             ratingBar = view.findViewById(R.id.ratingBar1);
+            imageCover = (ImageView) view.findViewById(R.id.cover_borrow);
         }
     }
 
@@ -137,6 +155,28 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                     bookActivity.startActivity(intent);
                 }
             });
+
+            Book currentBook = originalList.get(position);
+            ArrayList<String> images = currentBook.getGalleryImages();
+
+            if (images.size() > 0) {
+
+                String image = images.get(0);
+                StorageReference ref = storageReference.child(image);
+                final long ONE_MEGABYTE = 1024 * 1024;
+                ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                    @Override
+                    public void onSuccess(byte[] bytes) {
+                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                        borrowHolder.imageCover.setImageBitmap(bitmap);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        // Handle any errors
+                    }
+                });
+            }
     }
 
 

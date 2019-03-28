@@ -138,48 +138,47 @@ public class GalleryActivity extends AppCompatActivity {
             if (data == null) {
                 return;
             }
-            try {
-                lastImagePath = data.getData();
-                InputStream inputStream = this.getContentResolver().openInputStream(data.getData());
-                Bitmap addedImage = BitmapFactory.decodeStream(inputStream);
+            lastImagePath = data.getData();
+            String pathImage = "images/" + UUID.randomUUID().toString();
 
-                String pathImage = "images/" + UUID.randomUUID().toString();
-
-                // add path to Book in FireBase
-                Database db = new Database(this);
-                db.connect(this);
-                book.addImage(pathImage);
-                db.editBook(book);
-
-                // store in Storage
-                StorageReference ref = storageReference.child(pathImage);
-                ref.putFile(lastImagePath)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(GalleryActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(GalleryActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            }
-                        });
+            // add path to Book in FireBase
+            Database db = new Database(this);
+            db.connect(this);
+            imageList.add(pathImage);
+            db.editBook(book);
 
 
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
+            // store in Storage
+            StorageReference ref = storageReference.child(pathImage);
+            ref.putFile(lastImagePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(GalleryActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                            galleryAdapter.notifyDataSetChanged();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(GalleryActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        }
+                    });
         }
 
         if (requestCode == DELETE_IMAGE && resultCode == Activity.RESULT_OK) {
-            // implement this
+            int position = data.getIntExtra("position", -1 );
+            Database db = new Database(this);
+            db.connect(this);
+            imageList.remove(position);
+            db.editBook(book);
+            galleryAdapter.notifyItemRemoved(position);
+            galleryAdapter.notifyItemRangeChanged(position, imageList.size());
         }
     }
 
