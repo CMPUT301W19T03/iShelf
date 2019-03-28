@@ -37,8 +37,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
-        android:inputType="text"
-        android:text="User Review"
+        android:hint="User Review"
+        android:inputType="textAutoCorrect|text"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rbUser" />
@@ -47,13 +47,10 @@
         android:id="@+id/tvBookName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginTop="24dp"
         android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/etUserComment" />
+        app:layout_constraintTop_toBottomOf="@+id/etUserComment"
+        tools:layout_editor_absoluteX="176dp" />
 
     <RatingBar
         android:id="@+id/rbBook"
@@ -74,8 +71,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:ems="10"
+        android:hint="Book Review"
         android:inputType="text"
-        android:text="Book review"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/rbBook" />
