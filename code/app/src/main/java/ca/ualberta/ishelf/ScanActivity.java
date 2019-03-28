@@ -110,7 +110,8 @@ public class ScanActivity extends AppCompatActivity {
     private String description = "";
 
 
-    private boolean testing = false;
+    private boolean testing = true;
+    private boolean done_computation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,22 +134,32 @@ public class ScanActivity extends AppCompatActivity {
         Button finishScanButton = (Button) findViewById(R.id.accept_scan_button);
         FloatingActionButton backScan = (FloatingActionButton) findViewById(R.id.back_button_camera);
 
+        if (outputISBN.equals("")) {
+            finishScanButton.setEnabled(false);
+            finishScanButton.setBackgroundResource(R.drawable.roundedbutton);
+        }
+        else if (!outputISBN.equals("")){
+            finishScanButton.setEnabled(true);
+            finishScanButton.setBackgroundResource(R.drawable.gradientbutton);
+        }
+
         finishScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle extras = new Bundle();
-                extras.putString("ISBN", outputISBN);
-                extras.putString("description", description);
-                if (visit.equals("get_description")) {
-                    Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
+                //if (done_computation) {
+                    Bundle extras = new Bundle();
+                    extras.putString("ISBN", outputISBN);
+                    extras.putString("description", description);
+                    if (visit.equals("get_description")) {
+                        Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
+                    } else if (visit.equals("lend")) {
+                        Intent intent = new Intent(ScanActivity.this, BookProfileActivity.class);
+                    }
+                    intent.putExtras(extras);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
-                else if (visit.equals("lend")) {
-                    Intent intent = new Intent(ScanActivity.this, BookProfileActivity.class);
-                }
-                intent.putExtras(extras);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
+            //}
         });
 
         backScan.setOnClickListener(new View.OnClickListener() {
@@ -408,6 +419,7 @@ public class ScanActivity extends AppCompatActivity {
                         JSONObject volumeInfo = book.getJSONObject("volumeInfo");
                         description = volumeInfo.getString("description");
                     }
+                    done_computation = true;
                 }
                 catch (JSONException e) {
                 }
