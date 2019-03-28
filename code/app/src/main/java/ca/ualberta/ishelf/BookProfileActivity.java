@@ -330,6 +330,8 @@ public class BookProfileActivity extends AppCompatActivity {
             passedBook.setAvailable();
             passedBook.setTransition(0);
             final String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+            // delete the request
+            deleteRequest(passedBook.getId().toString());
 
             passedBook.setHolder(passedBook.getOwner());
             passedBook.setNext_holder(null);
@@ -339,6 +341,44 @@ public class BookProfileActivity extends AppCompatActivity {
             // Get the Owner to review the Borrower
 
         }
+
+    }
+
+    public void deleteRequest(String bookId){
+        // get logged in username
+        final String username = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+        Firebase childRef = fb.child("Requests");
+
+        childRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for(DataSnapshot d: dataSnapshot.getChildren()) {
+                    String jRequest = d.getValue(String.class);
+                    if (jRequest != null) {
+                        // Get Requests object from Gson
+                        Gson gson = new Gson();
+                        Type tokenType = new TypeToken<Request>() {
+                        }.getType();
+                        Request request = gson.fromJson(jRequest, tokenType);
+                        if(request.getBookId().equals(bookId) && request.getOwner().equals(username)){
+                            db.deleteRequest(request.getId().toString());
+                            break;
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+
+        });
 
     }
 
