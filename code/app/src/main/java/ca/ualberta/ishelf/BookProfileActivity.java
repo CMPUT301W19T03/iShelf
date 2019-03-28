@@ -97,6 +97,7 @@ public class BookProfileActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
         // get the signed-in user's username
