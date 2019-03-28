@@ -687,4 +687,11 @@ public class BookProfileActivity extends AppCompatActivity {
             }
         }
     }
+
+    public void reviewsClicked(View v){
+        Intent intent = new Intent(this, ViewRatingsActivity.class);
+        intent.putExtra("BookID", passedBook.getId().toString());
+        startActivity(intent);
+    }
+
 }

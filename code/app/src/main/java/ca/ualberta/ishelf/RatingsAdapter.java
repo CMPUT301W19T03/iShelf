@@ -28,7 +28,7 @@ import java.util.Date;
  * This is the adapter for the List of requests for the recycler view
  * @author : Randal Kimpinski
  */
-public class RatingsAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.ViewHolder>{
+public class RatingsAdapter extends RecyclerView.Adapter<RatingsAdapter.ViewHolder>{
     private static final String TAG = "RatingRecyclerViewAdapter";
     // Array holding the names of the books being requested
     private ArrayList<Rating> mRatings = new ArrayList<>();
@@ -38,14 +38,9 @@ public class RatingsAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.
     /**
      * Assigns the arrays that we pass in to variables so that they can
      * later be assigned to their appropriate views
-     * @param context the context that we create the recycler in
-     * @param imageNames the names of the requesters
-     * @param myRatings the value of the requester ratings
-     * @param bookNames the name of the book they are requesting
-     * @param myStatus the status of the book they are requesting
      * @author : Randal Kimpinski
      */
-    public LORRecyclerViewAdapter(Context context, ArrayList<Rating> ratings) {
+    public RatingsAdapter(Context context, ArrayList<Rating> ratings) {
         mContext = context;
         mRatings = ratings;
     }
@@ -60,7 +55,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int i) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_of_requests_list_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.review_item, parent, false);
         ViewHolder holder = new ViewHolder(view);
         return holder;
     }
@@ -77,81 +72,10 @@ public class RatingsAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        final int fposition = position;
-        Log.d(TAG, "onBindViewHolder: called");
-        // Set the contents of each recycler view item
-        holder.testText.setText(mImageNames.get(position));
-        holder.bookName.setText(mBookNames.get(position));
-        holder.bRating.setRating(bRatings.get(position));
-        //TODO set location button to visible or invisible
-        if (mStatus.get(position) == 0) {
-            // If the request hasn't been accepted, display the accept/decline buttons
-            holder.locationButton.setVisibility(View.INVISIBLE);
-            //holder.locationButton.setEnabled(false);
-            holder.locationButton.setClickable(false);
-            holder.acceptButton.setVisibility(View.VISIBLE);
-            //holder.acceptButton.setEnabled(true);
-            holder.acceptButton.setClickable(true);
-            holder.declineButton.setVisibility(View.VISIBLE);
-            //holder.declineButton.setEnabled(true);
-            holder.declineButton.setClickable(true);
-        } else {
-            // If the request has been accepted, display location button
-            holder.locationButton.setVisibility(View.INVISIBLE);
-            //holder.locationButton.setEnabled(true);
-            holder.locationButton.setClickable(false);
-            holder.acceptButton.setVisibility(View.INVISIBLE);
-            //holder.acceptButton.setEnabled(false);
-            holder.acceptButton.setClickable(false);
-            holder.declineButton.setVisibility(View.INVISIBLE);
-            //holder.declineButton.setEnabled(false);
-            holder.declineButton.setClickable(false);
-        }
-
-        /**
-         * This is called when anywhere in the recyclerView item is pressed
-         * @author : Randal Kimpinski
-         */
-        holder.parentLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick: clicked on: " + mImageNames.get(fposition));
-                Toast.makeText(mContext, mImageNames.get(fposition), Toast.LENGTH_SHORT).show();
-            }
-        });
-        /**
-         * This is called when the accept button is pressed
-         * @author : Randal Kimpinski
-         */
-        holder.acceptButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick acceptButton: clicked on: " + fposition);
-                ((ListOfRequestsActivity) mContext).acceptRequest(fposition);
-            }
-        });
-        /**
-         * This is called when the decline button is pressed
-         * @author : Randal Kimpinski
-         */
-        holder.declineButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick declineButton: clicked on: " + fposition);
-                ((ListOfRequestsActivity) mContext).declineRequest(fposition);
-            }
-        });
-        /**
-         * This is called when the decline button is pressed
-         * @author : Randal Kimpinski
-         */
-        holder.locationButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.d(TAG, "onClick locationButton: clicked on: " + fposition);
-                ((ListOfRequestsActivity) mContext).locationButton(fposition);
-            }
-        });
+        holder.tvReviewerName.setText(mRatings.get(position).getReviewer());
+        holder.tvDate.setText(mRatings.get(position).getDate().toString());
+        holder.rbRating.setRating(mRatings.get(position).getRating());
+        holder.tvTextComment.setText(mRatings.get(position).getComment());
     }
 
     /**
@@ -162,7 +86,7 @@ public class RatingsAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.
     @Override
     public int getItemCount() {
         // necassary to actually display items
-        return mImageNames.size();
+        return mRatings.size();
     }
 
     /**
@@ -171,14 +95,10 @@ public class RatingsAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.
      * @author : Randal Kimpinski
      */
     public class ViewHolder extends RecyclerView.ViewHolder {
-        TextView testText;
-        TextView bookName;
-        Button acceptButton;
-        Button declineButton;
-        Button locationButton;
-        RatingBar bRating;
-        ConstraintLayout parentLayout;
-        //RelativeLayout parentLayout;
+        TextView tvReviewerName;
+        TextView tvDate;
+        RatingBar rbRating;
+        TextView tvTextComment;
 
         /**
          * sets the variables in our viewholder to the appropriate view items
@@ -187,15 +107,10 @@ public class RatingsAdapter extends RecyclerView.Adapter<LORRecyclerViewAdapter.
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            testText = itemView.findViewById(R.id.textView);
-            bookName = itemView.findViewById(R.id.bookNameView);
-            acceptButton = itemView.findViewById(R.id.AButton);
-            declineButton = itemView.findViewById(R.id.DButton);
-            locationButton = itemView.findViewById(R.id.locationButton);
-            bRating = itemView.findViewById(R.id.ratingBar2);
-            parentLayout = itemView.findViewById(R.id.LORParent);
-            //declineButton.setTag(1, itemView);
-            //acceptButton.setTag(2, itemView);
+            tvReviewerName = itemView.findViewById(R.id.tvReviewerName);
+            tvDate = itemView.findViewById(R.id.tvDate);
+            rbRating = itemView.findViewById(R.id.rbRating);
+            tvTextComment = itemView.findViewById(R.id.tvTextComment);
         }
 
     }
