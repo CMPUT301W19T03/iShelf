@@ -751,7 +751,7 @@ public class BookProfileActivity extends AppCompatActivity {
                 UUID bookID = passedBook.getId();
                 Intent ratingIntent = new Intent(this, RatingActivity.class);
                 ratingIntent.putExtra("User", bookOwnerName);
-                ratingIntent.putExtra("Book", bookName);
+                ratingIntent.putExtra("bookName", bookName);
                 ratingIntent.putExtra("BookID", bookID.toString());
                 startActivity(ratingIntent);
             }
