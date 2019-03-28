@@ -24,6 +24,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -221,7 +222,6 @@ public class EditBookActivity extends AppCompatActivity {
                     newintent.putExtra("Book Data", book);
                     setResult(RESULT_OK, newintent);
                     finish();
-
                 }
 
 
@@ -310,8 +310,17 @@ public class EditBookActivity extends AppCompatActivity {
         if (requestCode == SCAN_AND_GET_DESCRIPTION && resultCode == Activity.RESULT_OK) {
             String ISBN = data.getStringExtra("ISBN");
             String description = data.getStringExtra("description");
+            String year = data.getStringExtra("year");
+            String title = data.getStringExtra("title");
+            String author = data.getStringExtra("author");
+            String genre = data.getStringExtra("genre");
+
             DescriptionText.setText(description);
             ISBNText.setText(ISBN);
+            TitleText.setText(title);
+            YearText.setText(year);
+            GenreText.setText(genre);
+            AuthorText.setText(author);
         }
     }
 
