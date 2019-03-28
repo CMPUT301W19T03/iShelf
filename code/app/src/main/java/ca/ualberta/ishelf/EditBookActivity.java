@@ -313,6 +313,7 @@ public class EditBookActivity extends AppCompatActivity {
             String year = data.getStringExtra("year");
             String title = data.getStringExtra("title");
 
+
             DescriptionText.setText(description);
             ISBNText.setText(ISBN);
             YearText.setText(year);
