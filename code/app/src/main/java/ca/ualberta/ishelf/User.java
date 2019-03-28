@@ -105,9 +105,9 @@ public class User implements Serializable {
     public float getOverallRating(){
         int numberOfRatings = ratingArrayList.size();
         float aggregateRating = 0;
-        if (ratingArrayList.size() != 0) { //you cant go != null - Evan
+        if (ratingArrayList.size() != 0) {
             for (int i = 0; i < ratingArrayList.size(); i++) {
-                aggregateRating = ratingArrayList.get(i).getRating();
+                aggregateRating += ratingArrayList.get(i).getRating();
             }
         }
         aggregateRating = aggregateRating / numberOfRatings;

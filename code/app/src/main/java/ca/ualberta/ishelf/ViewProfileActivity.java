@@ -1,5 +1,6 @@
 package ca.ualberta.ishelf;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -211,6 +212,7 @@ public class ViewProfileActivity extends AppCompatActivity {
     public void updateUI(User user){
         Log.d(TAG, "in updateUI");
         tvUsername.setText(user.getUsername());
+        username=user.getUsername();
         String phoneNumber = user.getPhoneNum();
         if (phoneNumber != null && phoneNumber.length() > 0) {
             tvPhoneNum.setText("PHONE: " + phoneNumber);
@@ -227,6 +229,12 @@ public class ViewProfileActivity extends AppCompatActivity {
         ratingBar.setIsIndicator(true); // make it so the rating is non-changeable by the user
         Linkify.addLinks(tvPhoneNum, Linkify.PHONE_NUMBERS); // make phone number callable/textable
         Linkify.addLinks(tvEmail, Linkify.EMAIL_ADDRESSES); // make email clickable
+    }
+
+    public void reviewsClicked(View v){
+        Intent intent = new Intent(this, ViewRatingsActivity.class);
+        intent.putExtra("UserID", username);
+        startActivity(intent);
     }
 
 }
