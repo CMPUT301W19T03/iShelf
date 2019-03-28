@@ -27,6 +27,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.UUID;
 
@@ -145,6 +146,10 @@ public class RequestFragment extends Fragment {
                     }
                 }
 
+                Collections.sort(requestsUserMadeList);
+                Collections.reverse(requestsUserMadeList);
+                Collections.sort(requestUserReceivedList);
+                Collections.reverse(requestUserReceivedList);
                 getBooks();
 
             }
@@ -217,33 +222,33 @@ public class RequestFragment extends Fragment {
 
         if (filter == 0){
             ArrayList<Request> allRequests = new ArrayList<>();
-            allRequests.addAll(requestsUserMadeList);
             allRequests.addAll(requestUserReceivedList);
+            allRequests.addAll(requestsUserMadeList);
             ArrayList<Book> allBooks = new ArrayList<>();
-            allBooks.addAll(requestsUserMadeBooksList);
             allBooks.addAll(requestUserReceivedBooksList);
+            allBooks.addAll(requestsUserMadeBooksList);
             requestAdapter.updateList(allRequests, allBooks);
-        }else if(filter==1) {
-            requestAdapter.updateList(requestsUserMadeList, requestsUserMadeBooksList);
-        } else if (filter==2){
-            ArrayList<Request> acceptedRequests = new ArrayList<>();
-            ArrayList<Book> acceptedBooks = new ArrayList<>();
-            for (int i=0; i < (requestsUserMadeList.size()); i++){
-                if(requestsUserMadeList.get(i).getStatus() == 1){
-                    acceptedRequests.add(requestsUserMadeList.get(i));
-                    acceptedBooks.add(requestsUserMadeBooksList.get(i));
-                }
-            }
-            requestAdapter.updateList(acceptedRequests, acceptedBooks);
-        } else if (filter==3){
+        } else if (filter==1){
             requestAdapter.updateList(requestUserReceivedList, requestUserReceivedBooksList);
-        }else if (filter==4){
+        }else if (filter==2){
             ArrayList<Request> acceptedRequests = new ArrayList<>();
             ArrayList<Book> acceptedBooks = new ArrayList<>();
             for (int i=0; i < (requestUserReceivedList.size()); i++){
                 if(requestUserReceivedList.get(i).getStatus() == 1){
                     acceptedRequests.add(requestUserReceivedList.get(i));
                     acceptedBooks.add(requestUserReceivedBooksList.get(i));
+                }
+            }
+            requestAdapter.updateList(acceptedRequests, acceptedBooks);
+        }else if(filter==3) {
+            requestAdapter.updateList(requestsUserMadeList, requestsUserMadeBooksList);
+        } else if (filter==4){
+            ArrayList<Request> acceptedRequests = new ArrayList<>();
+            ArrayList<Book> acceptedBooks = new ArrayList<>();
+            for (int i=0; i < (requestsUserMadeList.size()); i++){
+                if(requestsUserMadeList.get(i).getStatus() == 1){
+                    acceptedRequests.add(requestsUserMadeList.get(i));
+                    acceptedBooks.add(requestsUserMadeBooksList.get(i));
                 }
             }
             requestAdapter.updateList(acceptedRequests, acceptedBooks);

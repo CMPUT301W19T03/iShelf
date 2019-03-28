@@ -93,6 +93,9 @@ public class EditBookActivity extends AppCompatActivity {
                 // convert imageView to a bitMap
 
                 Intent intent = new Intent(EditBookActivity.this, ScanActivity.class);
+                Bundle extras = new Bundle();
+                extras.putString("task", "get_description");
+                intent.putExtras(extras);
                 startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
             }
         });

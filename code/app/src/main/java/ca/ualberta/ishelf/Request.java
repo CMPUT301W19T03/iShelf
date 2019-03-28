@@ -20,7 +20,7 @@ import static android.support.constraint.Constraints.TAG;
  * if no action has been taken yet
  * Since these objects are not directly stored in firebase, they don't need a unique id
  */
-public class Request implements Parcelable {
+public class Request implements Parcelable, Comparable<Request> {
     // id of Request Object
     private UUID id;
     // id of book to be borrowed
@@ -79,7 +79,7 @@ public class Request implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(bookId.toString());
+        dest.writeString(bookId.toString()); //this is null - Evan
         dest.writeString(requester);
         dest.writeInt(status);
         dest.writeString(owner);
@@ -281,4 +281,17 @@ public class Request implements Parcelable {
                 + timeRequested.toString();
         return message;
     }
+
+    @Override
+    public int compareTo(Request o) {
+        Date d1 = this.getTimeRequested();
+        Date d2 = o.getTimeRequested();
+        if (d1.after(d2)) {
+            return 1;
+        } else if (d1.before(d2)) {
+            return -1;
+        }
+        return 0;
+    }
+
 }
