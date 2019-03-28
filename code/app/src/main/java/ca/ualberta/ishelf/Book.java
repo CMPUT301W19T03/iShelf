@@ -31,6 +31,8 @@ public class Book implements Parcelable{
     private String genre;
     private String author;
     private int transition;
+
+
     /*
     0 is its available for booking
     1 is when u have accept someones request.
@@ -79,6 +81,7 @@ public class Book implements Parcelable{
         genre = in.readString();
         author = in.readString();
         id = UUID.fromString(in.readString());
+        galleryImages = in.createStringArrayList();
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -308,6 +311,7 @@ public class Book implements Parcelable{
         dest.writeString(genre);
         dest.writeString(author);
         dest.writeString(id.toString());
+        dest.writeStringList(galleryImages);
 
     }
 }

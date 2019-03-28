@@ -4,6 +4,8 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
@@ -15,6 +17,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
+import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,6 +27,10 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -52,10 +59,17 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
     private ArrayList<Book> filterList = new ArrayList<>();
     private Context mContext;
 
+    // FireBase stuff
+    FirebaseStorage storage;
+    StorageReference storageReference;
+
     public MyAdapter(ArrayList<Book> booksList, Context mContext, ArrayList<Book> filterList) {
         this.filterList = filterList;
         this.booksList = booksList;
         this.mContext = mContext;
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
     }
 
 
@@ -67,6 +81,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
         public TextView title;
         public ConstraintLayout parentLayout;
         public RatingBar ratingBar;
+        public ImageView imageCover;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -77,6 +92,7 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
             owner = (TextView) itemView.findViewById(R.id.owner_borrow);
             description = (TextView) itemView.findViewById(R.id.description);
             ratingBar = itemView.findViewById(R.id.ratingBar1);
+            imageCover = (ImageView) itemView.findViewById(R.id.cover_borrow);
         }
     }
 
@@ -121,6 +137,27 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
 
             }
         });
+
+        Book currentBook = booksList.get(position);
+        ArrayList<String> images = currentBook.getGalleryImages();
+
+        if (images.size() > 0) {
+            String image = images.get(0);
+            StorageReference ref = storageReference.child(image);
+            final long ONE_MEGABYTE = 1024 * 1024;
+            ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+                @Override
+                public void onSuccess(byte[] bytes) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    mholder.imageCover.setImageBitmap(bitmap);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle any errors
+                }
+            });
+        }
 
     }
 
