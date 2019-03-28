@@ -108,6 +108,8 @@ public class ScanActivity extends AppCompatActivity {
     String url = "https://www.googleapis.com/books/v1/volumes?q=isbn:";
     private final OkHttpClient client = new OkHttpClient();
     private String description = "";
+    private String year = "";
+    private String title = "";
 
 
     private boolean testing = true;
@@ -139,6 +141,8 @@ public class ScanActivity extends AppCompatActivity {
                 Bundle extras = new Bundle();
                 extras.putString("ISBN", outputISBN);
                 extras.putString("description", description);
+                extras.putString("title", title);
+                extras.putString("year", year);
                 if (visit.equals("get_description")) {
                     Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
                 }
@@ -407,6 +411,9 @@ public class ScanActivity extends AppCompatActivity {
                         JSONObject book = books.getJSONObject(i);
                         JSONObject volumeInfo = book.getJSONObject("volumeInfo");
                         description = volumeInfo.getString("description");
+                        // get title and author
+                        year = volumeInfo.getString("publishedDate");
+                        title = volumeInfo.getString("title");
                     }
                 }
                 catch (JSONException e) {

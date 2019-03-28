@@ -310,8 +310,14 @@ public class EditBookActivity extends AppCompatActivity {
         if (requestCode == SCAN_AND_GET_DESCRIPTION && resultCode == Activity.RESULT_OK) {
             String ISBN = data.getStringExtra("ISBN");
             String description = data.getStringExtra("description");
+            String year = data.getStringExtra("year");
+            String title = data.getStringExtra("title");
+
             DescriptionText.setText(description);
             ISBNText.setText(ISBN);
+            YearText.setText(year);
+            TitleText.setText(title);
+
         }
     }
 
