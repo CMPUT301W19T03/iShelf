@@ -32,7 +32,7 @@
     </string-array>
     <string-array name="select_rating">
         <!--<item name="All">All</item>-->
-        <item name="Owner">Owner</item>
-        <item name="Book">Book</item>
+        <item name="Owner">Owner Rating</item>
+        <item name="Book">Book Rating</item>
     </string-array>
 </resources>
