@@ -181,6 +181,7 @@
         android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/map"
+        android:stepSize="0.5"
         app:layout_constraintTop_toBottomOf="@+id/bookRatingBar" />
 
     <Button
@@ -337,7 +338,7 @@
         android:progressTint="@android:color/holo_orange_light"
         android:rating="0.0"
         android:secondaryProgressTint="@android:color/holo_orange_light"
-        android:stepSize="1.0"
+        android:stepSize="0.5"
         app:layout_constraintStart_toEndOf="@+id/ownerUsername"
         app:layout_constraintTop_toBottomOf="@+id/status" />
 
