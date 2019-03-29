@@ -12,7 +12,7 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import ca.ualberta.ishelf.R;
-import ca.ualberta.ishelf.Rating;
+import ca.ualberta.ishelf.Models.Rating;
 
 /**
  * This is the adapter for the List of requests for the recycler view

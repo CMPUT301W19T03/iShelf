@@ -21,6 +21,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.User;
+
 /**
  * ViewProfileActivity
  * Send in either:  key: "Username" - a Username in the form of a String

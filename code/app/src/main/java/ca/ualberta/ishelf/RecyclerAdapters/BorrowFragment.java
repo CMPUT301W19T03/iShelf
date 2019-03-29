@@ -28,10 +28,10 @@ import android.widget.Spinner;
 
 import java.util.ArrayList;
 
-import ca.ualberta.ishelf.Book;
-import ca.ualberta.ishelf.Database;
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.R;
-import ca.ualberta.ishelf.User;
+import ca.ualberta.ishelf.Models.User;
 
 import static android.support.constraint.Constraints.TAG;
 

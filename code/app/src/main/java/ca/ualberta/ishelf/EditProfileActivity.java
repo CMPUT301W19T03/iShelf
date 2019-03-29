@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.view.WindowManager;
 import android.widget.EditText;
 
 import com.firebase.client.DataSnapshot;
@@ -19,6 +18,9 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.User;
 
 /**
  * EditProfileActivity

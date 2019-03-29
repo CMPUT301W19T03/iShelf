@@ -3,6 +3,9 @@ package ca.ualberta.ishelf;
 import org.junit.Assert;
 import org.junit.Test;
 
+import ca.ualberta.ishelf.Models.Borrow;
+import ca.ualberta.ishelf.Models.User;
+
 /**
  *
  * borrow unit test

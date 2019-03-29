@@ -30,11 +30,11 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import ca.ualberta.ishelf.Book;
-import ca.ualberta.ishelf.Database;
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.EditBookActivity;
 import ca.ualberta.ishelf.R;
-import ca.ualberta.ishelf.User;
+import ca.ualberta.ishelf.Models.User;
 
 import static android.app.Activity.RESULT_OK;
 
