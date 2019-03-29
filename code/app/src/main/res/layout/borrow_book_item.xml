@@ -24,11 +24,11 @@ android:backgroundTint="#80FFFFFF">
     android:textColor="@color/black"
     android:textSize="15sp"
     android:textStyle="bold"
-    app:layout_constraintStart_toEndOf="@+id/imageView2"
+    app:layout_constraintStart_toEndOf="@+id/cover_borrow"
     app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/imageView2"
+        android:id="@+id/cover_borrow"
         android:layout_width="86dp"
         android:layout_height="141dp"
         android:layout_marginStart="16dp"
@@ -52,7 +52,7 @@ android:backgroundTint="#80FFFFFF">
     android:secondaryProgressTint="@android:color/holo_orange_light"
     android:stepSize="1.0"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toEndOf="@+id/imageView2" />
+    app:layout_constraintStart_toEndOf="@+id/cover_borrow" />
 
     <TextView
         android:id="@+id/owner_borrow"
@@ -64,7 +64,7 @@ android:backgroundTint="#80FFFFFF">
         android:text="Owner"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toEndOf="@+id/cover_borrow"
         app:layout_constraintTop_toBottomOf="@+id/title" />
 
     <TextView
@@ -77,7 +77,7 @@ android:backgroundTint="#80FFFFFF">
         android:text="Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/imageView2"
+        app:layout_constraintStart_toEndOf="@+id/cover_borrow"
         app:layout_constraintTop_toBottomOf="@+id/owner_borrow" />
 
 

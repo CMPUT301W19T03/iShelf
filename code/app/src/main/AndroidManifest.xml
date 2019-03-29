@@ -62,6 +62,7 @@
             android:name=".EditBookActivity"
             android:windowSoftInputMode="adjustResize" />
         <activity android:name=".ViewProfileActivity" />
+        <activity android:name=".ViewRatingsActivity" />
         <activity
             android:name=".EditProfileActivity"
             android:windowSoftInputMode="adjustResize"> <!-- makes the save button appear above the keyboard -->

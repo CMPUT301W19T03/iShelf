@@ -4,15 +4,24 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
@@ -25,14 +34,21 @@ import java.util.ArrayList;
  * @author : Faisal
  */
 class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
-    private ArrayList<Bitmap> originalList = new ArrayList<Bitmap>();
+    private ArrayList<String> originalList = new ArrayList<String>();
     private Context galleryContext;
     private final int DELETE_IMAGE = 37;
 
+    // FireBase stuff
+    FirebaseStorage storage;
+    StorageReference storageReference;
 
-    public GalleryAdapter(Context galleryContext, ArrayList<Bitmap> originalList) {
+
+    public GalleryAdapter(Context galleryContext, ArrayList<String> originalList) {
         this.originalList = originalList;
         this.galleryContext = galleryContext;
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
     }
 
     public static class GalleryViewHolder extends RecyclerView.ViewHolder {
@@ -57,17 +73,31 @@ class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final GalleryViewHolder imageHolder = (GalleryViewHolder) holder;
 
-        imageHolder.image.setImageBitmap(originalList.get(position));
+        String test = originalList.get(position);
+        StorageReference ref = storageReference.child(originalList.get(position));
+
+        final long ONE_MEGABYTE = 1024 * 1024;
+        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                imageHolder.image.setImageBitmap(bitmap);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Handle any errors
+            }
+        });
+
         imageHolder.image.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
             @Override
             public void onClick(View view) {
                 // convert imageView to a bitMap
-                Bitmap bitMap = ((BitmapDrawable)imageHolder.image.getDrawable()).getBitmap();
-
                 // send the bitmap to ViewImageActivity
                 Bundle extras = new Bundle();
-                extras.putParcelable("sent_image", bitMap);
+                extras.putString("sent_image", originalList.get(position));
                 extras.putInt("position", position);
                 Intent intent = new Intent((Activity) galleryContext, ViewImageActivity.class);
                 intent.putExtras(extras);
@@ -82,7 +112,7 @@ class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return originalList.size();
     }
 
-    public void updateList(ArrayList<Bitmap> list){
+    public void updateList(ArrayList<String> list){
         originalList = list;
     }
 }
