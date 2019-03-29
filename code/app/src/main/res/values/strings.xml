@@ -17,9 +17,9 @@
     <string-array name="requested_array">
         <item name="All">All</item>
         <item name="Received">Requests Received</item>
-        <item name="ReceivedAccepted"> - Accepted</item>
+        <item name="ReceivedAccepted">  - Accepted</item>
         <item name="Made">Requests Made</item>
-        <item name="MadeAccepted"> - Accepted</item>
+        <item name="MadeAccepted">  - Accepted</item>
     </string-array>
     <string name="title_activity_maps">Map</string>
     <string-array name="rating_array">
@@ -32,7 +32,7 @@
     </string-array>
     <string-array name="select_rating">
         <!--<item name="All">All</item>-->
-        <item name="Owner">Owner</item>
-        <item name="Book">Book</item>
+        <item name="Owner">Owner Rating</item>
+        <item name="Book">Book Rating</item>
     </string-array>
 </resources>

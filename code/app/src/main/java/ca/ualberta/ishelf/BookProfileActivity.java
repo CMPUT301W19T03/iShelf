@@ -84,6 +84,7 @@ public class BookProfileActivity extends AppCompatActivity {
     // to see a gallery of books
     private Button galleryButton;
     private String ISBN = new String();
+    private TextView cholder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -229,7 +230,8 @@ public class BookProfileActivity extends AppCompatActivity {
         }else{
             textView6.setText("BORROWED");
         }
-
+        cholder = (TextView) findViewById(R.id.current_holder);
+        cholder.setText(passedBook.getHolder());
         TextView ownerUsername = findViewById(R.id.ownerUsername);
         ownerUsername.setPaintFlags(ownerUsername.getPaintFlags() |   Paint.UNDERLINE_TEXT_FLAG);
         ownerUsername.setText(owner);
