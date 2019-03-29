@@ -195,9 +195,12 @@ public class ListOfRequestsActivity extends AppCompatActivity {
             // Delete the requests instead of just declining it
             db.deleteRequest(tempRequest.getId().toString());
             // Create and add notification to firebase
-            Notification notification = new Notification(new Date(),
-                    username + " has declined your request for " + selectedBookName, tempRequest.getRequester());
-            db.addNotification(notification);
+            // But only if it isn't a duplicate of the request we accepted
+            if (!tempRequest.getRequester().equals(selectedRequest.getRequester())) {
+                Notification notification = new Notification(new Date(),
+                        username + " has declined your request for " + selectedBookName, tempRequest.getRequester());
+                db.addNotification(notification);
+            }
         }
 
         // Accept Request
