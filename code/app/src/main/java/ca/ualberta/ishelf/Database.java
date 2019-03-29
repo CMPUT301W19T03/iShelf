@@ -37,7 +37,7 @@ public class Database extends Application {
      * Database db = new Database(this)
      * @author : Randal Kimpinski
      */
-    Database(Context context){
+    public Database(Context context){
         Firebase.setAndroidContext(context);
         ref = new Firebase(link);
     }

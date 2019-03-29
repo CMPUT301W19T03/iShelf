@@ -1,4 +1,4 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
 
 import android.app.Activity;
@@ -38,6 +38,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.ualberta.ishelf.Book;
+import ca.ualberta.ishelf.BookProfileActivity;
+import ca.ualberta.ishelf.Database;
+import ca.ualberta.ishelf.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /*https://www.youtube.com/watch?v=Vyqz_-sJGFk

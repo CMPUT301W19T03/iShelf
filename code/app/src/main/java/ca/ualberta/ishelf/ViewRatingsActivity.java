@@ -1,13 +1,11 @@
 package ca.ualberta.ishelf;
 
-import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -18,7 +16,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.UUID;
+
+import ca.ualberta.ishelf.RecyclerAdapters.RatingsAdapter;
 
 public class ViewRatingsActivity extends AppCompatActivity {
     // Tag for debugging

@@ -1,4 +1,4 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,12 +15,15 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import ca.ualberta.ishelf.Notification;
+import ca.ualberta.ishelf.R;
+
 /**
  * //adapter for the notification recycler view
  * //works like all the other adapters in the project.
  */
 
-class NotificationAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<ViewHolder> {
     private ArrayList<Notification> notificationList = new ArrayList<Notification>();
 
 

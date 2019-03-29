@@ -1,4 +1,4 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -25,6 +25,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 
+import ca.ualberta.ishelf.R;
+import ca.ualberta.ishelf.ViewImageActivity;
+
 
 /**
  * GalleryAdapter
@@ -33,7 +36,7 @@ import java.util.ArrayList;
  *
  * @author : Faisal
  */
-class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<String> originalList = new ArrayList<String>();
     private Context galleryContext;
     private final int DELETE_IMAGE = 37;
