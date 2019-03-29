@@ -34,6 +34,8 @@ import java.util.ArrayList;
  *
  * Updates to the account is saved to Firebase
  *
+ * TODO: Bug - if user has any reviews it crashes the app when you click on the Save Button
+ *
  * author: Jeremy
  */
 public class EditProfileActivity extends AppCompatActivity {
@@ -152,7 +154,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
             // add result for viewProfile
             Intent intent = new Intent();
-            intent.putExtra("User", user);
+            //intent.putExtra("User", user);
+            intent.putExtra("Username", user.getUsername());
             setResult(3, intent);
             finish();
         }
