@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.SharedMemory;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -54,7 +55,7 @@ import static android.support.constraint.Constraints.TAG;
  * @author mehrab
  */
 
-public class RequestFragment extends Fragment {
+public class RequestFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
     private final String TAG = "RequestFragment";
     private ArrayList<Request> requestsUserMadeList = new ArrayList<>();
     private ArrayList<Book> requestsUserMadeBooksList = new ArrayList<>();
@@ -64,7 +65,7 @@ public class RequestFragment extends Fragment {
     private RecyclerView requestRecyclerView;
     private RequestAdapter requestAdapter;
     private RecyclerView.LayoutManager requestLayoutManager;
-
+    private SwipeRefreshLayout swipeRefresh;
 
     @Nullable
     @Override
@@ -105,7 +106,8 @@ public class RequestFragment extends Fragment {
 
         // Get requests from firebase
         getRequests();
-
+        swipeRefresh = (SwipeRefreshLayout) getActivity().findViewById(R.id.swipe_refresh2);
+        swipeRefresh.setOnRefreshListener(this);
 
     }
 
@@ -256,20 +258,11 @@ public class RequestFragment extends Fragment {
 
     }
 
-
-//    private void enteredAlert(String msg) {
-//        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this.getContext());
-//        alertDialogBuilder.setMessage((CharSequence) msg);
-//        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface arg0, int arg1) {
-//                // TODO Auto-generated catch block
-//            }
-//        });
-//        AlertDialog alertDialog = alertDialogBuilder.create();
-//        alertDialog.show();
-//    }
-
-
+    @Override
+    public void onRefresh() {
+        clearLists();
+        getRequests();
+        swipeRefresh.setRefreshing(false);
+    }
 
 }

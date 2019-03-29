@@ -9,6 +9,7 @@ package ca.ualberta.ishelf;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -36,7 +37,7 @@ import java.util.UUID;
  * additional queries to firebase
  * @author : Randal
  */
-public class ListOfRequestsActivity extends AppCompatActivity {
+public class ListOfRequestsActivity extends AppCompatActivity{
     // tag For debugging
     private static final String TAG = "ListOfRequestsActivity";
     // List of strings that are displayed in requests
@@ -104,6 +105,7 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         //addTestData();
         getRequests();
         getRequestInformation();
+
     }
 
     /**
@@ -445,24 +447,4 @@ public class ListOfRequestsActivity extends AppCompatActivity {
         }
     }
 
-    /**
-     * Add test Request objects to firebase
-     * Request attributes must be valid keys for other firebase entries
-     * Primary purpose is to test
-     * Useful for just testing getRequestInformation
-     * @author Randal Kimpinski
-     */
-    public void addTestData() {
-        // Create test Request objects that refer to real Firebase items
-        UUID id;
-        id = UUID.fromString("i1afag89-77e9-49d6-afdd-ab98e4e245d4");
-        Request r1 = new Request(id, "Evan", username);
-        Request r2 = new Request(id, "aalattas", username);
-        Request r3 = new Request(id, "jsgray1", username);
-        // Add requests to Firebase
-        Database db = new Database(this);
-        db.addRequest(r1);
-        db.addRequest(r2);
-        db.addRequest(r3);
-    }
 }

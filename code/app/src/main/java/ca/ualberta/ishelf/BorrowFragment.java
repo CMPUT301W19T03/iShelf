@@ -106,21 +106,6 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         bookAdapter = new BorrowAdapter(view.getContext(), bookList, bookList);
         bookRecyclerView.setAdapter(bookAdapter);
         spinner = view.findViewById(R.id.rating_sorter);
-        object_spinner = view.findViewById(R.id.object_rating);
-
-        object_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                //Filter(selectedItem);
-                selected_object= selectedItem;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -149,9 +134,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         searchView = (SearchView) getActivity().findViewById(R.id.searchView1);
 
         borrowRefresh = (SwipeRefreshLayout) view.findViewById(R.id.swipe_refresh);
-        borrowRefresh.setOnRefreshListener(this
-
-        );
+        borrowRefresh.setOnRefreshListener(this);
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override

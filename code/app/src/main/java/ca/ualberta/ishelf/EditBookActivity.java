@@ -209,8 +209,6 @@ public class EditBookActivity extends AppCompatActivity {
                     newINTent.putExtra("Pos", pos);
                     newINTent.putExtra("Check", true);
 
-                    System.out.print("HElllllllloooooowewrwejrjoejiorwejrweijorij");
-
                     setResult(RESULT_OK,newINTent);
                     finish();
 
@@ -323,8 +321,8 @@ public class EditBookActivity extends AppCompatActivity {
             AuthorText.setText(author);
         }
     }
-
-
-
+    public void cancelButton (View v){
+        finish();
+    }
 }
 

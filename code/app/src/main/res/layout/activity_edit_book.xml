@@ -176,6 +176,7 @@
         android:layout_marginBottom="16dp"
         android:background="@drawable/roundedbutton"
         android:text="Cancel"
+        android:onClick="cancelButton"
         android:textColor="@color/ghost_white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
