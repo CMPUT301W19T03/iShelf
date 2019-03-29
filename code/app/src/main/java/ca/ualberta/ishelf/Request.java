@@ -7,6 +7,9 @@ import android.util.Log;
 
 import com.google.android.gms.maps.model.LatLng;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.UUID;
 
@@ -63,6 +66,7 @@ public class Request implements Parcelable, Comparable<Request> {
     }
 
     protected Request(Parcel in) {
+         DateFormat format = new SimpleDateFormat("yyyy MM dd HH mm ss z");
         bookId = UUID.fromString(in.readString());
         requester = in.readString();
         status = in.readInt();
@@ -75,10 +79,16 @@ public class Request implements Parcelable, Comparable<Request> {
             location = new LatLng(lat, lng);
         }
         id = UUID.fromString(in.readString());
+        try {
+            timeRequested = format.parse(in.readString());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+         DateFormat format = new SimpleDateFormat("yyyy MM dd HH mm ss z");
         dest.writeString(bookId.toString()); //this is null - Evan
         dest.writeString(requester);
         dest.writeInt(status);
@@ -98,6 +108,8 @@ public class Request implements Parcelable, Comparable<Request> {
         dest.writeDouble(lat);
         dest.writeDouble(lng);
         dest.writeString(id.toString());
+
+        dest.writeString(format.format(timeRequested));
     }
 
     @Override

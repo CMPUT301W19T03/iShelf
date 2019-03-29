@@ -8,7 +8,7 @@
     tools:context=".BookProfileActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/image_book"
         android:layout_width="150sp"
         android:layout_height="150sp"
         android:layout_marginTop="24dp"
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
-        android:text="Book Rating"
+        android:text="Book Rating:"
         android:textColor="@color/midnight_blue"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -120,12 +120,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:text="Owner:"
         android:textColor="@color/midnight_blue"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
     <Button
         android:id="@+id/acpt"
@@ -181,6 +181,7 @@
         android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/map"
+        android:stepSize="0.5"
         app:layout_constraintTop_toBottomOf="@+id/bookRatingBar" />
 
     <Button
@@ -228,14 +229,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="8dp"
         android:onClick="viewProfile"
         android:text="TextView"
         android:textColor="@color/midnight_blue"
         android:textColorLink="@color/ColorPrimary"
         android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/textView9"
-        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+        app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
     <TextView
         android:id="@+id/des"
@@ -324,7 +325,7 @@
         android:textColor="@color/azure"
         android:visibility="invisible"
         app:layout_constraintEnd_toStartOf="@+id/bking"
-        app:layout_constraintTop_toBottomOf="@+id/textView14" />
+        app:layout_constraintTop_toBottomOf="@+id/bookRatingBar" />
 
     <RatingBar
         android:id="@+id/ownerRatingBar"
@@ -332,14 +333,14 @@
         android:layout_width="184dp"
         android:layout_height="36dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
         android:numStars="5"
         android:progressTint="@android:color/holo_orange_light"
         android:rating="0.0"
         android:secondaryProgressTint="@android:color/holo_orange_light"
-        android:stepSize="1.0"
+        android:stepSize="0.5"
         app:layout_constraintStart_toEndOf="@+id/ownerUsername"
-        app:layout_constraintTop_toBottomOf="@+id/status" />
+        app:layout_constraintTop_toBottomOf="@+id/current_holder" />
 
     <RatingBar
         android:id="@+id/bookRatingBar"
@@ -367,9 +368,9 @@
         android:background="@drawable/roundedbutton"
         android:text="VIEW GALLERY"
         android:textColor="@color/azure"
-        app:layout_constraintEnd_toEndOf="@+id/imageView"
-        app:layout_constraintStart_toStartOf="@+id/imageView"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintEnd_toEndOf="@+id/image_book"
+        app:layout_constraintStart_toStartOf="@+id/image_book"
+        app:layout_constraintTop_toBottomOf="@+id/image_book" />
 
     <Button
         android:id="@+id/map"
@@ -384,5 +385,42 @@
         android:visibility="invisible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/bookRatingBar" />
+
+    <TextView
+        android:id="@+id/current_holder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="TextView"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/textView16"
+        app:layout_constraintTop_toBottomOf="@+id/status" />
+
+    <TextView
+        android:id="@+id/textView16"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:text="Current Holder:"
+        android:textColor="@color/midnight_blue"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView8" />
+
+    <Button
+        android:id="@+id/show_review"
+        android:layout_width="87dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="Reviews"
+        android:textColor="@color/azure"
+        android:onClick="reviewsClicked"
+        android:background="@drawable/roundedbutton"
+        app:layout_constraintEnd_toStartOf="@+id/edit"
+        app:layout_constraintTop_toBottomOf="@+id/acpt" />
 
 </android.support.constraint.ConstraintLayout>

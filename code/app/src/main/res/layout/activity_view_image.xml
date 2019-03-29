@@ -11,6 +11,8 @@
         android:id="@+id/full_image"
         android:layout_width="438dp"
         android:layout_height="667dp"
+        app:layout_constraintBottom_toTopOf="@+id/delete_image_button"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@mipmap/ic_launcher" />

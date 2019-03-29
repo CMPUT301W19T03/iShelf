@@ -152,7 +152,8 @@ public class EditProfileActivity extends AppCompatActivity {
 
             // add result for viewProfile
             Intent intent = new Intent();
-            intent.putExtra("User", user);
+            //intent.putExtra("User", user);
+            intent.putExtra("Username", user.getUsername());
             setResult(3, intent);
             finish();
         }

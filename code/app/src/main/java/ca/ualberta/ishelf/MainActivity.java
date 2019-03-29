@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String CHANNEL_ID = "1256";
     private static final int NOTIFICATION_ID = 192873641;
-    // Here is my first comment
     private TextView mTextMessage;
     private Toolbar myToolbar;
     private SearchView searchView;
@@ -344,7 +343,6 @@ public class MainActivity extends AppCompatActivity {
 
                             found = true;
                             break;
-
                         }
                     }
 
@@ -355,7 +353,6 @@ public class MainActivity extends AppCompatActivity {
                         Intent intent = new Intent(getBaseContext(), SignInActivity.class);
                         startActivityForResult(intent, 1);
                     }
-
                 }
 
                 @Override
@@ -364,7 +361,6 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
-
     }
 
 
