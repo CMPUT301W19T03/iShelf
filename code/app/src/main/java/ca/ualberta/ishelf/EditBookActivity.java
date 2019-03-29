@@ -3,7 +3,6 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,9 +23,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import ca.ualberta.ishelf.RecyclerAdapters.MyAdapter;
+import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;
 
 /**
  * EditBookActivity

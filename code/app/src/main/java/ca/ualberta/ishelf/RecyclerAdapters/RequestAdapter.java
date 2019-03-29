@@ -1,4 +1,4 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
 import android.app.Activity;
 import android.content.Context;
@@ -24,6 +24,13 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import ca.ualberta.ishelf.Book;
+import ca.ualberta.ishelf.BookProfileActivity;
+import ca.ualberta.ishelf.Database;
+import ca.ualberta.ishelf.R;
+import ca.ualberta.ishelf.Request;
+import ca.ualberta.ishelf.User;
 
 /**
  * adapter for the RequestFragment recycler view
