@@ -75,6 +75,15 @@ public class RatingActivity extends AppCompatActivity {
 //            // TODO: retrieve Book from Firebase using bookname
 //        }
 
+        if (intent.hasExtra("bookName")){
+            tvBookname.setText("Please review the book: " + bookname);
+        } else {
+            // book does not exist, so remove all relevant UI elements
+            tvBookname.setVisibility(View.GONE);
+            rbBook.setVisibility(View.GONE);
+            etBookComment.setVisibility(View.GONE);
+        }
+
         if (intent.hasExtra("BookID")){
             bookID = intent.getStringExtra("BookID");
             Log.d(TAG, "onCreate: BookID: " + bookID);
@@ -85,16 +94,15 @@ public class RatingActivity extends AppCompatActivity {
         tvUsername.setText("Please review " + username);
 
         // check if book exists, if it doesn't we need to hide it, else we need to set it
-        if (bookname != null) {
-            // book exists, so update the relevant UI elements
-            tvBookname.setText("Please review the book: " + bookname);
-        } else {
-            // book does not exist, so remove all relevant UI elements
-            tvBookname.setVisibility(View.GONE);
-            rbBook.setVisibility(View.GONE);
-            etBookComment.setVisibility(View.GONE);
-        }
-
+//        if (bookID != null) {
+//            // book exists, so update the relevant UI elements
+//            tvBookname.setText("Please review the book: " + bookname);
+//        } else {
+//            // book does not exist, so remove all relevant UI elements
+//            tvBookname.setVisibility(View.GONE);
+//            rbBook.setVisibility(View.GONE);
+//            etBookComment.setVisibility(View.GONE);
+//        }
         currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
 
 
@@ -108,7 +116,6 @@ public class RatingActivity extends AppCompatActivity {
         userRating.setDate(date);
         user.addRating(userRating);
         //userRating.setDate(date.getTime());
-        // TODO: update user with firebase
         Database db = new Database(this);
         db.editUser(user);
 
@@ -117,16 +124,11 @@ public class RatingActivity extends AppCompatActivity {
             bookRating.setReviewer(currentUsername);
             bookRating.setDate(date);
             book.addRating(bookRating);
-            // TODO: update book with firebase
             db.editBook(book);
         }
         Toast.makeText(this, "Rating Saved", Toast.LENGTH_LONG).show();
         finish();
     }
-
-    /**
-     * get User based on username from Firebase
-     */
 
     /**
      * get a book based on bookID from firebase
@@ -169,6 +171,10 @@ public class RatingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * get a user based on username from firebase
+     * @author rmnattas
+     */
     public void getUser(String username){
         //connect to firebase
         Database db = new Database(this);

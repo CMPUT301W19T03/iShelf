@@ -4,6 +4,10 @@ import android.media.Image;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -82,6 +86,11 @@ public class Book implements Parcelable{
         author = in.readString();
         id = UUID.fromString(in.readString());
         galleryImages = in.createStringArrayList();
+        Gson gson = new Gson();
+        String jRatings = in.readString();
+        Type RatingList = new TypeToken<ArrayList<Rating>>(){}.getType();
+        ratings = gson.fromJson(jRatings, RatingList);
+
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -312,6 +321,9 @@ public class Book implements Parcelable{
         dest.writeString(author);
         dest.writeString(id.toString());
         dest.writeStringList(galleryImages);
+        Gson gson = new Gson();
+        String jRatings = gson.toJson(ratings);
+        dest.writeString(jRatings);
 
     }
 }
