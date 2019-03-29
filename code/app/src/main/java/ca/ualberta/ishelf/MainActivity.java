@@ -215,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
         // Create an explicit intent for an app Activity and add book as extra
         //TODO get this working
         //Intent intent = new Intent(this, BookProfileActivity.class);
-        Intent intent = new Intent(this, NotificationActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         //Bundle extras = new Bundle();
         //extras.putParcelable("Book Data", new Book());
         //intent.putExtras(extras);
