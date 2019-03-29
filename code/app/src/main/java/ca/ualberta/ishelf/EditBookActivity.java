@@ -138,22 +138,33 @@ public class EditBookActivity extends AppCompatActivity {
 
         String genre = GenreText.getText().toString();
         String description = DescriptionText.getText().toString();
-
-        Book book = new Book(title, description, isbn, year, genre, author, false);
+        if (passedBook == null){
+            passedBook = new Book();
+            String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+            passedBook.setOwner(currentUsername);
+            passedBook.setHolder(currentUsername);
+        }
+//        Book book = new Book(title, description, isbn, year, genre, author, false);
+        passedBook.setName(title);
+        passedBook.setDescription(description);
+        passedBook.setISBN(isbn);
+        passedBook.setYear(year);
+        passedBook.setGenre(genre);
+        passedBook.setAuthor(author);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        book.setOwner(currentUsername);
-        book.setHolder(currentUsername);
+//        book.setOwner(currentUsername);
+//        book.setHolder(currentUsername);
 
-        if (passedBook != null){
-            book.setId(passedBook.getId());
-        }
+//        if (passedBook != null){
+//            book.setId(passedBook.getId());
+//        }
 
-        Booklist.add(book);
+        Booklist.add(passedBook);
         saveInFile();
 
-        saveFirebase(book);
+        saveFirebase(passedBook);
 
 
     }

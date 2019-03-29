@@ -336,7 +336,6 @@
         android:layout_marginTop="8dp"
         android:numStars="5"
         android:progressTint="@android:color/holo_orange_light"
-        android:rating="0.0"
         android:secondaryProgressTint="@android:color/holo_orange_light"
         android:stepSize="0.5"
         app:layout_constraintStart_toEndOf="@+id/ownerUsername"
