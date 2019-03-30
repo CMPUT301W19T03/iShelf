@@ -6,6 +6,9 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Rating;
+
 /**
  *
  * book unit test

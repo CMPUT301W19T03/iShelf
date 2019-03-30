@@ -1,10 +1,8 @@
 package ca.ualberta.ishelf;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.util.Linkify;
@@ -21,9 +19,10 @@ import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
+
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.User;
 
 /**
  * ViewProfileActivity
@@ -98,68 +97,29 @@ public class ViewProfileActivity extends AppCompatActivity {
             Log.d(TAG, "onCreate: USERNAME passed in");
             // If just a username is passed in
             Bundle bundle = this.getIntent().getExtras();
-            username = (String) bundle.getSerializable("Username");
+            username = bundle.getString("Username");
             Log.d(TAG, "onCreate: username passed in is: " + username);
             if (username != null) {
-                /**
-                 * Retrieve the user's info from the database (Firebase)
-                 */
-                // Get user from the passed in username
-                Firebase.setAndroidContext(this);
-                ref = new Firebase(link);
-
-                // get reference to specific entry
-                Firebase tempRef = ref.child("Users").child(username);
-                // create a one time use listener to immediately access datasnapshot
-                tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot dataSnapshot) {
-                        String jUser = dataSnapshot.getValue(String.class);
-                        Log.d("jUser", jUser);
-                        if (jUser != null) {
-                            // Get user object from Gson
-                            Gson gson = new Gson();
-                            Type tokenType = new TypeToken<User>() {
-                            }.getType();
-                            user = gson.fromJson(jUser, tokenType); // here is where we get the user object
-                            // pass the retrieved User to updateUI to update the UI elements
-                            updateUI(user);
-                        } else {
-                            Log.d("FBerror1", "User doesn't exist or string is empty");
-                        }
-                    }
-                    @Override
-                    public void onCancelled(FirebaseError firebaseError) {
-                        return;
-                    }
-                });
+                getUser(username); // getUser also calls updateUI
             } else {
-                Log.d(TAG, "onCreate: Username passed in is Null");
+                Log.d(TAG, "onCreate: NOTHING PASSED IN");
+                // When nothing is passed in
             }
-        } else if (this.getIntent().hasExtra("User")){
-            Log.d(TAG, "onCreate: USER");
-            // if the entire user is passed in
-            // retrieve the User object from the intent and pass it to updateUI
-            user = (User) this.getIntent().getExtras().getSerializable("User");
-            updateUI(user);
-        } else {
-            Log.d(TAG, "onCreate: NOTHING PASSED IN");
-            // When nothing is passed in
-        }
 
-        if (currentUsername.equals(username)){
-            // if profile we are viewing is the logged in user's
-            Log.d(TAG, "onCreate: Viewing profile of currently logged in user");
-            editProfileButton.setVisibility(View.VISIBLE);
-            signOutButton.setVisibility(View.VISIBLE);
-        } else {
-            Log.d(TAG, "onCreate: Viewing profile of not the currently logged in user." +
-                    " Passed in: " + username +
-                    " Current: " + currentUsername);
-            editProfileButton.setVisibility(View.GONE);
-            signOutButton.setVisibility(View.GONE);
-        }
+            if (currentUsername.equals(username)) {
+                // if profile we are viewing is the logged in user's
+                Log.d(TAG, "onCreate: Viewing profile of currently logged in user");
+                editProfileButton.setVisibility(View.VISIBLE);
+                signOutButton.setVisibility(View.VISIBLE);
+            } else {
+                Log.d(TAG, "onCreate: Viewing profile of not the currently logged in user." +
+                        " Passed in: " + username +
+                        " Current: " + currentUsername);
+                editProfileButton.setVisibility(View.GONE);
+                signOutButton.setVisibility(View.GONE);
+            }
 
+        }
     }
 
     /**
@@ -199,14 +159,15 @@ public class ViewProfileActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, intent);
         if (requestCode == 3) {
             Log.d(TAG, "onCreate: USER");
-            user = (User) intent.getExtras().getSerializable("User");
-            updateUI(user);
+            username = intent.getStringExtra("Username");
+            getUser(username);
         }
     }
 
     /**
      * Used for updating the UI elements
-     * @param user the current user object
+     * Called from getUsername
+     * @param user User, the current user object we are displaying
      */
     public void updateUI(User user){
         Log.d(TAG, "in updateUI");
@@ -234,6 +195,45 @@ public class ViewProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(this, ViewRatingsActivity.class);
         intent.putExtra("UserID", username);
         startActivity(intent);
+    }
+
+    /**
+     * get a user based on username from the database
+     * @author rmnattas
+     */
+    public void getUser(String username){
+        //connect to firebase
+        Database db = new Database(this);
+        Firebase fb = db.connect(this);
+
+        // get reference to specific entry
+        Firebase tempRef = fb.child("Users").child(username);
+        // create a one time use listener to immediately access datasnapshot
+        tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String jUser = dataSnapshot.getValue(String.class);
+                Log.d("jUser", jUser);
+                if (jUser != null) {
+                    // Get user object from Gson
+                    Gson gson = new Gson();
+                    Type tokenType = new TypeToken<User>() {
+                    }.getType();
+                    user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+                    // update the UI using the User object
+                    updateUI(user);
+                } else {
+                    Log.d("FBerror1", "User doesn't exist or string is empty");
+
+                }
+
+            }
+
+            @Override
+            public void onCancelled(FirebaseError firebaseError) {
+                return;
+            }
+        });
     }
 
 }

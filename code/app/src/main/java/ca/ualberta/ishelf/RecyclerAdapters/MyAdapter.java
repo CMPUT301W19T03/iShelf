@@ -1,4 +1,4 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
 
 import android.app.Activity;
@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.nfc.Tag;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -14,15 +13,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -38,6 +34,10 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.BookProfileActivity;
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.R;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /*https://www.youtube.com/watch?v=Vyqz_-sJGFk

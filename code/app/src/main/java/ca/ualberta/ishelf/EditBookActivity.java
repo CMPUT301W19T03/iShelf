@@ -3,7 +3,6 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.provider.ContactsContract;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,9 +23,14 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.UUID;
+
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.User;
+import ca.ualberta.ishelf.RecyclerAdapters.MyAdapter;
+import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;
 
 /**
  * EditBookActivity
@@ -138,22 +142,33 @@ public class EditBookActivity extends AppCompatActivity {
 
         String genre = GenreText.getText().toString();
         String description = DescriptionText.getText().toString();
-
-        Book book = new Book(title, description, isbn, year, genre, author, false);
+        if (passedBook == null){
+            passedBook = new Book();
+            String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+            passedBook.setOwner(currentUsername);
+            passedBook.setHolder(currentUsername);
+        }
+//        Book book = new Book(title, description, isbn, year, genre, author, false);
+        passedBook.setName(title);
+        passedBook.setDescription(description);
+        passedBook.setISBN(isbn);
+        passedBook.setYear(year);
+        passedBook.setGenre(genre);
+        passedBook.setAuthor(author);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        book.setOwner(currentUsername);
-        book.setHolder(currentUsername);
+//        book.setOwner(currentUsername);
+//        book.setHolder(currentUsername);
 
-        if (passedBook != null){
-            book.setId(passedBook.getId());
-        }
+//        if (passedBook != null){
+//            book.setId(passedBook.getId());
+//        }
 
-        Booklist.add(book);
+        Booklist.add(passedBook);
         saveInFile();
 
-        saveFirebase(book);
+        saveFirebase(passedBook);
 
 
     }

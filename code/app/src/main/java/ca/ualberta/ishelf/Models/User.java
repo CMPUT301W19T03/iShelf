@@ -1,6 +1,4 @@
-package ca.ualberta.ishelf;
-
-import android.util.Log;
+package ca.ualberta.ishelf.Models;
 
 import java.io.Serializable;
 import java.util.ArrayList;

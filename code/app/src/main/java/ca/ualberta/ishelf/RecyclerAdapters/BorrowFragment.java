@@ -1,27 +1,17 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.app.SearchManager;
 import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -35,17 +25,13 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 
 import android.widget.Spinner;
-import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
+
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.R;
+import ca.ualberta.ishelf.Models.User;
 
 import static android.support.constraint.Constraints.TAG;
 
@@ -79,8 +65,6 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView.LayoutManager bookLayoutManager;
     private SwipeRefreshLayout borrowRefresh;
     private Spinner spinner;
-    private Spinner object_spinner;
-    private String selected_object = new String();
 
     private String currentUsername = new String();
     private SearchView searchView;
@@ -107,11 +91,13 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         bookRecyclerView.setAdapter(bookAdapter);
         spinner = view.findViewById(R.id.rating_sorter);
 
+
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                Filter(selectedItem, selected_object);
+                Filter(selectedItem);
 
 
             }
@@ -158,8 +144,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         getAvailableBooks();
     }
 
-    public void Filter(String filter, String object){
-        if(object.equals("Book")){
+    public void Filter(String filter){
             if(filter.equals("1")) {
                 ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
                 for (Book book : bookList){
@@ -212,69 +197,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 bookAdapter.notifyDataSetChanged();
             }
         }
-        else if(object.equals("Owner")){
-            if(filter.equals("1")) {
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=1){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            } else if(filter.equals("2")) {
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=2){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            } else if (filter.equals(("3"))){
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=3){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            } else if(filter.equals("4")){
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=4){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            }
-            else if(filter.equals("5")){
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=5){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            }
-            else if(filter.equals("All")){
-                bookAdapter.updateList(bookList);
-                bookAdapter.notifyDataSetChanged();
-            }
-        }else{
-            bookAdapter.updateList(bookList);
-            bookAdapter.notifyDataSetChanged();
-        }
 
-    }
 
     public void getUser(String username){
         if (username != null) {

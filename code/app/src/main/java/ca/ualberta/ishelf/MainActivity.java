@@ -1,6 +1,5 @@
 package ca.ualberta.ishelf;
 
-import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -16,46 +15,15 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.app.SearchManager;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
 import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
-        import android.app.Activity;
-        import android.app.NotificationChannel;
-        import android.app.NotificationManager;
-        import android.content.Context;
-        import android.content.Intent;
-        import android.content.SharedPreferences;
-        import android.graphics.Color;
-        import android.os.Build;
-        import android.os.Bundle;
-        import android.support.annotation.NonNull;
-        import android.support.design.widget.BottomNavigationView;
-        import android.support.v4.app.Fragment;
-        import android.support.v4.app.NotificationCompat;
-        import android.support.v4.app.NotificationManagerCompat;
-        import android.support.v7.app.AppCompatActivity;
-        import android.support.v7.widget.Toolbar;
-        import android.app.SearchManager;
-        import android.widget.EditText;
-        import android.widget.ImageView;
-        import android.widget.SearchView;
-        import android.widget.SearchView.OnQueryTextListener;
-        import android.util.Log;
-        import android.view.Menu;
-        import android.view.MenuItem;
-        import android.view.View;
-        import android.widget.TextView;
-        import android.widget.Toast;
+import android.graphics.Color;
 
-        import com.firebase.client.ChildEventListener;
+import com.firebase.client.ChildEventListener;
         import com.firebase.client.DataSnapshot;
         import com.firebase.client.Firebase;
         import com.firebase.client.FirebaseError;
@@ -71,7 +39,12 @@ import android.widget.Toast;
         import java.lang.reflect.Type;
         import java.util.ArrayList;
         import java.util.Date;
-        import java.util.UUID;
+
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Notification;
+import ca.ualberta.ishelf.RecyclerAdapters.BorrowFragment;
+import ca.ualberta.ishelf.RecyclerAdapters.RequestFragment;
+import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;
 
 
 /**
@@ -215,7 +188,7 @@ public class MainActivity extends AppCompatActivity {
         // Create an explicit intent for an app Activity and add book as extra
         //TODO get this working
         //Intent intent = new Intent(this, BookProfileActivity.class);
-        Intent intent = new Intent(this, NotificationActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         //Bundle extras = new Bundle();
         //extras.putParcelable("Book Data", new Book());
         //intent.putExtras(extras);

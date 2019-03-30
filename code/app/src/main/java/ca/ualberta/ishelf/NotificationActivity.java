@@ -3,26 +3,11 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.app.SearchManager;
 import android.util.Log;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -32,19 +17,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
-import android.widget.Toast;
 
-import com.firebase.client.DataSnapshot;
-import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
+
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Notification;
+import ca.ualberta.ishelf.RecyclerAdapters.NotificationAdapter;
 
 /**
  * Notifications Activity

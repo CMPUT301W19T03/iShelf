@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import java.util.Date;
 
+import ca.ualberta.ishelf.Models.Notification;
+
 import static org.junit.Assert.assertEquals;
 
 /**

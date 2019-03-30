@@ -12,7 +12,6 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -23,6 +22,9 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.Locale;
+
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Request;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 

@@ -1,26 +1,24 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.ViewHolder;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
-import android.widget.RatingBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import ca.ualberta.ishelf.Models.Notification;
+import ca.ualberta.ishelf.R;
 
 /**
  * //adapter for the notification recycler view
  * //works like all the other adapters in the project.
  */
 
-class NotificationAdapter extends RecyclerView.Adapter<ViewHolder> {
+public class NotificationAdapter extends RecyclerView.Adapter<ViewHolder> {
     private ArrayList<Notification> notificationList = new ArrayList<Notification>();
 
 

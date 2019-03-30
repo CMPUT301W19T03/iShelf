@@ -3,7 +3,7 @@ package ca.ualberta.ishelf;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.util.ArrayList;
+import ca.ualberta.ishelf.Models.Rating;
 
 /**
  * rating unit test

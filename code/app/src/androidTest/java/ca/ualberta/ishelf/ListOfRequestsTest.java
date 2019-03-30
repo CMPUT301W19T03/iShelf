@@ -24,6 +24,9 @@ import java.util.UUID;
 
 import androidx.test.espresso.ViewAction;
 import androidx.test.rule.ActivityTestRule;
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Request;
+import ca.ualberta.ishelf.Models.User;
 
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;

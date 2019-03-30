@@ -4,6 +4,10 @@ import org.junit.Assert;
 
 import java.util.UUID;
 
+import ca.ualberta.ishelf.Models.Rating;
+import ca.ualberta.ishelf.Models.Request;
+import ca.ualberta.ishelf.Models.User;
+
 import static org.junit.Assert.*;
 /**
  * changed tests to match altered user

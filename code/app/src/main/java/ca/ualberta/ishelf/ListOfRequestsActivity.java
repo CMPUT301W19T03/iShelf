@@ -8,8 +8,6 @@ package ca.ualberta.ishelf;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,6 +26,13 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
+
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Notification;
+import ca.ualberta.ishelf.Models.Request;
+import ca.ualberta.ishelf.Models.User;
+import ca.ualberta.ishelf.RecyclerAdapters.LORRecyclerViewAdapter;
 
 /**
  * This class deals with accepting requests that other users have made for one of our books
@@ -105,7 +110,6 @@ public class ListOfRequestsActivity extends AppCompatActivity{
         //addTestData();
         getRequests();
         getRequestInformation();
-
     }
 
     /**
@@ -127,7 +131,7 @@ public class ListOfRequestsActivity extends AppCompatActivity{
      *
      * @param position the position in the recycler view of the clicked button
      */
-    void locationButton(int position) {
+    public void locationButton(int position) {
         Log.d(TAG+" locationButton", "Called with " + position);
         Request selectedRequest = requests.get(position);
         // send the "selectedRequest" Request to the MapsActivity passed as an extra called "Request"
@@ -145,7 +149,7 @@ public class ListOfRequestsActivity extends AppCompatActivity{
      * @param position the position in the recycler view of the clicked button
      * @author : Randal Kimpinski
      */
-    void acceptRequest(int position){
+    public void acceptRequest(int position){
         Log.d(TAG+" acceptRequest", "Called with " + position);
         // Create Database object that we will use
         Database db = new Database(this);
@@ -197,9 +201,12 @@ public class ListOfRequestsActivity extends AppCompatActivity{
             // Delete the requests instead of just declining it
             db.deleteRequest(tempRequest.getId().toString());
             // Create and add notification to firebase
-            Notification notification = new Notification(new Date(),
-                    username + " has declined your request for " + selectedBookName, tempRequest.getRequester());
-            db.addNotification(notification);
+            // But only if it isn't a duplicate of the request we accepted
+            if (!tempRequest.getRequester().equals(selectedRequest.getRequester())) {
+                Notification notification = new Notification(new Date(),
+                        username + " has declined your request for " + selectedBookName, tempRequest.getRequester());
+                db.addNotification(notification);
+            }
         }
 
         // Accept Request
@@ -244,7 +251,7 @@ public class ListOfRequestsActivity extends AppCompatActivity{
      * @param position the position in the recycler view of the clicked button
      * @author : Randal Kimpinski
      */
-    void declineRequest(int position) {
+    public void declineRequest(int position) {
         Log.d(TAG+" declineRequest", "Called with " + position);
         // Create Database object that we will use
         Database db = new Database(this);

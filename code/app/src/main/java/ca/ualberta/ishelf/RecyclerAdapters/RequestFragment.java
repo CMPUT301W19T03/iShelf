@@ -1,10 +1,7 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.RecyclerAdapters;
 
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.SharedMemory;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -29,10 +26,11 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
-import java.util.UUID;
 
-import static android.support.constraint.Constraints.TAG;
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.R;
+import ca.ualberta.ishelf.Models.Request;
 
 /**
  * Requests Activity

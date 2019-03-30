@@ -1,4 +1,4 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.Models;
 
 /**
  *THis is the borrow object which deals with the borrow transaction
