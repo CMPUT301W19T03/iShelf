@@ -65,8 +65,6 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     private RecyclerView.LayoutManager bookLayoutManager;
     private SwipeRefreshLayout borrowRefresh;
     private Spinner spinner;
-    private Spinner object_spinner;
-    private String selected_object = new String();
 
     private String currentUsername = new String();
     private SearchView searchView;
@@ -92,27 +90,14 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         bookAdapter = new BorrowAdapter(view.getContext(), bookList, bookList);
         bookRecyclerView.setAdapter(bookAdapter);
         spinner = view.findViewById(R.id.rating_sorter);
-        object_spinner = view.findViewById(R.id.object_rating);
 
-        object_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedItem = parent.getItemAtPosition(position).toString();
-                //Filter(selectedItem);
-                selected_object= selectedItem;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String selectedItem = parent.getItemAtPosition(position).toString();
-                Filter(selectedItem, selected_object);
+                Filter(selectedItem);
 
 
             }
@@ -161,8 +146,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
         getAvailableBooks();
     }
 
-    public void Filter(String filter, String object){
-        if(object.equals("Book")){
+    public void Filter(String filter){
             if(filter.equals("1")) {
                 ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
                 for (Book book : bookList){
@@ -215,69 +199,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 bookAdapter.notifyDataSetChanged();
             }
         }
-        else if(object.equals("Owner")){
-            if(filter.equals("1")) {
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=1){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            } else if(filter.equals("2")) {
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=2){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            } else if (filter.equals(("3"))){
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=3){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            } else if(filter.equals("4")){
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=4){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            }
-            else if(filter.equals("5")){
-                ArrayList<Book> ratedBooks = new ArrayList<>(); // both owned and borrowed
-                for (Book book : bookList){
-                    getUser(book.getOwner());
-                    if (user.getOverallRating()>=5){
-                        ratedBooks.add(book);
-                    }
-                }
-                bookAdapter.updateList(ratedBooks);
-                bookAdapter.notifyDataSetChanged();
-            }
-            else if(filter.equals("All")){
-                bookAdapter.updateList(bookList);
-                bookAdapter.notifyDataSetChanged();
-            }
-        }else{
-            bookAdapter.updateList(bookList);
-            bookAdapter.notifyDataSetChanged();
-        }
 
-    }
 
     public void getUser(String username){
         if (username != null) {
