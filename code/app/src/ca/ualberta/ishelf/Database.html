@@ -107,7 +107,7 @@ var activeTableTab = "activeTableTab";
 <li>android.app.Application</li>
 <li>
 <ul class="inheritance">
-<li>ca.ualberta.ishelf.Database</li>
+<li>ca.ualberta.ishelf.Models.Database</li>
 </ul>
 </li>
 </ul>
@@ -189,26 +189,26 @@ extends android.app.Application</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addBook-ca.ualberta.ishelf.Book-">addBook</a></span>(<a href="../../../ca/ualberta/ishelf/Book.html" title="class in ca.ualberta.ishelf">Book</a>&nbsp;book)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addBook-ca.ualberta.ishelf.Models.Book-">addBook</a></span>(<a href="../../../ca/ualberta/ishelf/Book.html" title="class in ca.ualberta.ishelf">Book</a>&nbsp;book)</code>
 <div class="block">Given a book object, adds that object to the firebase real-time database</div>
 </td>
 </tr>
 <tr id="i1" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addNotification-ca.ualberta.ishelf.Notification-">addNotification</a></span>(<a href="../../../ca/ualberta/ishelf/Notification.html" title="class in ca.ualberta.ishelf">Notification</a>&nbsp;notification)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addNotification-ca.ualberta.ishelf.Models.Notification-">addNotification</a></span>(<a href="../../../ca/ualberta/ishelf/Notification.html" title="class in ca.ualberta.ishelf">Notification</a>&nbsp;notification)</code>
 <div class="block">Given a notification object, adds that object to the firebase realt-time database</div>
 </td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addRequest-java.lang.String-ca.ualberta.ishelf.Request-">addRequest</a></span>(java.lang.String&nbsp;bookOwnerUsername,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addRequest-java.lang.String-ca.ualberta.ishelf.Models.Request-">addRequest</a></span>(java.lang.String&nbsp;bookOwnerUsername,
           <a href="../../../ca/ualberta/ishelf/Request.html" title="class in ca.ualberta.ishelf">Request</a>&nbsp;request)</code>
 <div class="block">Given a request object, adds that object to the firebase real-time database</div>
 </td>
 </tr>
 <tr id="i3" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addUser-ca.ualberta.ishelf.User-">addUser</a></span>(<a href="../../../ca/ualberta/ishelf/User.html" title="class in ca.ualberta.ishelf">User</a>&nbsp;user)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#addUser-ca.ualberta.ishelf.Models.User-">addUser</a></span>(<a href="../../../ca/ualberta/ishelf/User.html" title="class in ca.ualberta.ishelf">User</a>&nbsp;user)</code>
 <div class="block">Given a user object, adds that object to firebase
  Uses Gson to store the object</div>
 </td>
@@ -232,7 +232,7 @@ extends android.app.Application</pre>
 </tr>
 <tr id="i7" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#deleteRequest-java.lang.String-ca.ualberta.ishelf.Request-">deleteRequest</a></span>(java.lang.String&nbsp;bookOwnerUsername,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#deleteRequest-java.lang.String-ca.ualberta.ishelf.Models.Request-">deleteRequest</a></span>(java.lang.String&nbsp;bookOwnerUsername,
              <a href="../../../ca/ualberta/ishelf/Request.html" title="class in ca.ualberta.ishelf">Request</a>&nbsp;request)</code>
 <div class="block">Given the UUID of a request, finds that request in the Firebase real-time database
  and removes it</div>
@@ -246,27 +246,27 @@ extends android.app.Application</pre>
 </tr>
 <tr id="i9" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editBook-ca.ualberta.ishelf.Book-">editBook</a></span>(<a href="../../../ca/ualberta/ishelf/Book.html" title="class in ca.ualberta.ishelf">Book</a>&nbsp;book)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editBook-ca.ualberta.ishelf.Models.Book-">editBook</a></span>(<a href="../../../ca/ualberta/ishelf/Book.html" title="class in ca.ualberta.ishelf">Book</a>&nbsp;book)</code>
 <div class="block">Given a book object, finds that object in the database and replaces it</div>
 </td>
 </tr>
 <tr id="i10" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editNotification-ca.ualberta.ishelf.Notification-">editNotification</a></span>(<a href="../../../ca/ualberta/ishelf/Notification.html" title="class in ca.ualberta.ishelf">Notification</a>&nbsp;notification)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editNotification-ca.ualberta.ishelf.Models.Notification-">editNotification</a></span>(<a href="../../../ca/ualberta/ishelf/Notification.html" title="class in ca.ualberta.ishelf">Notification</a>&nbsp;notification)</code>
 <div class="block">Given a notification, finds that notification in the firebase real-time database
  and replaces it with our new notification</div>
 </td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editRequest-java.lang.String-ca.ualberta.ishelf.Request-">editRequest</a></span>(java.lang.String&nbsp;bookOwnerUsername,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editRequest-java.lang.String-ca.ualberta.ishelf.Models.Request-">editRequest</a></span>(java.lang.String&nbsp;bookOwnerUsername,
            <a href="../../../ca/ualberta/ishelf/Request.html" title="class in ca.ualberta.ishelf">Request</a>&nbsp;request)</code>
 <div class="block">Given a book object, finds that object in the database and replaces it</div>
 </td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editUser-java.lang.String-ca.ualberta.ishelf.User-">editUser</a></span>(java.lang.String&nbsp;oldUsername,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editUser-java.lang.String-ca.ualberta.ishelf.Models.User-">editUser</a></span>(java.lang.String&nbsp;oldUsername,
         <a href="../../../ca/ualberta/ishelf/User.html" title="class in ca.ualberta.ishelf">User</a>&nbsp;user)</code>
 <div class="block">Given a user object, and it's original username, finds the old User object in the
  firebase real-time database and replaces it with the new user.</div>
@@ -274,7 +274,7 @@ extends android.app.Application</pre>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editUser-ca.ualberta.ishelf.User-">editUser</a></span>(<a href="../../../ca/ualberta/ishelf/User.html" title="class in ca.ualberta.ishelf">User</a>&nbsp;user)</code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../ca/ualberta/ishelf/Database.html#editUser-ca.ualberta.ishelf.Models.User-">editUser</a></span>(<a href="../../../ca/ualberta/ishelf/User.html" title="class in ca.ualberta.ishelf">User</a>&nbsp;user)</code>
 <div class="block">Given a user object, finds that object in the database and replaces it</div>
 </td>
 </tr>

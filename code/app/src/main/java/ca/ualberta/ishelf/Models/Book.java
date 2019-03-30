@@ -1,4 +1,4 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.Models;
 
 import android.media.Image;
 import android.os.Parcel;

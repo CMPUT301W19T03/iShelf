@@ -21,6 +21,8 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Notification;
 import ca.ualberta.ishelf.RecyclerAdapters.NotificationAdapter;
 
 /**

@@ -1,6 +1,5 @@
 package ca.ualberta.ishelf.RecyclerAdapters;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -11,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
@@ -25,12 +23,12 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
-import ca.ualberta.ishelf.Book;
+import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.BookProfileActivity;
-import ca.ualberta.ishelf.Database;
+import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.R;
-import ca.ualberta.ishelf.Request;
-import ca.ualberta.ishelf.User;
+import ca.ualberta.ishelf.Models.Request;
+import ca.ualberta.ishelf.Models.User;
 
 /**
  * adapter for the RequestFragment recycler view

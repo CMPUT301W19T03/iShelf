@@ -22,6 +22,8 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.UUID;
 
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.RecyclerAdapters.GalleryAdapter;
 
 /**

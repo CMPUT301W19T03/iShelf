@@ -27,6 +27,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Notification;
+import ca.ualberta.ishelf.Models.Request;
+import ca.ualberta.ishelf.Models.User;
 import ca.ualberta.ishelf.RecyclerAdapters.LORRecyclerViewAdapter;
 
 /**

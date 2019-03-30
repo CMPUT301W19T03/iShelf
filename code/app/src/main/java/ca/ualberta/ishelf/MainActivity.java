@@ -40,6 +40,8 @@ import com.firebase.client.ChildEventListener;
         import java.util.ArrayList;
         import java.util.Date;
 
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Notification;
 import ca.ualberta.ishelf.RecyclerAdapters.BorrowFragment;
 import ca.ualberta.ishelf.RecyclerAdapters.RequestFragment;
 import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;

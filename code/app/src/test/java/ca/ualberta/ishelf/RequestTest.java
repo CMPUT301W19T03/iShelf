@@ -7,6 +7,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import ca.ualberta.ishelf.Models.Request;
+
 /**
  * request unit test
  * @author Evan

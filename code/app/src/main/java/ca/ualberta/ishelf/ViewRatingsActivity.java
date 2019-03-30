@@ -17,6 +17,10 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 
+import ca.ualberta.ishelf.Models.Book;
+import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Rating;
+import ca.ualberta.ishelf.Models.User;
 import ca.ualberta.ishelf.RecyclerAdapters.RatingsAdapter;
 
 public class ViewRatingsActivity extends AppCompatActivity {

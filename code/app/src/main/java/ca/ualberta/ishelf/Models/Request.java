@@ -1,6 +1,5 @@
-package ca.ualberta.ishelf;
+package ca.ualberta.ishelf.Models;
 
-import android.location.Location;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
