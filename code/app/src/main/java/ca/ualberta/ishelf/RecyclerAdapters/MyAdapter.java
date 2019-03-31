@@ -34,6 +34,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.ualberta.ishelf.GlideApp;
 import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.BookProfileActivity;
 import ca.ualberta.ishelf.Models.Database;
@@ -140,24 +141,27 @@ public class MyAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> imp
 
         Book currentBook = booksList.get(position);
         ArrayList<String> images = currentBook.getGalleryImages();
+        mholder.imageCover.setImageBitmap(null);
 
         if (images.size() > 0) {
-            String image = images.get(0);
+            String image = null;
+            int index = currentBook.getIndexCover();
+            int x= 1;
+            int yy= 1;
+            if (index != -1) {
+                image = images.get(currentBook.getIndexCover());
+            }
+            else {
+                image = images.get(0);
+            }
+
             StorageReference ref = storageReference.child(image);
-            final long ONE_MEGABYTE = 1024 * 1024;
-            ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    mholder.imageCover.setImageBitmap(bitmap);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
+
+            GlideApp.with(mContext)
+                    .load(ref)
+                    .into(mholder.imageCover);
         }
+
 
     }
 

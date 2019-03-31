@@ -3,26 +3,45 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -31,6 +50,11 @@ import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.Models.User;
 import ca.ualberta.ishelf.RecyclerAdapters.MyAdapter;
 import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * EditBookActivity
@@ -65,11 +89,25 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText YearText;
     private EditText GenreText;
     private EditText DescriptionText;
+    private ImageView CoverImage;
+
+    private Button AddCover;
+    private Button AddOther;
+
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
     private Book passedBook = null;
 
     private final int SCAN_AND_GET_DESCRIPTION = 212;
+    private final int GET_OTHER_BOOKS = 277;
+    private final int PICK_IMAGE_FOR_GALLERYY = 36;
+
+
+    private final OkHttpClient client = new OkHttpClient();
+
+    private String URLcover = "";
+    private ArrayList<String> galleryImageURLS = new ArrayList<String>();
+    private int indexCover = -1;
 
 
     @Override
@@ -86,7 +124,9 @@ public class EditBookActivity extends AppCompatActivity {
         YearText = (EditText) findViewById(R.id.editYear);
         GenreText= (EditText) findViewById(R.id.editGenre);
         DescriptionText = (EditText) findViewById(R.id.editDes);
-
+        CoverImage = (ImageView) findViewById(R.id.cover_image);
+        AddCover = (Button) findViewById(R.id.add_cover_button);
+        AddOther = (Button) findViewById(R.id.add_other_images_button);
 
         Button clearButton = (Button) findViewById(R.id.cancel);
         Button saveButton = (Button) findViewById(R.id.save);
@@ -104,6 +144,46 @@ public class EditBookActivity extends AppCompatActivity {
                 startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
             }
         });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageReference = storage.getReference();
+                for (String path : galleryImageURLS) {
+                    StorageReference deleteFile = storageReference.child(path);
+                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(EditBookActivity.this, "Previous Image Deleted", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                finish();
+            }
+        });
+
+
+        AddOther.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle extras = new Bundle();
+                extras.putString("check", "new");
+                extras.putStringArrayList("sent_list", galleryImageURLS);
+                Intent intent = new Intent(EditBookActivity.this, GalleryActivity.class);
+                intent.putExtras(extras);
+                startActivityForResult(intent, GET_OTHER_BOOKS);
+            }
+        });
+
+        AddCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickImage();
+            }
+        });
+
+
 
 
         loadFromFile();
@@ -155,6 +235,8 @@ public class EditBookActivity extends AppCompatActivity {
         passedBook.setYear(year);
         passedBook.setGenre(genre);
         passedBook.setAuthor(author);
+        passedBook.setGalleryImages(galleryImageURLS);
+        passedBook.setIndexCover(indexCover);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -258,6 +340,7 @@ public class EditBookActivity extends AppCompatActivity {
         final Database db = new Database(this);
         Firebase ref = db.connect(this);
         Firebase tempRef = ref.child("Users").child(username);
+
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -329,7 +412,8 @@ public class EditBookActivity extends AppCompatActivity {
             String title = data.getStringExtra("title");
             String author = data.getStringExtra("author");
             String genre = data.getStringExtra("genre");
-
+            URLcover = data.getStringExtra("URL");
+            getImageCover();
             DescriptionText.setText(description);
             ISBNText.setText(ISBN);
             TitleText.setText(title);
@@ -337,9 +421,102 @@ public class EditBookActivity extends AppCompatActivity {
             GenreText.setText(genre);
             AuthorText.setText(author);
         }
+
+        if (requestCode == GET_OTHER_BOOKS && resultCode == Activity.RESULT_OK) {
+            galleryImageURLS = data.getStringArrayListExtra("pathList");
+        }
+
+        if (requestCode == PICK_IMAGE_FOR_GALLERYY && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                return;
+            }
+
+            Uri lastImagePath = data.getData();
+            CoverImage.setImageURI(lastImagePath);
+            String pathImage = "images1/" + UUID.randomUUID().toString();
+            galleryImageURLS.add(pathImage);
+            indexCover = galleryImageURLS.size() - 1;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference();
+            // store in Storage
+            StorageReference ref = storageReference.child(pathImage);
+            ref.putFile(lastImagePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(EditBookActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(EditBookActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        }
+                    });
+        }
     }
 
+    public void getImageCover() {
+        final Request request = new Request.Builder().url(URLcover).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //Handle the error
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                    // https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+
+                    String pathImage = "images1/" + UUID.randomUUID().toString();
+                    galleryImageURLS.add(pathImage);
+                    indexCover = galleryImageURLS.size() - 1;
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageReference = storage.getReference();
+                    StorageReference ref = storageReference.child(pathImage);
+
+                    UploadTask uploadTask = ref.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
 
 
+                        }
+                    });
+
+                    // Remember to set the bitmap in the main thread.
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            CoverImage.setImageBitmap(bitmap);
+                        }
+                    });
+                } else {
+                    //Handle the error
+                }
+            }
+        });
+    }
+
+    public void pickImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
+    }
 }
 
