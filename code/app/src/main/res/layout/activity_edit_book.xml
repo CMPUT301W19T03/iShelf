@@ -61,7 +61,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+                app:layout_constraintTop_toBottomOf="@+id/cover_image" />
 
             <EditText
                 android:id="@+id/editAuthor"
@@ -191,7 +191,7 @@
                 app:layout_constraintVertical_bias="0.314" />
 
             <ImageView
-                android:id="@+id/imageView2"
+                android:id="@+id/cover_image"
                 android:layout_width="147dp"
                 android:layout_height="171dp"
                 android:layout_marginStart="16dp"
@@ -201,21 +201,7 @@
                 app:srcCompat="@drawable/shape" />
 
             <Button
-                android:id="@+id/button3"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:text="ADD OTHER IMAGES"
-                android:textColor="@color/ghost_white"
-                android:background="@drawable/roundedbutton"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <Button
-                android:id="@+id/button4"
+                android:id="@+id/add_cover_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
@@ -225,8 +211,22 @@
                 android:textColor="@color/ghost_white"
                 android:background="@drawable/roundedbutton"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/imageView2"
-                app:layout_constraintTop_toBottomOf="@+id/button3" />
+                app:layout_constraintStart_toEndOf="@+id/cover_image"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Button
+                android:id="@+id/add_other_images_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:text="ADD OTHER IMAGES"
+                android:textColor="@color/ghost_white"
+                android:background="@drawable/roundedbutton"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/cover_image"
+                app:layout_constraintTop_toBottomOf="@+id/add_cover_button" />
 
         </android.support.constraint.ConstraintLayout>
     </ScrollView>

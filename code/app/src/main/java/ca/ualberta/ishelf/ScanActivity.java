@@ -148,6 +148,7 @@ public class ScanActivity extends AppCompatActivity {
                 extras.putString("year", year);
                 extras.putString("author", author);
                 extras.putString("genre", genre);
+                extras.putString("URL", URLimage);
 
                 if (visit.equals("get_description")) {
                     Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
@@ -428,7 +429,7 @@ public class ScanActivity extends AppCompatActivity {
                         JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
                         URLimage = imageLinks.getString("thumbnail");
                         fixImageURL(URLimage);
-                        getImageCover();
+                        //getImageCover();
                     }
                 }
                 catch (JSONException e) {
@@ -437,31 +438,6 @@ public class ScanActivity extends AppCompatActivity {
                     throw new IOException("Error response " + response);
                 }
 
-            }
-        });
-    }
-
-    public void getImageCover() {
-        final Request request = new Request.Builder().url("https://books.google.com/books/content?id=CI0vn67GuvcC&printsec=frontcover&img=1&zoom=0&source=gbs_api").build();
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                //Handle the error
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.isSuccessful()) {
-                    Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
-                    // Remember to set the bitmap in the main thread.
-                    new Handler(Looper.getMainLooper()).post(new Runnable() {
-                        @Override
-                        public void run() {
-                        }
-                    });
-                } else {
-                    //Handle the error
-                }
             }
         });
     }

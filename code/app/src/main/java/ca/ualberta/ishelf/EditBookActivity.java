@@ -3,12 +3,17 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -23,6 +28,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -31,6 +37,11 @@ import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.Models.User;
 import ca.ualberta.ishelf.RecyclerAdapters.MyAdapter;
 import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 
 /**
  * EditBookActivity
@@ -65,11 +76,16 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText YearText;
     private EditText GenreText;
     private EditText DescriptionText;
+    private ImageView CoverImage;
+
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
     private Book passedBook = null;
 
     private final int SCAN_AND_GET_DESCRIPTION = 212;
+    private final OkHttpClient client = new OkHttpClient();
+
+    private String URLcover = "";
 
 
     @Override
@@ -86,6 +102,7 @@ public class EditBookActivity extends AppCompatActivity {
         YearText = (EditText) findViewById(R.id.editYear);
         GenreText= (EditText) findViewById(R.id.editGenre);
         DescriptionText = (EditText) findViewById(R.id.editDes);
+        CoverImage = (ImageView) findViewById(R.id.cover_image);
 
 
         Button clearButton = (Button) findViewById(R.id.cancel);
@@ -258,6 +275,7 @@ public class EditBookActivity extends AppCompatActivity {
         final Database db = new Database(this);
         Firebase ref = db.connect(this);
         Firebase tempRef = ref.child("Users").child(username);
+
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -329,7 +347,9 @@ public class EditBookActivity extends AppCompatActivity {
             String title = data.getStringExtra("title");
             String author = data.getStringExtra("author");
             String genre = data.getStringExtra("genre");
+            URLcover = data.getStringExtra("URL");
 
+            getImageCover();
             DescriptionText.setText(description);
             ISBNText.setText(ISBN);
             TitleText.setText(title);
@@ -337,6 +357,33 @@ public class EditBookActivity extends AppCompatActivity {
             GenreText.setText(genre);
             AuthorText.setText(author);
         }
+    }
+
+    public void getImageCover() {
+        final Request request = new Request.Builder().url(URLcover).build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //Handle the error
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+
+                    // Remember to set the bitmap in the main thread.
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                            CoverImage.setImageBitmap(bitmap);
+                        }
+                    });
+                } else {
+                    //Handle the error
+                }
+            }
+        });
     }
 
 
