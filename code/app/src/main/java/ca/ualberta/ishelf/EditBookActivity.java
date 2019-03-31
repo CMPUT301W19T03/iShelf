@@ -12,6 +12,8 @@ import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -108,6 +110,8 @@ public class EditBookActivity extends AppCompatActivity {
     private String URLcover = "";
     private ArrayList<String> galleryImageURLS = new ArrayList<String>();
     private int indexCover = -1;
+    private boolean computation_done = false;
+    private Button saveButton;
 
 
     @Override
@@ -128,8 +132,28 @@ public class EditBookActivity extends AppCompatActivity {
         AddCover = (Button) findViewById(R.id.add_cover_button);
         AddOther = (Button) findViewById(R.id.add_other_images_button);
 
+        // add listener
+        ISBNText.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+                String isbn = s.toString();
+                if (!isbn.equals("")) {
+                    computation_done = true;
+                    saveButton.setBackground(getDrawable(R.drawable.gradientbutton));
+                }
+                else {
+                    computation_done = false;
+                    saveButton.setBackground(getDrawable(R.drawable.roundedbuttongray));
+                }
+            }
+
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+        });
+
         Button clearButton = (Button) findViewById(R.id.cancel);
-        Button saveButton = (Button) findViewById(R.id.save);
+        saveButton = (Button) findViewById(R.id.save);
         Button scanButton = (Button) findViewById(R.id.scan);
 
         scanButton.setOnClickListener(new View.OnClickListener() {
@@ -218,8 +242,12 @@ public class EditBookActivity extends AppCompatActivity {
 
         String author = AuthorText.getText().toString();
 
-        Long isbn = Long.parseLong(ISBNText.getText().toString());
-        
+        String isbn_string = ISBNText.getText().toString();
+
+        Long isbn = null;
+        if (!isbn_string.equals("")) {
+            isbn = Long.parseLong(isbn_string);
+        }
         String year = YearText.getText().toString();
 
         String genre = GenreText.getText().toString();
@@ -230,10 +258,13 @@ public class EditBookActivity extends AppCompatActivity {
             passedBook.setOwner(currentUsername);
             passedBook.setHolder(currentUsername);
         }
+
 //        Book book = new Book(title, description, isbn, year, genre, author, false);
         passedBook.setName(title);
         passedBook.setDescription(description);
-        passedBook.setISBN(isbn);
+        if (isbn != null) {
+            passedBook.setISBN(isbn);
+        }
         passedBook.setYear(year);
         passedBook.setGenre(genre);
         passedBook.setAuthor(author);
@@ -242,17 +273,13 @@ public class EditBookActivity extends AppCompatActivity {
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-//        book.setOwner(currentUsername);
-//        book.setHolder(currentUsername);
-
-//        if (passedBook != null){
-//            book.setId(passedBook.getId());
-//        }
 
         Booklist.add(passedBook);
         saveInFile();
 
-        saveFirebase(passedBook);
+        if (computation_done) {
+            saveFirebase(passedBook);
+        }
 
 
     }
