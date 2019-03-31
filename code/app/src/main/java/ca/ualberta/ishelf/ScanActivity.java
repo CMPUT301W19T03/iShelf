@@ -20,6 +20,7 @@ import android.media.ImageReader;
 import android.os.Build;
 import android.os.Handler;
 import android.os.HandlerThread;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -112,8 +113,9 @@ public class ScanActivity extends AppCompatActivity {
     private String year = "";
     private String genre = "";
     private String author = "";
+    private String URLimage = "";
 
-    private boolean testing = false;
+    private boolean testing = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,24 +203,26 @@ public class ScanActivity extends AppCompatActivity {
                 shutter.startAnimation(fade);
                 lastScan = textureView.getBitmap();
                 //lastScan = BitmapFactory.decodeResource(getResources(), R.drawable.isbn_test2);
-                FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(lastScan);
-                Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
-                        .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
-                            @Override
-                            public void onSuccess(List<FirebaseVisionBarcode> barCodes) {
-                                if (barCodes.size() > 0) {
-                                    FirebaseVisionBarcode ISBN = barCodes.get(0);
-                                    outputISBN = ISBN.getRawValue();
-                                    lastISBN.setText(outputISBN);
-                                    getAsyncCall();
+                if (!testing) {
+                    FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(lastScan);
+                    Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
+                            .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+                                @Override
+                                public void onSuccess(List<FirebaseVisionBarcode> barCodes) {
+                                    if (barCodes.size() > 0) {
+                                        FirebaseVisionBarcode ISBN = barCodes.get(0);
+                                        outputISBN = ISBN.getRawValue();
+                                        lastISBN.setText(outputISBN);
+                                        getAsyncCall();
+                                    }
                                 }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                            }
-                        });
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                }
                 if (testing) {
                     outputISBN = "9780307401199";
                     lastISBN.setText(outputISBN);
@@ -421,6 +425,10 @@ public class ScanActivity extends AppCompatActivity {
                         description = volumeInfo.getString("description");
                         title = volumeInfo.getString("title");
                         year = volumeInfo.getString("publishedDate");
+                        JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
+                        URLimage = imageLinks.getString("thumbnail");
+                        fixImageURL(URLimage);
+                        getImageCover();
                     }
                 }
                 catch (JSONException e) {
@@ -433,6 +441,34 @@ public class ScanActivity extends AppCompatActivity {
         });
     }
 
+    public void getImageCover() {
+        final Request request = new Request.Builder().url("https://books.google.com/books/content?id=CI0vn67GuvcC&printsec=frontcover&img=1&zoom=0&source=gbs_api").build();
+        client.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //Handle the error
+            }
 
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful()) {
+                    Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                    // Remember to set the bitmap in the main thread.
+                    new Handler(Looper.getMainLooper()).post(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+                } else {
+                    //Handle the error
+                }
+            }
+        });
+    }
+
+    public void fixImageURL(String URL) {
+        URLimage = URLimage.replace("http", "https");
+        URLimage = URLimage.replace("zoom=1", "zoom=0");
+    }
 
 }
