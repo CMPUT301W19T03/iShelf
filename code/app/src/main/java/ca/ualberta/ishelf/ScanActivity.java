@@ -423,26 +423,85 @@ public class ScanActivity extends AppCompatActivity {
             @Override public void onResponse(Call call, Response response) throws IOException {
                 ResponseBody responseBody = response.body();
                 String string = responseBody.string();
+
+                JSONObject urlJSON = null;
                 try {
-                    JSONObject urlJSON = new JSONObject(string);
-                    JSONArray books = urlJSON.getJSONArray("items");
-                    for (int i = 0; i < books.length(); i++) {
-                        JSONObject book = books.getJSONObject(i);
-                        JSONObject volumeInfo = book.getJSONObject("volumeInfo");
-                        JSONArray authors = volumeInfo.getJSONArray("authors");
-                        JSONArray genres = volumeInfo.getJSONArray("categories");
-                        genre = genres.getString(0);
-                        author = authors.getString(0);
-                        description = volumeInfo.getString("description");
-                        title = volumeInfo.getString("title");
-                        year = volumeInfo.getString("publishedDate");
-                        JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
-                        URLimage = imageLinks.getString("thumbnail");
-                        fixImageURL(URLimage);
+                    urlJSON = new JSONObject(string);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                JSONArray books = null;
+                try {
+                    books = urlJSON.getJSONArray("items");
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                for (int i = 0; i < books.length(); i++) {
+                    JSONObject book = null;
+                    try {
+                        book = books.getJSONObject(i);
+                    } catch (JSONException e) {
+                        continue;
                     }
+                    JSONObject volumeInfo = null;
+                    try {
+                        volumeInfo = book.getJSONObject("volumeInfo");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    JSONArray authors = null;
+                    try {
+                        authors = volumeInfo.getJSONArray("authors");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    JSONArray genres = null;
+                    try {
+                        genres = volumeInfo.getJSONArray("categories");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    try {
+                        genre = genres.getString(0);
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    try {
+                        author = authors.getString(0);
+                    } catch (JSONException e) {
+                       continue;
+                    }
+                    try {
+                        description = volumeInfo.getString("description");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+
+                    try {
+                        title = volumeInfo.getString("title");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    try {
+                        year = volumeInfo.getString("publishedDate");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    JSONObject imageLinks;
+                    try {
+                        imageLinks = volumeInfo.getJSONObject("imageLinks");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    try {
+                        URLimage = imageLinks.getString("thumbnail");
+                    } catch (JSONException e) {
+                        continue;
+                    }
+                    fixImageURL(URLimage);
                 }
-                catch (JSONException e) {
-                }
+
+
 
                 // Remember to set the bitmap in the main thread.
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
