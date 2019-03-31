@@ -2,7 +2,10 @@ package ca.ualberta.ishelf;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Environment;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -19,6 +22,13 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -53,6 +63,7 @@ public class GalleryActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager galleryLayoutManager;
 
     private Button addButton;
+    private Button doneButton;
     private String check;
 
     // FireBase stuff
@@ -85,6 +96,9 @@ public class GalleryActivity extends AppCompatActivity {
             book = extras.getParcelable("sent_book");
             imageList = book.getGalleryImages();
         }
+        else {
+            imageList = extras.getStringArrayList("sent_list");
+        }
 
         // create recycler for images
         galleryRecyclerView = (RecyclerView) findViewById((R.id.gallery_recycler));
@@ -99,6 +113,21 @@ public class GalleryActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 pickImage();
+            }
+        });
+
+        doneButton = (Button) findViewById((R.id.done_gallery_button));
+        doneButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!check.equals("has_book")) {
+                    Bundle extras = new Bundle();
+                    extras.putStringArrayList("pathList", imageList);
+                    Intent intent = new Intent(view.getContext(), EditBookActivity.class);
+                    intent.putExtras(extras);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         });
     }
@@ -141,30 +170,29 @@ public class GalleryActivity extends AppCompatActivity {
                 db.connect(this);
                 db.editBook(book);
             }
-
-
-            // store in Storage
-            StorageReference ref = storageReference.child(pathImage);
-            ref.putFile(lastImagePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(GalleryActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                            galleryAdapter.notifyDataSetChanged();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(GalleryActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        }
-                    });
+                // store in Storage
+                StorageReference ref = storageReference.child(pathImage);
+                ref.putFile(lastImagePath)
+                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                                Toast.makeText(GalleryActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                                galleryAdapter.notifyDataSetChanged();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toast.makeText(GalleryActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                            @Override
+                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                            }
+                        });
         }
+
 
         if (requestCode == DELETE_IMAGE && resultCode == Activity.RESULT_OK) {
             int position = data.getIntExtra("position", -1 );
@@ -179,13 +207,22 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
+//    public Bitmap getBitmap(File file) {
+//        try {
+//            Bitmap bitmap=null;
+//            BitmapFactory.Options options = new BitmapFactory.Options();
+//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+//            bitmap = BitmapFactory.decodeStream(new FileInputStream(file), null, options);
+//            return bitmap;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
     public void updateImages(){
         galleryAdapter.updateList(imageList);
         galleryAdapter.notifyDataSetChanged();
     }
-
-
-
 }
 

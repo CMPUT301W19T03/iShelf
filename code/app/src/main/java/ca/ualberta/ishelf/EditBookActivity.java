@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
@@ -22,8 +23,10 @@ import com.firebase.client.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -92,6 +95,7 @@ public class EditBookActivity extends AppCompatActivity {
     private final OkHttpClient client = new OkHttpClient();
 
     private String URLcover = "";
+    private ArrayList<String> galleryImageURLS = new ArrayList<String>();
 
 
     @Override
@@ -134,13 +138,12 @@ public class EditBookActivity extends AppCompatActivity {
             public void onClick(View view) {
                 Bundle extras = new Bundle();
                 extras.putString("check", "new");
+                extras.putStringArrayList("sent_list", galleryImageURLS);
                 Intent intent = new Intent(EditBookActivity.this, GalleryActivity.class);
                 intent.putExtras(extras);
                 startActivityForResult(intent, GET_OTHER_BOOKS);
             }
         });
-
-
 
 
         loadFromFile();
@@ -192,6 +195,7 @@ public class EditBookActivity extends AppCompatActivity {
         passedBook.setYear(year);
         passedBook.setGenre(genre);
         passedBook.setAuthor(author);
+        passedBook.setGalleryImages(galleryImageURLS);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -379,6 +383,7 @@ public class EditBookActivity extends AppCompatActivity {
         }
 
         if (requestCode == GET_OTHER_BOOKS && resultCode == Activity.RESULT_OK) {
+            galleryImageURLS = data.getStringArrayListExtra("pathList");
         }
     }
 
