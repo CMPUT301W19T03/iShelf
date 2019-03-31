@@ -26,6 +26,7 @@ import com.firebase.client.ValueEventListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
@@ -99,6 +100,7 @@ public class EditBookActivity extends AppCompatActivity {
 
     private final int SCAN_AND_GET_DESCRIPTION = 212;
     private final int GET_OTHER_BOOKS = 277;
+    private final int PICK_IMAGE_FOR_GALLERYY = 36;
 
 
     private final OkHttpClient client = new OkHttpClient();
@@ -173,6 +175,15 @@ public class EditBookActivity extends AppCompatActivity {
                 startActivityForResult(intent, GET_OTHER_BOOKS);
             }
         });
+
+        AddCover.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                pickImage();
+            }
+        });
+
+
 
 
         loadFromFile();
@@ -402,8 +413,6 @@ public class EditBookActivity extends AppCompatActivity {
             String author = data.getStringExtra("author");
             String genre = data.getStringExtra("genre");
             URLcover = data.getStringExtra("URL");
-            indexCover = galleryImageURLS.size() - 1;
-
             getImageCover();
             DescriptionText.setText(description);
             ISBNText.setText(ISBN);
@@ -415,6 +424,40 @@ public class EditBookActivity extends AppCompatActivity {
 
         if (requestCode == GET_OTHER_BOOKS && resultCode == Activity.RESULT_OK) {
             galleryImageURLS = data.getStringArrayListExtra("pathList");
+        }
+
+        if (requestCode == PICK_IMAGE_FOR_GALLERYY && resultCode == Activity.RESULT_OK) {
+            if (data == null) {
+                return;
+            }
+
+            Uri lastImagePath = data.getData();
+            CoverImage.setImageURI(lastImagePath);
+            String pathImage = "images1/" + UUID.randomUUID().toString();
+            galleryImageURLS.add(pathImage);
+            indexCover = galleryImageURLS.size() - 1;
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageReference = storage.getReference();
+            // store in Storage
+            StorageReference ref = storageReference.child(pathImage);
+            ref.putFile(lastImagePath)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Toast.makeText(EditBookActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(EditBookActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                        }
+                    });
         }
     }
 
@@ -437,6 +480,7 @@ public class EditBookActivity extends AppCompatActivity {
 
                     String pathImage = "images1/" + UUID.randomUUID().toString();
                     galleryImageURLS.add(pathImage);
+                    indexCover = galleryImageURLS.size() - 1;
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageReference = storage.getReference();
                     StorageReference ref = storageReference.child(pathImage);
@@ -469,7 +513,10 @@ public class EditBookActivity extends AppCompatActivity {
         });
     }
 
-
-
+    public void pickImage() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
+    }
 }
 
