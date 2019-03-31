@@ -306,8 +306,6 @@ public class EditBookActivity extends AppCompatActivity {
                     newINTent.putExtra("Pos", pos);
                     newINTent.putExtra("Check", true);
 
-                    System.out.print("HElllllllloooooowewrwejrjoejiorwejrweijorij");
-
                     setResult(RESULT_OK,newINTent);
                     finish();
 
@@ -340,7 +338,6 @@ public class EditBookActivity extends AppCompatActivity {
         final Database db = new Database(this);
         Firebase ref = db.connect(this);
         Firebase tempRef = ref.child("Users").child(username);
-
         tempRef.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
