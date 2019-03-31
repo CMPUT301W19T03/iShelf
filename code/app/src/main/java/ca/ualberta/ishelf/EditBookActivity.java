@@ -78,11 +78,17 @@ public class EditBookActivity extends AppCompatActivity {
     private EditText DescriptionText;
     private ImageView CoverImage;
 
+    private Button AddCover;
+    private Button AddOther;
+
     private ArrayList<Book> Booklist = new ArrayList<Book>();
     private static final String FILENAME = "book1.sav";
     private Book passedBook = null;
 
     private final int SCAN_AND_GET_DESCRIPTION = 212;
+    private final int GET_OTHER_BOOKS = 277;
+
+
     private final OkHttpClient client = new OkHttpClient();
 
     private String URLcover = "";
@@ -103,7 +109,8 @@ public class EditBookActivity extends AppCompatActivity {
         GenreText= (EditText) findViewById(R.id.editGenre);
         DescriptionText = (EditText) findViewById(R.id.editDes);
         CoverImage = (ImageView) findViewById(R.id.cover_image);
-
+        AddCover = (Button) findViewById(R.id.add_cover_button);
+        AddOther = (Button) findViewById(R.id.add_other_images_button);
 
         Button clearButton = (Button) findViewById(R.id.cancel);
         Button saveButton = (Button) findViewById(R.id.save);
@@ -121,6 +128,19 @@ public class EditBookActivity extends AppCompatActivity {
                 startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
             }
         });
+
+        AddOther.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Bundle extras = new Bundle();
+                extras.putString("check", "new");
+                Intent intent = new Intent(EditBookActivity.this, GalleryActivity.class);
+                intent.putExtras(extras);
+                startActivityForResult(intent, GET_OTHER_BOOKS);
+            }
+        });
+
+
 
 
         loadFromFile();
@@ -356,6 +376,9 @@ public class EditBookActivity extends AppCompatActivity {
             YearText.setText(year);
             GenreText.setText(genre);
             AuthorText.setText(author);
+        }
+
+        if (requestCode == GET_OTHER_BOOKS && resultCode == Activity.RESULT_OK) {
         }
     }
 

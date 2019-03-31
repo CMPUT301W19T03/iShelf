@@ -53,6 +53,7 @@ public class GalleryActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager galleryLayoutManager;
 
     private Button addButton;
+    private String check;
 
     // FireBase stuff
     FirebaseStorage storage;
@@ -79,9 +80,11 @@ public class GalleryActivity extends AppCompatActivity {
 
         // get ID for book
         Bundle extras = getIntent().getExtras();
-        book = extras.getParcelable("sent_book");
-
-        imageList = book.getGalleryImages();
+        check = extras.getString("check");
+        if (check.equals("has_book")) {
+            book = extras.getParcelable("sent_book");
+            imageList = book.getGalleryImages();
+        }
 
         // create recycler for images
         galleryRecyclerView = (RecyclerView) findViewById((R.id.gallery_recycler));
@@ -132,10 +135,12 @@ public class GalleryActivity extends AppCompatActivity {
             String pathImage = "images/" + UUID.randomUUID().toString();
 
             // add path to Book in FireBase
-            Database db = new Database(this);
-            db.connect(this);
             imageList.add(pathImage);
-            db.editBook(book);
+            if (book != null) {
+                Database db = new Database(this);
+                db.connect(this);
+                db.editBook(book);
+            }
 
 
             // store in Storage
@@ -163,10 +168,12 @@ public class GalleryActivity extends AppCompatActivity {
 
         if (requestCode == DELETE_IMAGE && resultCode == Activity.RESULT_OK) {
             int position = data.getIntExtra("position", -1 );
-            Database db = new Database(this);
-            db.connect(this);
             imageList.remove(position);
-            db.editBook(book);
+            if (book != null) {
+                Database db = new Database(this);
+                db.connect(this);
+                db.editBook(book);
+            }
             galleryAdapter.notifyItemRemoved(position);
             galleryAdapter.notifyItemRangeChanged(position, imageList.size());
         }
