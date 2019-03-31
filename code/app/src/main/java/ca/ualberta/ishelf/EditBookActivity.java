@@ -5,9 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,13 +23,16 @@ import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -100,6 +105,7 @@ public class EditBookActivity extends AppCompatActivity {
 
     private String URLcover = "";
     private ArrayList<String> galleryImageURLS = new ArrayList<String>();
+    private int indexCover = -1;
 
 
     @Override
@@ -219,6 +225,7 @@ public class EditBookActivity extends AppCompatActivity {
         passedBook.setGenre(genre);
         passedBook.setAuthor(author);
         passedBook.setGalleryImages(galleryImageURLS);
+        passedBook.setIndexCover(indexCover);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -395,6 +402,7 @@ public class EditBookActivity extends AppCompatActivity {
             String author = data.getStringExtra("author");
             String genre = data.getStringExtra("genre");
             URLcover = data.getStringExtra("URL");
+            indexCover = galleryImageURLS.size() - 1;
 
             getImageCover();
             DescriptionText.setText(description);
@@ -422,6 +430,30 @@ public class EditBookActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful()) {
                     Bitmap bitmap = BitmapFactory.decodeStream(response.body().byteStream());
+                    // https://stackoverflow.com/questions/40885860/how-to-save-bitmap-to-firebase
+                    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+                    byte[] data = baos.toByteArray();
+
+                    String pathImage = "images1/" + UUID.randomUUID().toString();
+                    galleryImageURLS.add(pathImage);
+                    FirebaseStorage storage = FirebaseStorage.getInstance();
+                    StorageReference storageReference = storage.getReference();
+                    StorageReference ref = storageReference.child(pathImage);
+
+                    UploadTask uploadTask = ref.putBytes(data);
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+
+
+                        }
+                    });
 
                     // Remember to set the bitmap in the main thread.
                     new Handler(Looper.getMainLooper()).post(new Runnable() {
