@@ -132,6 +132,7 @@ public class EditBookActivity extends AppCompatActivity {
         AddCover = (Button) findViewById(R.id.add_cover_button);
         AddOther = (Button) findViewById(R.id.add_other_images_button);
 
+        // add listener
         ISBNText.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
