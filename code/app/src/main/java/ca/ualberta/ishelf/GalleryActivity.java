@@ -161,7 +161,7 @@ public class GalleryActivity extends AppCompatActivity {
                 return;
             }
             lastImagePath = data.getData();
-            String pathImage = "images/" + UUID.randomUUID().toString();
+            String pathImage = "images1/" + UUID.randomUUID().toString();
 
             // add path to Book in FireBase
             imageList.add(pathImage);

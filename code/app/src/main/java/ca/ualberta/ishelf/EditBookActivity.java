@@ -15,11 +15,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -132,6 +136,25 @@ public class EditBookActivity extends AppCompatActivity {
                 startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
             }
         });
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageReference = storage.getReference();
+                for (String path : galleryImageURLS) {
+                    StorageReference deleteFile = storageReference.child(path);
+                    deleteFile.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            Toast.makeText(EditBookActivity.this, "Previous Image Deleted", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+                finish();
+            }
+        });
+
 
         AddOther.setOnClickListener(new View.OnClickListener() {
             @Override
