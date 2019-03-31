@@ -213,19 +213,6 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
-//    public Bitmap getBitmap(File file) {
-//        try {
-//            Bitmap bitmap=null;
-//            BitmapFactory.Options options = new BitmapFactory.Options();
-//            options.inPreferredConfig = Bitmap.Config.ARGB_8888;
-//            bitmap = BitmapFactory.decodeStream(new FileInputStream(file), null, options);
-//            return bitmap;
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            return null;
-//        }
-//    }
-
     public void updateImages(){
         galleryAdapter.updateList(imageList);
         galleryAdapter.notifyDataSetChanged();

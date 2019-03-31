@@ -115,7 +115,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 LinearLayoutManager.VERTICAL);
         bookRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        getAvailableBooks();
+        getAvailableBooks(false, -1);
 
         searchView = (SearchView) getActivity().findViewById(R.id.searchView1);
 
@@ -143,7 +143,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
     @Override
     public void onResume() {
         super.onResume();
-        getAvailableBooks();
+        getAvailableBooks(false, -1);
     }
 
     public void Filter(String filter){
@@ -238,8 +238,6 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                     return;
                 }
             });
-
-
         } else {
             Log.d(TAG, "onCreate: Username passed in is Null");
         }
@@ -249,7 +247,7 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
      * get available books from firebase
      * @author rmnattas
      */
-    public void getAvailableBooks(){
+    public void getAvailableBooks(boolean isRefresh, int oldSize){
 
         //connect to firebase
         Database db = new Database(getContext());
@@ -288,9 +286,17 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
                         Log.d("FBerrorFragmentRequest", "User doesn't exist or string is empty");
                     }
                 }
-                bookAdapter.updateList(bookList);
-                bookAdapter.notifyDataSetChanged();
+                if (!isRefresh) {
+                    bookAdapter.updateList(bookList);
+                    bookAdapter.notifyDataSetChanged();
+                }
+                else {
+                    bookAdapter.notifyItemRangeRemoved(0, oldSize);
+                    bookAdapter.notifyItemRangeInserted(0, bookList.size());
+                }
             }
+
+
 
             @Override
             public void onCancelled(FirebaseError firebaseError) {
@@ -309,8 +315,9 @@ public class BorrowFragment extends Fragment implements SwipeRefreshLayout.OnRef
      */
     @Override
     public void onRefresh(){
+        int oldSize = bookList.size();
         bookList.clear();
-        getAvailableBooks();
+        getAvailableBooks(true, oldSize);
         borrowRefresh.setRefreshing(false);
     }
 
