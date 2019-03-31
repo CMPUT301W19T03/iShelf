@@ -217,7 +217,9 @@ public class EditBookActivity extends AppCompatActivity {
         String title = TitleText.getText().toString();
 
         String author = AuthorText.getText().toString();
+
         Long isbn = Long.parseLong(ISBNText.getText().toString());
+        
         String year = YearText.getText().toString();
 
         String genre = GenreText.getText().toString();
