@@ -1,6 +1,7 @@
 package ca.ualberta.ishelf;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -108,7 +109,12 @@ public class GalleryActivity extends AppCompatActivity {
         galleryRecyclerView.setAdapter(galleryAdapter);
 
         // set up add button
+        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+        Boolean isOwner = (currentUsername.equals(book.getOwner()));
         addButton = (Button) findViewById((R.id.add_image_button));
+        if(!isOwner) {
+            addButton.setVisibility(View.INVISIBLE);
+        }
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
