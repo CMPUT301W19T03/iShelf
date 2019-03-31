@@ -74,6 +74,7 @@ public class ViewImageActivity extends AppCompatActivity {
                 Bundle extras = new Bundle();
                 extras.putInt("position", position);
                 StorageReference deleteRef = storageReference.child(URL);
+
                 // Delete the file
                 deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override

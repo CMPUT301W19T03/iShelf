@@ -29,6 +29,7 @@ public class Book implements Parcelable{
     private Boolean borrowedBook = false;
     private ArrayList<Rating> ratings = new ArrayList<Rating>(); // Error due to no Rating class yet
     private ArrayList<String> galleryImages = new ArrayList<String>();
+    private int indexCover = -1;
     private UUID id; // changed from int to UUID
     private Image photo;
     private String year;
@@ -50,6 +51,7 @@ public class Book implements Parcelable{
         this.status = 1;
         this.transition=0;
         this.id = UUID.randomUUID();
+        this.indexCover = -1;
     }
 
     public Book(String name, String description, Long ISBN, String year, String genre, String author, boolean borrowedBook) {
@@ -63,6 +65,7 @@ public class Book implements Parcelable{
         this.status = 1;
         this.transition = 0;
         this.borrowedBook = borrowedBook;
+        this.indexCover = -1;
     }
 
 
@@ -297,6 +300,14 @@ public class Book implements Parcelable{
 
     public void removeImage(int position) {
         this.galleryImages.remove(position);
+    }
+
+    public int getIndexCover() {
+        return indexCover;
+    }
+
+    public void setIndexCover(int indexCover) {
+        this.indexCover = indexCover;
     }
 
     @Override
