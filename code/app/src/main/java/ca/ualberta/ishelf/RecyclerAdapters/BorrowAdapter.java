@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
@@ -33,6 +35,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import ca.ualberta.ishelf.GlideApp;
 import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.BookProfileActivity;
 import ca.ualberta.ishelf.Models.Database;
@@ -152,24 +155,22 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
 
             Book currentBook = originalList.get(position);
             ArrayList<String> images = currentBook.getGalleryImages();
+            borrowHolder.imageCover.setImageBitmap(null);
 
             if (images.size() > 0) {
+                String image = null;
+                if (currentBook.getIndexCover() != -1) {
+                    image = images.get(currentBook.getIndexCover());
+                }
+                else {
+                    image = images.get(0);
+                }
 
-                String image = images.get(0);
                 StorageReference ref = storageReference.child(image);
-                final long ONE_MEGABYTE = 1024 * 1024;
-                ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                    @Override
-                    public void onSuccess(byte[] bytes) {
-                        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                        borrowHolder.imageCover.setImageBitmap(bitmap);
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Handle any errors
-                    }
-                });
+
+                GlideApp.with(bookContext)
+                        .load(ref)
+                        .into(borrowHolder.imageCover);
             }
     }
 

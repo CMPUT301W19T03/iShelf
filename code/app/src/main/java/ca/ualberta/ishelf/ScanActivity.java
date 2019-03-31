@@ -39,6 +39,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
@@ -102,6 +103,7 @@ public class ScanActivity extends AppCompatActivity {
     private Button lastISBN;
     private FrameLayout shutter;
     private final AlphaAnimation fade = new AlphaAnimation(1, 0);
+    private ProgressBar progressBar;
 
     private String visit;
 
@@ -114,8 +116,10 @@ public class ScanActivity extends AppCompatActivity {
     private String genre = "";
     private String author = "";
     private String URLimage = "";
+    private Button finishScanButton;
 
     private boolean testing = true;
+    private boolean finished_computation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,34 +135,37 @@ public class ScanActivity extends AppCompatActivity {
         scanFab = (FloatingActionButton) findViewById(R.id.scan_fab);
         lastISBN = (Button) findViewById(R.id.last_ISBN);
         shutter = (FrameLayout) findViewById(R.id.snapshot_effect);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_scan);
+
 
         Intent intent = getIntent();
         visit = intent.getStringExtra("task");
 
-        Button finishScanButton = (Button) findViewById(R.id.accept_scan_button);
+        finishScanButton = (Button) findViewById(R.id.accept_scan_button);
         FloatingActionButton backScan = (FloatingActionButton) findViewById(R.id.back_button_camera);
 
         finishScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Bundle extras = new Bundle();
-                extras.putString("ISBN", outputISBN);
-                extras.putString("description", description);
-                extras.putString("title", title);
-                extras.putString("year", year);
-                extras.putString("author", author);
-                extras.putString("genre", genre);
-                extras.putString("URL", URLimage);
+                if (finished_computation) {
+                    Bundle extras = new Bundle();
+                    extras.putString("ISBN", outputISBN);
+                    extras.putString("description", description);
+                    extras.putString("title", title);
+                    extras.putString("year", year);
+                    extras.putString("author", author);
+                    extras.putString("genre", genre);
+                    extras.putString("URL", URLimage);
 
-                if (visit.equals("get_description")) {
-                    Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
+                    if (visit.equals("get_description")) {
+                        Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
+                    } else if (visit.equals("lend")) {
+                        Intent intent = new Intent(ScanActivity.this, BookProfileActivity.class);
+                    }
+                    intent.putExtras(extras);
+                    setResult(RESULT_OK, intent);
+                    finish();
                 }
-                else if (visit.equals("lend")) {
-                    Intent intent = new Intent(ScanActivity.this, BookProfileActivity.class);
-                }
-                intent.putExtras(extras);
-                setResult(RESULT_OK, intent);
-                finish();
             }
         });
 
@@ -201,6 +208,7 @@ public class ScanActivity extends AppCompatActivity {
         scanFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                finished_computation = false;
                 shutter.startAnimation(fade);
                 lastScan = textureView.getBitmap();
                 //lastScan = BitmapFactory.decodeResource(getResources(), R.drawable.isbn_test2);
@@ -214,6 +222,7 @@ public class ScanActivity extends AppCompatActivity {
                                         FirebaseVisionBarcode ISBN = barCodes.get(0);
                                         outputISBN = ISBN.getRawValue();
                                         lastISBN.setText(outputISBN);
+                                        progressBar.setVisibility(View.VISIBLE);
                                         getAsyncCall();
                                     }
                                 }
@@ -227,6 +236,7 @@ public class ScanActivity extends AppCompatActivity {
                 if (testing) {
                     outputISBN = "9780307401199";
                     lastISBN.setText(outputISBN);
+                    progressBar.setVisibility(View.VISIBLE);
                     getAsyncCall();
                 }
             }
@@ -429,11 +439,23 @@ public class ScanActivity extends AppCompatActivity {
                         JSONObject imageLinks = volumeInfo.getJSONObject("imageLinks");
                         URLimage = imageLinks.getString("thumbnail");
                         fixImageURL(URLimage);
-                        //getImageCover();
                     }
                 }
                 catch (JSONException e) {
                 }
+
+                // Remember to set the bitmap in the main thread.
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    @Override
+                    public void run() {
+                        progressBar.setVisibility(View.INVISIBLE);
+                        if (!lastISBN.equals("")) {
+                            finishScanButton.setBackground(getDrawable(R.drawable.gradientbutton));
+                        }
+                        finished_computation = true;
+                    }
+                });
+
                 if (!response.isSuccessful()) {
                     throw new IOException("Error response " + response);
                 }
