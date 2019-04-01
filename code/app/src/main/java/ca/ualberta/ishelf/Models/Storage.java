@@ -30,25 +30,18 @@ public class Storage {
 
         StorageReference ref = storageReference.child(path);
         ref.putFile(image)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
-                        future.complete(null);
-                    }
+                .addOnSuccessListener(taskSnapshot -> {
+                    Toast.makeText(context, "Uploaded", Toast.LENGTH_SHORT).show();
+                    future.complete(null);
                 })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception error) {
-                        Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
-                        future.completeExceptionally(error);
-                    }
+                .addOnFailureListener(error -> {
+                    Toast.makeText(context, "Failed", Toast.LENGTH_SHORT).show();
+                    future.complete(null);
                 })
-                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                    }
+                .addOnProgressListener(taskSnapshot -> {
+                    // stub
                 });
+
         return future;
     }
 }

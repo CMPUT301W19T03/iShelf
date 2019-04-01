@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -32,14 +33,14 @@ import ca.ualberta.ishelf.RecyclerAdapters.GalleryAdapter;
 
 public class GalleryActivity extends AppCompatActivity {
 
-
-    private int colomn_number = 2;
+    // int
     private final int PICK_IMAGE_FOR_GALLERYY = 36;
     private final int DELETE_IMAGE = 37;
+    private int colomn_number = 2;
+
 
     private ArrayList<String> imageList = new ArrayList<String>();
 
-    private String ID;
     private Book book;
 
     private RecyclerView galleryRecyclerView;
@@ -48,11 +49,10 @@ public class GalleryActivity extends AppCompatActivity {
 
     private Button addButton;
     private Button doneButton;
+
     private String check;
 
     private Storage storage;
-
-    private Uri lastImagePath;
 
     /**
      * OnCreate
@@ -69,6 +69,9 @@ public class GalleryActivity extends AppCompatActivity {
 
         // set up FireBase Storage
         storage = new Storage();
+
+
+
 
         // set up add button
 
@@ -96,27 +99,6 @@ public class GalleryActivity extends AppCompatActivity {
         galleryAdapter = new GalleryAdapter(this, imageList);
         galleryRecyclerView.setAdapter(galleryAdapter);
 
-        addButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                pickImage();
-            }
-        });
-
-        doneButton = (Button) findViewById((R.id.done_gallery_button));
-        doneButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!check.equals("has_book")) {
-                    Bundle extras = new Bundle();
-                    extras.putStringArrayList("pathList", imageList);
-                    Intent intent = new Intent(view.getContext(), EditBookActivity.class);
-                    intent.putExtras(extras);
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-            }
-        });
     }
 
     /**
@@ -134,12 +116,6 @@ public class GalleryActivity extends AppCompatActivity {
      * @author : Faisal (based on Ahsan Kamal)
      */
 
-    public void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -147,7 +123,7 @@ public class GalleryActivity extends AppCompatActivity {
             if (data == null) {
                 return;
             }
-            lastImagePath = data.getData();
+            Uri lastImagePath = data.getData();
             String pathImage = "images1/" + UUID.randomUUID().toString();
 
             // add path to Book in FireBase
@@ -181,5 +157,26 @@ public class GalleryActivity extends AppCompatActivity {
         galleryAdapter.updateList(imageList);
         galleryAdapter.notifyDataSetChanged();
     }
+
+    public void finishGalleryButton(View v){
+        if (!check.equals("has_book")) {
+            Bundle extras = new Bundle();
+            extras.putStringArrayList("pathList", imageList);
+            Intent intent = new Intent(GalleryActivity.this, EditBookActivity.class);
+            intent.putExtras(extras);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+        else {
+            finish();
+        }
+    }
+
+    public void addImageButton() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
+    }
+
 }
 
