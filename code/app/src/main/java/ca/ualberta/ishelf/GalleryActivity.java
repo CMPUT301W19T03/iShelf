@@ -3,38 +3,21 @@ package ca.ualberta.ishelf;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.os.Environment;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Storage;
 import ca.ualberta.ishelf.RecyclerAdapters.GalleryAdapter;
 
 /**
@@ -67,9 +50,7 @@ public class GalleryActivity extends AppCompatActivity {
     private Button doneButton;
     private String check;
 
-    // FireBase stuff
-    FirebaseStorage storage;
-    StorageReference storageReference;
+    private Storage storage;
 
     private Uri lastImagePath;
 
@@ -87,8 +68,8 @@ public class GalleryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_gallery);
 
         // set up FireBase Storage
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storage = new Storage();
+
         // set up add button
 
         addButton = (Button) findViewById((R.id.add_image_button));
@@ -114,8 +95,6 @@ public class GalleryActivity extends AppCompatActivity {
         galleryRecyclerView.setLayoutManager(galleryLayoutManager);
         galleryAdapter = new GalleryAdapter(this, imageList);
         galleryRecyclerView.setAdapter(galleryAdapter);
-
-
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -178,27 +157,10 @@ public class GalleryActivity extends AppCompatActivity {
                 db.connect(this);
                 db.editBook(book);
             }
-                // store in Storage
-                StorageReference ref = storageReference.child(pathImage);
-                ref.putFile(lastImagePath)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Toast.makeText(GalleryActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                                galleryAdapter.notifyDataSetChanged();
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toast.makeText(GalleryActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                            }
-                        });
+
+            CompletableFuture<Void> future = storage.addImage(pathImage, lastImagePath, GalleryActivity.this);
+            Runnable runnable = () -> galleryAdapter.notifyDataSetChanged();
+            future.thenRun(runnable);
         }
 
 
