@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -38,6 +39,7 @@ import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.Models.Notification;
 import ca.ualberta.ishelf.Models.Request;
+import ca.ualberta.ishelf.Models.Storage;
 import ca.ualberta.ishelf.Models.User;
 
 /**
@@ -74,56 +76,42 @@ import ca.ualberta.ishelf.Models.User;
 public class BookProfileActivity extends AppCompatActivity {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
+
     private Book passedBook = null;
+
     final String TAG = "BookProfileActivity";
     private Button mapButton;
     private final int SCAN_AND_GET_DESCRIPTION = 212;
     private final int SCAN_AND_Accept_Borrower = 213;
     private final int SCAN_AND_Return = 214;
     private final int SCAN_AND_Accept_OWner = 215;
+    private final int GALLERY_IMAGE = 216;
 
     // to see a gallery of books
     private Button galleryButton;
     private String ISBN = new String();
     private TextView cholder;
 
+    private Storage storage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
 
-
+        storage = new Storage();
 
         // get the book object passed by intent
         Intent intent = getIntent();
         passedBook = intent.getParcelableExtra("Book Data");
 
-
         ImageView gallery_image = (ImageView) findViewById(R.id.image_book);
-
         ArrayList<String> images = passedBook.getGalleryImages();
+
         if (images.size() > 0) {
-
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageReference = storage.getReference();
             String image = images.get(0);
-            StorageReference ref = storageReference.child(image);
-
-            final long ONE_MEGABYTE = 1024 * 1024;
-            ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    gallery_image.setImageBitmap(bitmap);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
+            storage.putImage(image, gallery_image, BookProfileActivity.this);
         }
-
 
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
@@ -131,13 +119,19 @@ public class BookProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bundle extras = new Bundle();
-                extras.putString("check", "has_book");
+                extras.putBoolean("has_book", true);
                 extras.putParcelable("sent_book", passedBook);
                 Intent intent = new Intent(view.getContext(), GalleryActivity.class);
                 intent.putExtras(extras);
-                startActivity(intent);
+                startActivityForResult(intent, GALLERY_IMAGE);
             }
         });
+
+//        SwipeRefreshLayout pullToRefresh = findViewById(R.id.refresh_book_page);
+//        pullToRefresh.setOnRefreshListener(() -> {
+//            finish();
+//            startActivity(getIntent());
+//        });
 
         Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
@@ -158,7 +152,7 @@ public class BookProfileActivity extends AppCompatActivity {
             lendButton.setVisibility(View.VISIBLE);
 
         }
-        if((isOwner || isHolder || isRequester)&& passedBook.getTransition()>0){
+        if((isOwner || isHolder || isRequester) && passedBook.getTransition()>0){
             Button mapButton =findViewById(R.id.map);
             canEdit=false;
             mapButton.setVisibility(View.VISIBLE);
@@ -341,7 +335,7 @@ public class BookProfileActivity extends AppCompatActivity {
         ISBN = "";
         Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
         Bundle extras = new Bundle();
-        extras.putString("task", "lend");
+        extras.putString("task", "verification");
         intent.putExtras(extras);
         startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
     }
@@ -354,7 +348,7 @@ public class BookProfileActivity extends AppCompatActivity {
             ISBN = "";
             Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
             Bundle extras = new Bundle();
-            extras.putString("task", "lend");
+            extras.putString("task", "verification");
             intent.putExtras(extras);
             startActivityForResult(intent, SCAN_AND_Accept_Borrower);
         }
@@ -362,7 +356,7 @@ public class BookProfileActivity extends AppCompatActivity {
             ISBN = "";
             Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
             Bundle extras = new Bundle();
-            extras.putString("task", "lend");
+            extras.putString("task", "verification");
             intent.putExtras(extras);
             startActivityForResult(intent, SCAN_AND_Accept_OWner);
 
@@ -819,13 +813,22 @@ public class BookProfileActivity extends AppCompatActivity {
 
         }
 
-
+        else if(requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_OK){
+            ArrayList<String> backList = data.getStringArrayListExtra("back_list");
+            passedBook.setGalleryImages(backList);
+            finish();
+            startActivity(getIntent());
+        }
     }
+
+
 
     public void reviewsClicked(View v){
         Intent intent = new Intent(this, ViewRatingsActivity.class);
         intent.putExtra("BookID", passedBook.getId().toString());
         startActivity(intent);
     }
+
+
 
 }

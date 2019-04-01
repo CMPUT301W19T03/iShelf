@@ -9,11 +9,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ortiz.touchview.TouchImageView;
+
+import java.util.concurrent.CompletableFuture;
+
+import ca.ualberta.ishelf.Models.Storage;
 
 
 /**
@@ -22,78 +28,64 @@ import com.google.firebase.storage.StorageReference;
  * Shows an expanded view of the image
  * Allows for ther user to delete the image
  *
- * TODO_: Implement with TouchImageView for allow for dynamic image manipulation
+ * Implemented with TouchImageView for allow for dynamic image manipulation
  *
  * @author : Faisal
  */
 public class ViewImageActivity extends AppCompatActivity {
 
-    private ImageView fullImage;
-    private Button deleteButton;
+    private Storage storage;
     private int position;
-
-    FirebaseStorage storage;
-    StorageReference storageReference;
-
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_image);
 
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storage = new Storage();
 
-        fullImage = (ImageView) findViewById(R.id.full_image);
+        Button deleteImageButton = findViewById(R.id.delete_image_button);
+        Button setAsCoverButton = findViewById(R.id.set_as_cover_button);
+
+        ImageView fullImage = (TouchImageView) findViewById(R.id.full_image);
         Bundle extras = getIntent().getExtras();
-        String URL = extras.getString("sent_image");
+        if (extras != null) {
+            path = extras.getString("sent_image");
+        }
+
+        Boolean isOwner = extras.getBoolean("is_owner");
+
+        if (!isOwner) {
+            deleteImageButton.setVisibility(View.INVISIBLE);
+            setAsCoverButton.setVisibility(View.INVISIBLE);
+        }
         position = extras.getInt("position");
 
-        StorageReference ref = storageReference.child(URL);
+        storage.putImage(path, fullImage, ViewImageActivity.this);
+    }
 
-        final long ONE_MEGABYTE = 1024 * 1024;
-        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                fullImage.setImageBitmap(bitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+    public void deleteImageButton(View v){
+        Bundle extras = new Bundle();
+        extras.putInt("position", position);
+        extras.putString("action", "delete");
+        CompletableFuture<Void> future = storage.deleteImage(path, ViewImageActivity.this);
+        Runnable runnable = () -> {
+            Intent intent = new Intent(ViewImageActivity.this, GalleryActivity.class);
+            intent.putExtras(extras);
+            setResult(RESULT_OK, intent);
+            finish();
+        };
+        future.thenRun(runnable);
+    }
 
-        // set up add button
-        deleteButton = (Button) findViewById((R.id.delete_image_button));
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle extras = new Bundle();
-                extras.putInt("position", position);
-                StorageReference deleteRef = storageReference.child(URL);
-
-                // Delete the file
-                deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // File deleted successfully
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Uh-oh, an error occurred!
-                    }
-                });
-
-                Intent intent = new Intent(view.getContext(), GalleryActivity.class);
-                intent.putExtras(extras);
-                setResult(RESULT_OK, intent);
-                finish();
-            }
-        });
-
+    public void setAsCoverButton(View v) {
+        Bundle extras = new Bundle();
+        extras.putInt("position", position);
+        extras.putString("action", "setCover");
+        Intent intent = new Intent(ViewImageActivity.this, GalleryActivity.class);
+        intent.putExtras(extras);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

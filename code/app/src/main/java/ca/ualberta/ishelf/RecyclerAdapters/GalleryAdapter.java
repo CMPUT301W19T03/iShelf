@@ -24,7 +24,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
+import ca.ualberta.ishelf.GlideApp;
+import ca.ualberta.ishelf.Models.Storage;
 import ca.ualberta.ishelf.R;
 import ca.ualberta.ishelf.ViewImageActivity;
 
@@ -39,24 +42,20 @@ import ca.ualberta.ishelf.ViewImageActivity;
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<String> originalList = new ArrayList<String>();
     private Context galleryContext;
-    private final int DELETE_IMAGE = 37;
-
-    // FireBase stuff
-    FirebaseStorage storage;
-    StorageReference storageReference;
+    private final int EDIT_PHOTO = 37;
+    private Storage storage;
+    private boolean isOwner;
 
 
-    public GalleryAdapter(Context galleryContext, ArrayList<String> originalList) {
+    public GalleryAdapter(Context galleryContext, ArrayList<String> originalList, boolean isOwner) {
         this.originalList = originalList;
         this.galleryContext = galleryContext;
-
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storage = new Storage();
+        this.isOwner = isOwner;
     }
 
     public static class GalleryViewHolder extends RecyclerView.ViewHolder {
         public ImageView image;
-
         public GalleryViewHolder(View view) {
             super(view);
             image = (ImageView) view.findViewById(R.id.image_gallery);
@@ -75,23 +74,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         final GalleryViewHolder imageHolder = (GalleryViewHolder) holder;
-
-        String test = originalList.get(position);
-        StorageReference ref = storageReference.child(originalList.get(position));
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                imageHolder.image.setImageBitmap(bitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+        storage.putImage(originalList.get(position), imageHolder.image, galleryContext);
 
         imageHolder.image.setOnClickListener(new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
@@ -101,11 +84,12 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 // send the bitmap to ViewImageActivity
                 Bundle extras = new Bundle();
                 extras.putString("sent_image", originalList.get(position));
+                extras.putBoolean("is_owner", isOwner);
                 extras.putInt("position", position);
                 Intent intent = new Intent((Activity) galleryContext, ViewImageActivity.class);
                 intent.putExtras(extras);
                 Activity galleryActivity = (Activity) galleryContext;
-                galleryActivity.startActivityForResult(intent, DELETE_IMAGE);
+                galleryActivity.startActivityForResult(intent, EDIT_PHOTO);
             }
         });
     }
@@ -113,9 +97,5 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     @Override
     public int getItemCount() {
         return originalList.size();
-    }
-
-    public void updateList(ArrayList<String> list){
-        originalList = list;
     }
 }

@@ -153,18 +153,12 @@ class BorrowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implem
                 }
             });
 
-            Book currentBook = originalList.get(position);
+            Book currentBook = filterList.get(position);
             ArrayList<String> images = currentBook.getGalleryImages();
             borrowHolder.imageCover.setImageBitmap(null);
 
             if (images.size() > 0) {
-                String image = null;
-                if (currentBook.getIndexCover() != -1) {
-                    image = images.get(currentBook.getIndexCover());
-                }
-                else {
-                    image = images.get(0);
-                }
+                String image = images.get(0);
 
                 StorageReference ref = storageReference.child(image);
 

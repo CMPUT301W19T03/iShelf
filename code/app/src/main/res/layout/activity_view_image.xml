@@ -7,10 +7,11 @@
     android:background="#000"
     tools:context=".ViewImageActivity">
 
-    <ImageView
+    <com.ortiz.touchview.TouchImageView
         android:id="@+id/full_image"
-        android:layout_width="438dp"
-        android:layout_height="667dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
         app:layout_constraintBottom_toTopOf="@+id/delete_image_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,19 +21,34 @@
     <Button
         android:id="@+id/delete_image_button"
         android:layout_width="0dp"
-        android:backgroundTint="#d62020"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
+        android:background="@drawable/gradientdeletebutton"
+        android:onClick="deleteImageButton"
         android:text="DELETE"
         android:textColor="#ffffff"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/set_as_cover_button"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/set_as_cover_button"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/gradientbutton"
+        android:onClick="setAsCoverButton"
+        android:text="SET AS COVER"
+        android:textColor="#ffffff"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/delete_image_button" />
 
 
 </android.support.constraint.ConstraintLayout>
