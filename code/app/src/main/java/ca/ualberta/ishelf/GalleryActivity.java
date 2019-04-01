@@ -11,8 +11,11 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
 
+import com.firebase.client.annotations.NotNull;
+
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
@@ -33,26 +36,18 @@ import ca.ualberta.ishelf.RecyclerAdapters.GalleryAdapter;
 
 public class GalleryActivity extends AppCompatActivity {
 
-    // int
-    private final int PICK_IMAGE_FOR_GALLERYY = 36;
+    private final int PICK_IMAGE_FOR_GALLERY = 36;
     private final int DELETE_IMAGE = 37;
-    private int colomn_number = 2;
-
 
     private ArrayList<String> imageList = new ArrayList<String>();
-
     private Book book;
 
     private RecyclerView galleryRecyclerView;
     private GalleryAdapter galleryAdapter;
     private RecyclerView.LayoutManager galleryLayoutManager;
 
-    private Button addButton;
-    private Button doneButton;
-
-    private String check;
-
     private Storage storage;
+    private boolean hasBook;
 
     /**
      * OnCreate
@@ -71,34 +66,27 @@ public class GalleryActivity extends AppCompatActivity {
         storage = new Storage();
 
 
-
-
-        // set up add button
-
-        addButton = (Button) findViewById((R.id.add_image_button));
-        // get ID for book
+        Button addButton = (Button) findViewById((R.id.add_image_button));
         Bundle extras = getIntent().getExtras();
-        check = extras.getString("check");
-        if (check.equals("has_book")) {
-            book = extras.getParcelable("sent_book");
-            imageList = book.getGalleryImages();
+        if (extras != null) { hasBook = extras.getBoolean("has_book"); }
+
+        if (hasBook) {
+            book = Objects.requireNonNull(extras).getParcelable("sent_book");
+            imageList = Objects.requireNonNull(book).getGalleryImages();
             String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-            Boolean isOwner = (currentUsername.equals(book.getOwner()));
-            if(!isOwner) {
-                addButton.setVisibility(View.INVISIBLE);
-            }
+            boolean isOwner = (currentUsername != null && currentUsername.equals(book.getOwner()));
+            if (!isOwner) {addButton.setVisibility(View.INVISIBLE);}
         }
         else {
-            imageList = extras.getStringArrayList("sent_list");
+            imageList = Objects.requireNonNull(extras).getStringArrayList("sent_list");
         }
 
         // create recycler for images
         galleryRecyclerView = (RecyclerView) findViewById((R.id.gallery_recycler));
-        galleryLayoutManager = new GridLayoutManager(this, colomn_number);
+        galleryLayoutManager = new GridLayoutManager(this, 2);
         galleryRecyclerView.setLayoutManager(galleryLayoutManager);
         galleryAdapter = new GalleryAdapter(this, imageList);
         galleryRecyclerView.setAdapter(galleryAdapter);
-
     }
 
     /**
@@ -119,26 +107,28 @@ public class GalleryActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PICK_IMAGE_FOR_GALLERYY && resultCode == Activity.RESULT_OK) {
+
+        if (requestCode == PICK_IMAGE_FOR_GALLERY && resultCode == Activity.RESULT_OK) {
             if (data == null) {
                 return;
             }
+
             Uri lastImagePath = data.getData();
             String pathImage = "images1/" + UUID.randomUUID().toString();
 
             // add path to Book in FireBase
             imageList.add(pathImage);
-            if (book != null) {
+            if (hasBook) {
                 Database db = new Database(this);
                 db.connect(this);
                 db.editBook(book);
             }
 
+            // add image to Storage
             CompletableFuture<Void> future = storage.addImage(pathImage, lastImagePath, GalleryActivity.this);
             Runnable runnable = () -> galleryAdapter.notifyDataSetChanged();
             future.thenRun(runnable);
         }
-
 
         if (requestCode == DELETE_IMAGE && resultCode == Activity.RESULT_OK) {
             int position = data.getIntExtra("position", -1 );
@@ -153,13 +143,8 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
-    public void updateImages(){
-        galleryAdapter.updateList(imageList);
-        galleryAdapter.notifyDataSetChanged();
-    }
-
     public void finishGalleryButton(View v){
-        if (!check.equals("has_book")) {
+        if (!hasBook) {
             Bundle extras = new Bundle();
             extras.putStringArrayList("pathList", imageList);
             Intent intent = new Intent(GalleryActivity.this, EditBookActivity.class);
@@ -172,11 +157,10 @@ public class GalleryActivity extends AppCompatActivity {
         }
     }
 
-    public void addImageButton() {
+    public void addImageButton(View v) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
+        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERY);
     }
-
 }
 

@@ -196,7 +196,7 @@ public class EditBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bundle extras = new Bundle();
-                extras.putString("check", "new");
+                extras.putBoolean("has_book", false);
                 extras.putStringArrayList("sent_list", galleryImageURLS);
                 Intent intent = new Intent(EditBookActivity.this, GalleryActivity.class);
                 intent.putExtras(extras);
@@ -218,6 +218,7 @@ public class EditBookActivity extends AppCompatActivity {
 //if its a book being edited set all text views to the preset data of the book object
         if(check){
             passedBook = intent.getParcelableExtra("Book Data");
+            galleryImageURLS = passedBook.getGalleryImages();
 
             String title = passedBook.getName();
             String author = passedBook.getAuthor();

@@ -130,7 +130,7 @@ public class BookProfileActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bundle extras = new Bundle();
-                extras.putString("check", "has_book");
+                extras.putBoolean("has_book", true);
                 extras.putParcelable("sent_book", passedBook);
                 Intent intent = new Intent(view.getContext(), GalleryActivity.class);
                 intent.putExtras(extras);
