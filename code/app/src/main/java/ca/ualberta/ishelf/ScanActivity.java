@@ -118,8 +118,11 @@ public class ScanActivity extends AppCompatActivity {
     private String URLimage = "";
     private Button finishScanButton;
 
-    private boolean testing = false;
+    private boolean testing = true;
     private boolean finished_computation = false;
+
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -127,8 +130,12 @@ public class ScanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
 
-        // need to use camera
+        // request to use cameras
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
+
+        // set up back button -- just go back to previous activity (that is, EditBookProfile)
+        FloatingActionButton backScan = (FloatingActionButton) findViewById(R.id.back_button_camera);
+        backScan.setOnClickListener(view -> finish());
 
         // get elements on screen
         textureView = (TextureView) findViewById(R.id.texture_view);
@@ -142,7 +149,7 @@ public class ScanActivity extends AppCompatActivity {
         visit = intent.getStringExtra("task");
 
         finishScanButton = (Button) findViewById(R.id.accept_scan_button);
-        FloatingActionButton backScan = (FloatingActionButton) findViewById(R.id.back_button_camera);
+
 
         finishScanButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -166,14 +173,6 @@ public class ScanActivity extends AppCompatActivity {
                     setResult(RESULT_OK, intent);
                     finish();
                 }
-            }
-        });
-
-        backScan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-
             }
         });
 
@@ -264,7 +263,6 @@ public class ScanActivity extends AppCompatActivity {
             }
         };
 
-
         stateCallback = new CameraDevice.StateCallback() {
             @Override
             public void onOpened(CameraDevice cameraDevice) {
@@ -284,7 +282,6 @@ public class ScanActivity extends AppCompatActivity {
                 ScanActivity.this.cameraDevice = null;
             }
         };
-
     }
 
     @Override
@@ -523,9 +520,9 @@ public class ScanActivity extends AppCompatActivity {
         });
     }
 
+
     public void fixImageURL(String URL) {
         URLimage = URLimage.replace("http", "https");
         URLimage = URLimage.replace("zoom=1", "zoom=0");
     }
-
 }
