@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.widget.TextView;
 
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -33,10 +34,11 @@ public class ViewRatingsActivity extends AppCompatActivity {
     // RecylerView adapter
     RatingsAdapter adapter;
     // Holds the User of the user being viewed in this activity
-    String UserID;
-    String bookID;
-    User user;
-    Book book;
+    private String UserID;
+    private String bookID;
+    private User user;
+    private Book book;
+    private TextView tvPageTitle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,12 +46,15 @@ public class ViewRatingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_view_ratings);
         Log.d(TAG, "onCreate");
 
+        tvPageTitle = findViewById(R.id.tvRatingTitle);
+
         Intent intent = this.getIntent();
         if (intent.hasExtra("UserID")){
             UserID = intent.getStringExtra("UserID");
             Log.d(TAG, "onCreate: BookID: " + UserID);
             getUser(UserID);
         }
+
         if (intent.hasExtra("BookID")){
             bookID = intent.getStringExtra("BookID");
             Log.d(TAG, "onCreate: BookID: " + bookID);
@@ -92,6 +97,12 @@ public class ViewRatingsActivity extends AppCompatActivity {
                     book = gson.fromJson(jBook, tokenType); // here is where we get the user object
                     mRatings.addAll(book.getRatings());
                     initRecyclerView();
+
+                    if (mRatings.size() == 0){
+                        tvPageTitle.setText(book.getName() + " has no ratings");
+                    } else {
+                        tvPageTitle.setText(book.getName() + " Ratings");
+                    }
                 } else {
 
                 }
@@ -124,8 +135,15 @@ public class ViewRatingsActivity extends AppCompatActivity {
                     Type tokenType = new TypeToken<User>() {
                     }.getType();
                     user = gson.fromJson(jUser, tokenType); // here is where we get the user object
+
                     mRatings.addAll(user.getRatingArrayList());
                     initRecyclerView();
+
+                    if (mRatings.size() == 0){
+                        tvPageTitle.setText(user.getUsername() + " has no ratings");
+                    } else {
+                        tvPageTitle.setText(user.getUsername() + " Ratings");
+                    }
                 } else {
 
 

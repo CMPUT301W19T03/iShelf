@@ -1,42 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<!--<android.support.v4.widget.SwipeRefreshLayout-->
-    <!--xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--xmlns:app="http://schemas.android.com/apk/res-auto"-->
-    <!--xmlns:tools="http://schemas.android.com/tools"-->
-    <!--tools:context=".BookProfileActivity"-->
-    <!--android:id="@+id/refresh_book_page"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent">-->
-
-    <android.support.constraint.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        tools:context=".BookProfileActivity"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@drawable/shape">
-
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/shapesign"
+    tools:context=".BookProfileActivity">
 
             <ImageView
                 android:id="@+id/image_book"
-                android:layout_width="144dp"
-                android:layout_height="165dp"
+                android:layout_width="150sp"
+                android:layout_height="150sp"
                 android:layout_marginTop="24dp"
                 android:layout_marginEnd="24dp"
                 android:clickable="true"
@@ -52,7 +26,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Author:"
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -65,7 +38,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Year: "
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -78,7 +50,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="ISBN: "
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -91,7 +62,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Genre: "
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -104,11 +74,11 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="24dp"
                 android:text="Title:"
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
 
 
             <TextView
@@ -118,11 +88,11 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:text="Description:"
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                app:layout_constraintTop_toBottomOf="@+id/textView5"
+             />
 
             <TextView
                 android:id="@+id/textView8"
@@ -130,12 +100,12 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
-                android:textStyle="bold"
                 android:text="Current Status:"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/scroll_des1" />
+                app:layout_constraintTop_toBottomOf="@+id/scroll_des"
+            />
 
 
             <TextView
@@ -145,7 +115,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="20dp"
                 android:text="Book Rating:"
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -158,7 +127,6 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:text="Owner:"
-                android:textStyle="bold"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -259,7 +227,7 @@
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
                 app:layout_constraintStart_toEndOf="@+id/textView8"
-                app:layout_constraintTop_toBottomOf="@+id/scroll_des1" />
+                app:layout_constraintTop_toBottomOf="@+id/scroll_des" />
 
             <TextView
                 android:id="@+id/ownerUsername"
@@ -275,31 +243,31 @@
                 app:layout_constraintStart_toEndOf="@+id/textView9"
                 app:layout_constraintTop_toBottomOf="@+id/textView16" />
 
-            <ScrollView
-                android:id="@+id/scroll_des1"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_marginStart="16dp"
+    <ScrollView
+        android:id="@+id/scroll_des"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView7">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <TextView
+                android:id="@+id/des"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="TextView"
+                android:textColor="@color/midnight_blue"
+                android:textSize="12sp"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView7">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    app:layout_constraintStart_toStartOf="parent">
-
-                    <TextView
-                        android:id="@+id/des"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:text="TextView"
-                        android:textColor="@color/midnight_blue"
-                        android:textSize="20sp"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="parent" />
-                </RelativeLayout>
-            </ScrollView>
+                app:layout_constraintTop_toBottomOf="parent" />
+        </RelativeLayout>
+    </ScrollView>
 
             <TextView
                 android:id="@+id/Title"
@@ -409,7 +377,7 @@
 
             <Button
                 android:id="@+id/gallery_button"
-                android:layout_width="135dp"
+                android:layout_width="119dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/roundedbutton"
@@ -451,7 +419,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
-                android:textStyle="bold"
                 android:text="Current Holder:"
                 android:textColor="@color/midnight_blue"
                 android:textSize="20sp"
@@ -472,6 +439,3 @@
                 app:layout_constraintTop_toBottomOf="@+id/acpt" />
 
         </android.support.constraint.ConstraintLayout>
-    </ScrollView>
-    </android.support.constraint.ConstraintLayout>
-<!--</android.support.v4.widget.SwipeRefreshLayout>-->
