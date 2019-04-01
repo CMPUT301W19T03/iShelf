@@ -49,6 +49,7 @@ import java.util.UUID;
 
 import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Storage;
 import ca.ualberta.ishelf.Models.User;
 import ca.ualberta.ishelf.RecyclerAdapters.MyAdapter;
 import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;
@@ -462,31 +463,10 @@ public class EditBookActivity extends AppCompatActivity {
             Uri lastImagePath = data.getData();
             CoverImage.setImageURI(lastImagePath);
             String pathImage = "images1/" + UUID.randomUUID().toString();
-            galleryImageURLS.add(0,pathImage);
+            galleryImageURLS.add(0, pathImage);
 
-
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageReference = storage.getReference();
-            // store in Storage
-            StorageReference ref = storageReference.child(pathImage);
-            ref.putFile(lastImagePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(EditBookActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(EditBookActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        }
-                    });
+            Storage storage = new Storage();
+            storage.addImage(pathImage, lastImagePath, EditBookActivity.this);
         }
     }
 
