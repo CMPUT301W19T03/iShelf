@@ -28,7 +28,7 @@ import ca.ualberta.ishelf.Models.Storage;
  * Shows an expanded view of the image
  * Allows for ther user to delete the image
  *
- * TODO_: Implement with TouchImageView for allow for dynamic image manipulation
+ * Implemented with TouchImageView for allow for dynamic image manipulation
  *
  * @author : Faisal
  */
@@ -45,10 +45,20 @@ public class ViewImageActivity extends AppCompatActivity {
 
         storage = new Storage();
 
+        Button deleteImageButton = findViewById(R.id.delete_image_button);
+        Button setAsCoverButton = findViewById(R.id.set_as_cover_button);
+
         ImageView fullImage = (TouchImageView) findViewById(R.id.full_image);
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             path = extras.getString("sent_image");
+        }
+
+        Boolean isOwner = extras.getBoolean("is_owner");
+
+        if (!isOwner) {
+            deleteImageButton.setVisibility(View.INVISIBLE);
+            setAsCoverButton.setVisibility(View.INVISIBLE);
         }
         position = extras.getInt("position");
 

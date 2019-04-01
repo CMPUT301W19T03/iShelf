@@ -28,8 +28,8 @@ import ca.ualberta.ishelf.RecyclerAdapters.GalleryAdapter;
  * GalleryActivity
  *
  * Allows a user to see the associated images of a book
- * Allows for you to see an expanded view of the image if yyou click on the image
- * Allows for oyui to add a new image
+ * Allows for you to see an expanded view of the image if you click on the image
+ * Allows for you to add a new image (if you are the owner)
  *
  * @author : Faisal
  */
@@ -48,10 +48,11 @@ public class GalleryActivity extends AppCompatActivity {
 
     private Storage storage;
     private boolean hasBook;
+    private boolean isOwner;
 
     /**
      * OnCreate
-     * <p>
+     *
      * Initializes recyclerView and button
      *
      * @author : Faisal
@@ -69,12 +70,15 @@ public class GalleryActivity extends AppCompatActivity {
         Button addButton = (Button) findViewById((R.id.add_image_button));
         Bundle extras = getIntent().getExtras();
         if (extras != null) { hasBook = extras.getBoolean("has_book"); }
-
+        Boolean potentialOwner = extras.getBoolean("is_owner");
+        if (potentialOwner) {
+            isOwner = true;
+        }
         if (hasBook) {
             book = Objects.requireNonNull(extras).getParcelable("sent_book");
             imageList = Objects.requireNonNull(book).getGalleryImages();
             String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-            boolean isOwner = (currentUsername != null && currentUsername.equals(book.getOwner()));
+            isOwner = (currentUsername != null && currentUsername.equals(book.getOwner()));
             if (!isOwner) {addButton.setVisibility(View.INVISIBLE);}
         }
         else {
@@ -85,7 +89,12 @@ public class GalleryActivity extends AppCompatActivity {
         galleryRecyclerView = (RecyclerView) findViewById((R.id.gallery_recycler));
         galleryLayoutManager = new GridLayoutManager(this, 3);
         galleryRecyclerView.setLayoutManager(galleryLayoutManager);
-        galleryAdapter = new GalleryAdapter(this, imageList);
+        if (isOwner) {
+            galleryAdapter = new GalleryAdapter(this, imageList, true);
+        }
+        else {
+            galleryAdapter = new GalleryAdapter(this, imageList, false);
+        }
         galleryRecyclerView.setAdapter(galleryAdapter);
     }
 

@@ -24,6 +24,7 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import ca.ualberta.ishelf.GlideApp;
 import ca.ualberta.ishelf.Models.Storage;
@@ -43,12 +44,14 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
     private Context galleryContext;
     private final int EDIT_PHOTO = 37;
     private Storage storage;
+    private boolean isOwner;
 
 
-    public GalleryAdapter(Context galleryContext, ArrayList<String> originalList) {
+    public GalleryAdapter(Context galleryContext, ArrayList<String> originalList, boolean isOwner) {
         this.originalList = originalList;
         this.galleryContext = galleryContext;
         storage = new Storage();
+        this.isOwner = isOwner;
     }
 
     public static class GalleryViewHolder extends RecyclerView.ViewHolder {
@@ -81,6 +84,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 // send the bitmap to ViewImageActivity
                 Bundle extras = new Bundle();
                 extras.putString("sent_image", originalList.get(position));
+                extras.putBoolean("is_owner", isOwner);
                 extras.putInt("position", position);
                 Intent intent = new Intent((Activity) galleryContext, ViewImageActivity.class);
                 intent.putExtras(extras);

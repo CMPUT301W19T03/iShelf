@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -125,6 +126,12 @@ public class BookProfileActivity extends AppCompatActivity {
                 startActivityForResult(intent, GALLERY_IMAGE);
             }
         });
+
+//        SwipeRefreshLayout pullToRefresh = findViewById(R.id.refresh_book_page);
+//        pullToRefresh.setOnRefreshListener(() -> {
+//            finish();
+//            startActivity(getIntent());
+//        });
 
         Boolean canEdit = intent.getBooleanExtra("Button Visible", false);
 
@@ -812,9 +819,6 @@ public class BookProfileActivity extends AppCompatActivity {
             finish();
             startActivity(getIntent());
         }
-
-
-
     }
 
 

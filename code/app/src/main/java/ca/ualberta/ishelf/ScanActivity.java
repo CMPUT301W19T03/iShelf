@@ -70,6 +70,16 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.ResponseBody;
 
+
+/**
+ * ScanActivity
+ *
+ * Allows you to scan a book to get its iSBN
+ * Using Google Books API, all information about the book is retrieved
+ *
+ * @author : Faisal
+ */
+
 public class ScanActivity extends AppCompatActivity {
 
     final String TAG = "scanActivity";
@@ -120,8 +130,8 @@ public class ScanActivity extends AppCompatActivity {
     private String URLimage = "";
     private Button finishScanButton;
 
-    private boolean testing = false;
-    private boolean finished_computation = false;
+    public boolean testing = false;
+    public boolean finished_computation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,6 +142,10 @@ public class ScanActivity extends AppCompatActivity {
         // request to use cameras
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
 
+        /* get what role scanning plays:
+           - is it getting information of a book   or
+           - is it getting the ISBN for verification purposes
+         */
         Intent intent = getIntent();
         visit = intent.getStringExtra("task");
 
@@ -151,7 +165,6 @@ public class ScanActivity extends AppCompatActivity {
         detector = FirebaseVision.getInstance()
                 .getVisionBarcodeDetector(options);
 
-
         // get elements on screen
         textureView = findViewById(R.id.texture_view);
         lastISBN = findViewById(R.id.last_ISBN);
@@ -161,6 +174,7 @@ public class ScanActivity extends AppCompatActivity {
 
         setUpShutter();
 
+        // set up the surfaceTexture for the camera
         surfaceTextureListener = new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
@@ -179,6 +193,7 @@ public class ScanActivity extends AppCompatActivity {
             }
         };
 
+        // connects to the camera to create the preview
         stateCallback = new CameraDevice.StateCallback() {
             @Override
             public void onOpened(CameraDevice cameraDevice) {
@@ -213,6 +228,7 @@ public class ScanActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        // make sure to not leave any un-used resources lying around
         closeCamera();
         closeBackgroundThread();
         Log.d("cam","camStop");
@@ -238,6 +254,10 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Allows us to see a live preview of the camera
+     * @author: Faisal
+     */
     private void createPreviewSession() {
         try {
             SurfaceTexture surfaceTexture = textureView.getSurfaceTexture();
@@ -307,26 +327,36 @@ public class ScanActivity extends AppCompatActivity {
             }
     }
 
-    // opens background thread
+    // opens a background thread for the camera
     private void openBackgroundThread() {
         backgroundThread = new HandlerThread("camera_background_thread");
         backgroundThread.start();
         backgroundHandler = new Handler(backgroundThread.getLooper());
     }
 
-    public void getAsyncCall(){
+
+    /**
+     * Gets the information of a book using its ISBN (Google Books API)
+     * @author: Faisal
+     */
+    public void getBookInfo(){
         Request request = new Request.Builder()
                 .url(url + outputISBN)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
             @Override public void onFailure(Call call, IOException e) {
-                Log.e(TAG, "error in getting response using async okhttp call");
+                Log.e(TAG, "error in getting response using async OKHttp call");
             }
+
             @Override public void onResponse(Call call, Response response) throws IOException {
                 ResponseBody responseBody = response.body();
                 String originalURL = URLimage;
 
+                /*
+                Lots of error handling, since Google Books API may give incomplete and messy
+                information
+                 */
                 String string = null;
                 if (responseBody != null) {
                     string = responseBody.string();
@@ -412,6 +442,10 @@ public class ScanActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Return to EditBookActivity with any information retrieved that is useful
+     * @author: Faisal
+     */
     public void finishScanButton(View v) {
         if (finished_computation) {
             Bundle extras = new Bundle();
@@ -436,6 +470,10 @@ public class ScanActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Retrieves the ISBN from back of book using FireBaseVision
+     * @author: Faisal
+     */
     public void scanFAB(View v){
         finished_computation = false;
         shutter.startAnimation(fade);
@@ -446,11 +484,13 @@ public class ScanActivity extends AppCompatActivity {
             detector.detectInImage(image)
                     .addOnSuccessListener(barCodes -> {
                         if (barCodes.size() > 0) {
+                            // get the ISBN
                             FirebaseVisionBarcode ISBN = barCodes.get(0);
                             outputISBN = ISBN.getRawValue();
                             lastISBN.setText(outputISBN);
                             progressBar.setVisibility(View.VISIBLE);
-                            getAsyncCall();
+                            // get the Book information from the ISBN
+                            getBookInfo();
                         }
                         else {
                             String output = "Detected No ISBN";
@@ -460,14 +500,19 @@ public class ScanActivity extends AppCompatActivity {
                         }
                     });
         }
+
         if (testing) {
             outputISBN = "9780307401199";
             lastISBN.setText(outputISBN);
             progressBar.setVisibility(View.VISIBLE);
-            getAsyncCall();
+            getBookInfo();
         }
     }
 
+    /**
+     * Sets up a flash of white that appears when the user takes a photo/scan
+     * @author: Faisal
+     */
     public void setUpShutter(){
         shutter.setVisibility(View.INVISIBLE);
         fade.setDuration(1000);

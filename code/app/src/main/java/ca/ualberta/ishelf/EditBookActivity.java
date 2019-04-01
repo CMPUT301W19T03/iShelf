@@ -105,13 +105,14 @@ public class EditBookActivity extends AppCompatActivity {
     private final int GET_OTHER_BOOKS = 277;
     private final int PICK_IMAGE_FOR_GALLERY = 36;
 
-
     private final OkHttpClient client = new OkHttpClient();
 
     private String URLcover = "";
     private ArrayList<String> galleryImageURLS = new ArrayList<String>();
     private boolean computation_done = false;
     private Button saveButton;
+
+    private Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +123,8 @@ public class EditBookActivity extends AppCompatActivity {
         //if its an edit book then true otherwise false
         Intent intent = getIntent();
         Boolean check = intent.getBooleanExtra("Check Data", false );
+
+        storage = new Storage();
 
         TitleText = (EditText) findViewById(R.id.editTitle);
         AuthorText = (EditText) findViewById(R.id.editAuthor);
@@ -197,6 +200,7 @@ public class EditBookActivity extends AppCompatActivity {
                 Bundle extras = new Bundle();
                 extras.putBoolean("has_book", false);
                 extras.putStringArrayList("sent_list", galleryImageURLS);
+                extras.putBoolean("is_owner", true);
                 Intent intent = new Intent(EditBookActivity.this, GalleryActivity.class);
                 intent.putExtras(extras);
                 startActivityForResult(intent, GET_OTHER_BOOKS);
@@ -235,9 +239,14 @@ public class EditBookActivity extends AppCompatActivity {
             ISBNText.setText(Long.toString(isbn));
         }
 
-
-
-
+        // put image into imageView for cover if the cover exists
+        if (passedBook != null) {
+            ArrayList<String> images = passedBook.getGalleryImages();
+            if (images.size() > 0) {
+                String image = images.get(0);
+                storage.putImage(image, CoverImage, EditBookActivity.this);
+            }
+        }
     }
 //when save button is clicked
     public void save(View v){
@@ -453,6 +462,10 @@ public class EditBookActivity extends AppCompatActivity {
 
         if (requestCode == GET_OTHER_BOOKS && resultCode == Activity.RESULT_OK) {
             galleryImageURLS = data.getStringArrayListExtra("pathList");
+            if (galleryImageURLS.size() > 0) {
+                String path = galleryImageURLS.get(0);
+                storage.putImage(path, CoverImage,EditBookActivity.this);
+            }
         }
 
         if (requestCode == PICK_IMAGE_FOR_GALLERY && resultCode == Activity.RESULT_OK) {
@@ -470,6 +483,10 @@ public class EditBookActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Gets the book cover from a URL
+     * @author: Faisal
+     */
     public void getImageCover() {
         final Request request = new Request.Builder().url(URLcover).build();
         client.newCall(request).enqueue(new Callback() {
@@ -521,6 +538,7 @@ public class EditBookActivity extends AppCompatActivity {
         });
     }
 
+    
     public void pickImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
