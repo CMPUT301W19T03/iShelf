@@ -55,8 +55,7 @@
         <activity android:name=".GalleryActivity" />
         <activity android:name=".ScanActivity" />
         <activity android:name=".NotificationActivity" />
-        <activity android:name=".RatingActivity"
-            android:theme="@android:style/Theme.Dialog"/>
+        <activity android:name=".RatingActivity" />
         <activity
             android:name=".SignInActivity"
             android:windowSoftInputMode="adjustResize" />
