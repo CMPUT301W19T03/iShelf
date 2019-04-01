@@ -103,7 +103,6 @@ public class BookProfileActivity extends AppCompatActivity {
 
         ArrayList<String> images = passedBook.getGalleryImages();
         if (images.size() > 0) {
-
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference();
             String image = images.get(0);

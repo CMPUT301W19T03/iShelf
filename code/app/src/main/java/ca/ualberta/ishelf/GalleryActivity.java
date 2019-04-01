@@ -89,13 +89,20 @@ public class GalleryActivity extends AppCompatActivity {
         // set up FireBase Storage
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        // set up add button
 
+        addButton = (Button) findViewById((R.id.add_image_button));
         // get ID for book
         Bundle extras = getIntent().getExtras();
         check = extras.getString("check");
         if (check.equals("has_book")) {
             book = extras.getParcelable("sent_book");
             imageList = book.getGalleryImages();
+            String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
+            Boolean isOwner = (currentUsername.equals(book.getOwner()));
+            if(!isOwner) {
+                addButton.setVisibility(View.INVISIBLE);
+            }
         }
         else {
             imageList = extras.getStringArrayList("sent_list");
@@ -108,13 +115,8 @@ public class GalleryActivity extends AppCompatActivity {
         galleryAdapter = new GalleryAdapter(this, imageList);
         galleryRecyclerView.setAdapter(galleryAdapter);
 
-        // set up add button
-        String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
-        Boolean isOwner = (currentUsername.equals(book.getOwner()));
-        addButton = (Button) findViewById((R.id.add_image_button));
-        if(!isOwner) {
-            addButton.setVisibility(View.INVISIBLE);
-        }
+
+
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

@@ -109,7 +109,6 @@ public class EditBookActivity extends AppCompatActivity {
 
     private String URLcover = "";
     private ArrayList<String> galleryImageURLS = new ArrayList<String>();
-    private int indexCover = -1;
     private boolean computation_done = false;
     private Button saveButton;
 
@@ -122,6 +121,8 @@ public class EditBookActivity extends AppCompatActivity {
         //if its an edit book then true otherwise false
         Intent intent = getIntent();
         Boolean check = intent.getBooleanExtra("Check Data", false );
+
+
         TitleText = (EditText) findViewById(R.id.editTitle);
         AuthorText = (EditText) findViewById(R.id.editAuthor);
         ISBNText = (EditText) findViewById(R.id.editISBN);
@@ -131,6 +132,8 @@ public class EditBookActivity extends AppCompatActivity {
         CoverImage = (ImageView) findViewById(R.id.cover_image);
         AddCover = (Button) findViewById(R.id.add_cover_button);
         AddOther = (Button) findViewById(R.id.add_other_images_button);
+
+
 
         // add listener
         ISBNText.addTextChangedListener(new TextWatcher() {
@@ -269,7 +272,6 @@ public class EditBookActivity extends AppCompatActivity {
         passedBook.setGenre(genre);
         passedBook.setAuthor(author);
         passedBook.setGalleryImages(galleryImageURLS);
-        passedBook.setIndexCover(indexCover);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -460,8 +462,9 @@ public class EditBookActivity extends AppCompatActivity {
             Uri lastImagePath = data.getData();
             CoverImage.setImageURI(lastImagePath);
             String pathImage = "images1/" + UUID.randomUUID().toString();
-            galleryImageURLS.add(pathImage);
-            indexCover = galleryImageURLS.size() - 1;
+            galleryImageURLS.add(0,pathImage);
+
+
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageReference = storage.getReference();
             // store in Storage
@@ -505,8 +508,7 @@ public class EditBookActivity extends AppCompatActivity {
                     byte[] data = baos.toByteArray();
 
                     String pathImage = "images1/" + UUID.randomUUID().toString();
-                    galleryImageURLS.add(pathImage);
-                    indexCover = galleryImageURLS.size() - 1;
+                    galleryImageURLS.add(0, pathImage);
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageReference = storage.getReference();
                     StorageReference ref = storageReference.child(pathImage);
