@@ -327,7 +327,7 @@ public class BookProfileActivity extends AppCompatActivity {
         ISBN = "";
         Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
         Bundle extras = new Bundle();
-        extras.putString("task", "lend");
+        extras.putString("task", "verification");
         intent.putExtras(extras);
         startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
     }
@@ -340,7 +340,7 @@ public class BookProfileActivity extends AppCompatActivity {
             ISBN = "";
             Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
             Bundle extras = new Bundle();
-            extras.putString("task", "lend");
+            extras.putString("task", "verification");
             intent.putExtras(extras);
             startActivityForResult(intent, SCAN_AND_Accept_Borrower);
         }
@@ -348,7 +348,7 @@ public class BookProfileActivity extends AppCompatActivity {
             ISBN = "";
             Intent intent = new Intent(BookProfileActivity.this, ScanActivity.class);
             Bundle extras = new Bundle();
-            extras.putString("task", "lend");
+            extras.putString("task", "verification");
             intent.putExtras(extras);
             startActivityForResult(intent, SCAN_AND_Accept_OWner);
 
