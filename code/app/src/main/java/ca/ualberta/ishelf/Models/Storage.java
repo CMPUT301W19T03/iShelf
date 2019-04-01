@@ -54,4 +54,20 @@ public class Storage {
                 .load(ref)
                 .into(imageView);
     }
+
+    public CompletableFuture<Void> deleteImage(String path, Context context) {
+        final CompletableFuture<Void> future = new CompletableFuture<>();
+
+        StorageReference deleteRef = storageReference.child(path);
+
+        deleteRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                    future.complete(null);
+                }).addOnFailureListener(exception -> {
+                    Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show();
+                    future.complete(null);
+                });
+        return future;
+    }
 }

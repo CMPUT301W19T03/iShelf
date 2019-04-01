@@ -9,11 +9,17 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.ortiz.touchview.TouchImageView;
+
+import java.util.concurrent.CompletableFuture;
+
+import ca.ualberta.ishelf.Models.Storage;
 
 
 /**
@@ -30,69 +36,36 @@ public class ViewImageActivity extends AppCompatActivity {
 
     private ImageView fullImage;
     private Button deleteButton;
-    private int position;
-
-    FirebaseStorage storage;
-    StorageReference storageReference;
-
+    private Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_image);
 
-        storage = FirebaseStorage.getInstance();
-        storageReference = storage.getReference();
+        storage = new Storage();
 
-        fullImage = (ImageView) findViewById(R.id.full_image);
+        fullImage = (TouchImageView) findViewById(R.id.full_image);
         Bundle extras = getIntent().getExtras();
-        String URL = extras.getString("sent_image");
-        position = extras.getInt("position");
+        String path = extras.getString("sent_image");
+        int position = extras.getInt("position");
 
-        StorageReference ref = storageReference.child(URL);
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-        ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                fullImage.setImageBitmap(bitmap);
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                // Handle any errors
-            }
-        });
+        storage.putImage(path, fullImage, ViewImageActivity.this);
 
         // set up add button
-        deleteButton = (Button) findViewById((R.id.delete_image_button));
+        deleteButton = findViewById((R.id.delete_image_button));
 
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Bundle extras = new Bundle();
-                extras.putInt("position", position);
-                StorageReference deleteRef = storageReference.child(URL);
-
-                // Delete the file
-                deleteRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        // File deleted successfully
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        // Uh-oh, an error occurred!
-                    }
-                });
-
+        deleteButton.setOnClickListener(view -> {
+            Bundle extras1 = new Bundle();
+            extras1.putInt("position", position);
+            CompletableFuture<Void> future = storage.deleteImage(path, ViewImageActivity.this);
+            Runnable runnable = () -> {
                 Intent intent = new Intent(view.getContext(), GalleryActivity.class);
-                intent.putExtras(extras);
+                intent.putExtras(extras1);
                 setResult(RESULT_OK, intent);
                 finish();
-            }
+            };
+            future.thenRun(runnable);
         });
 
     }
