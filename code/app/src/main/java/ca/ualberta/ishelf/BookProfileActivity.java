@@ -38,6 +38,7 @@ import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.Models.Database;
 import ca.ualberta.ishelf.Models.Notification;
 import ca.ualberta.ishelf.Models.Request;
+import ca.ualberta.ishelf.Models.Storage;
 import ca.ualberta.ishelf.Models.User;
 
 /**
@@ -74,7 +75,9 @@ import ca.ualberta.ishelf.Models.User;
 public class BookProfileActivity extends AppCompatActivity {
     private final String link = "https://ishelf-bb4e7.firebaseio.com";
     private Firebase ref;
+
     private Book passedBook = null;
+
     final String TAG = "BookProfileActivity";
     private Button mapButton;
     private final int SCAN_AND_GET_DESCRIPTION = 212;
@@ -87,42 +90,26 @@ public class BookProfileActivity extends AppCompatActivity {
     private String ISBN = new String();
     private TextView cholder;
 
+    private Storage storage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book_profile);
 
-
+        storage = new Storage();
 
         // get the book object passed by intent
         Intent intent = getIntent();
         passedBook = intent.getParcelableExtra("Book Data");
 
-
         ImageView gallery_image = (ImageView) findViewById(R.id.image_book);
-
         ArrayList<String> images = passedBook.getGalleryImages();
+
         if (images.size() > 0) {
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageReference = storage.getReference();
             String image = images.get(0);
-            StorageReference ref = storageReference.child(image);
-
-            final long ONE_MEGABYTE = 1024 * 1024;
-            ref.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                @Override
-                public void onSuccess(byte[] bytes) {
-                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                    gallery_image.setImageBitmap(bitmap);
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    // Handle any errors
-                }
-            });
+            storage.putImage(image, gallery_image, BookProfileActivity.this);
         }
-
 
         galleryButton = (Button) findViewById(R.id.gallery_button);
 
@@ -157,7 +144,7 @@ public class BookProfileActivity extends AppCompatActivity {
             lendButton.setVisibility(View.VISIBLE);
 
         }
-        if((isOwner || isHolder || isRequester)&& passedBook.getTransition()>0){
+        if((isOwner || isHolder || isRequester) && passedBook.getTransition()>0){
             Button mapButton =findViewById(R.id.map);
             canEdit=false;
             mapButton.setVisibility(View.VISIBLE);

@@ -113,6 +113,7 @@ public class GalleryActivity extends AppCompatActivity {
                 return;
             }
 
+            // get Uri and path (for FireBase Storage)
             Uri lastImagePath = data.getData();
             String pathImage = "images1/" + UUID.randomUUID().toString();
 

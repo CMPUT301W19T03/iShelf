@@ -103,7 +103,7 @@ public class EditBookActivity extends AppCompatActivity {
 
     private final int SCAN_AND_GET_DESCRIPTION = 212;
     private final int GET_OTHER_BOOKS = 277;
-    private final int PICK_IMAGE_FOR_GALLERYY = 36;
+    private final int PICK_IMAGE_FOR_GALLERY = 36;
 
 
     private final OkHttpClient client = new OkHttpClient();
@@ -113,16 +113,15 @@ public class EditBookActivity extends AppCompatActivity {
     private boolean computation_done = false;
     private Button saveButton;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_book);
 
+
         //if its an edit book then true otherwise false
         Intent intent = getIntent();
         Boolean check = intent.getBooleanExtra("Check Data", false );
-
 
         TitleText = (EditText) findViewById(R.id.editTitle);
         AuthorText = (EditText) findViewById(R.id.editAuthor);
@@ -456,7 +455,7 @@ public class EditBookActivity extends AppCompatActivity {
             galleryImageURLS = data.getStringArrayListExtra("pathList");
         }
 
-        if (requestCode == PICK_IMAGE_FOR_GALLERYY && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_IMAGE_FOR_GALLERY && resultCode == Activity.RESULT_OK) {
             if (data == null) {
                 return;
             }
@@ -525,7 +524,7 @@ public class EditBookActivity extends AppCompatActivity {
     public void pickImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
+        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERY);
     }
 }
 
