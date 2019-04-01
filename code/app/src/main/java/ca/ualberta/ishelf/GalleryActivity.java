@@ -165,8 +165,7 @@ public class GalleryActivity extends AppCompatActivity {
         }
         else {
             Bundle extras = new Bundle();
-            ArrayList<String> newList = new ArrayList<>(imageList);
-            extras.putStringArrayList("back_list", newList);
+            extras.putStringArrayList("back_list", imageList);
             Intent intent = new Intent(GalleryActivity.this, BookProfileActivity.class);
             intent.putExtras(extras);
             setResult(RESULT_OK, intent);
