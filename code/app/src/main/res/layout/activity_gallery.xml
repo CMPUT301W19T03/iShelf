@@ -4,7 +4,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:background="@drawable/shape"
     android:layout_height="match_parent">
 
     <android.support.v7.widget.RecyclerView
@@ -22,13 +21,14 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
+        android:layout_marginLeft="16dp"
         android:layout_marginEnd="16dp"
+        android:layout_marginRight="16dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/gradientbutton"
-        android:onClick="finishGalleryButton"
         android:text="FINISH"
         android:textColor="#ffffff"
         android:textStyle="bold"
+        android:background="@drawable/gradientbutton"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -40,11 +40,10 @@
         android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:background="@drawable/roundedbutton"
-        android:onClick="addImageButton"
         android:text="ADD IMAGE"
         android:textColor="#ffffff"
         android:textStyle="bold"
+        android:background="@drawable/roundedbutton"
         app:layout_constraintBottom_toTopOf="@+id/done_gallery_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
