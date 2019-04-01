@@ -84,6 +84,7 @@ public class BookProfileActivity extends AppCompatActivity {
     private final int SCAN_AND_Accept_Borrower = 213;
     private final int SCAN_AND_Return = 214;
     private final int SCAN_AND_Accept_OWner = 215;
+    private final int GALLERY_IMAGE = 216;
 
     // to see a gallery of books
     private Button galleryButton;
@@ -121,7 +122,7 @@ public class BookProfileActivity extends AppCompatActivity {
                 extras.putParcelable("sent_book", passedBook);
                 Intent intent = new Intent(view.getContext(), GalleryActivity.class);
                 intent.putExtras(extras);
-                startActivity(intent);
+                startActivityForResult(intent, GALLERY_IMAGE);
             }
         });
 
@@ -805,13 +806,25 @@ public class BookProfileActivity extends AppCompatActivity {
 
         }
 
+        else if(requestCode == GALLERY_IMAGE && resultCode == Activity.RESULT_OK){
+            ArrayList<String> backList = data.getStringArrayListExtra("back_list");
+            passedBook.setGalleryImages(backList);
+            finish();
+            startActivity(getIntent());
+        }
+
+
 
     }
+
+
 
     public void reviewsClicked(View v){
         Intent intent = new Intent(this, ViewRatingsActivity.class);
         intent.putExtra("BookID", passedBook.getId().toString());
         startActivity(intent);
     }
+
+
 
 }

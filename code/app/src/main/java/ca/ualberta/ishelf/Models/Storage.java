@@ -1,23 +1,17 @@
 package ca.ualberta.ishelf.Models;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
-import android.support.annotation.NonNull;
+import android.support.v4.widget.CircularProgressDrawable;
+import android.view.Gravity;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
 import java.util.concurrent.CompletableFuture;
-
-import ca.ualberta.ishelf.BookProfileActivity;
-import ca.ualberta.ishelf.EditBookActivity;
 import ca.ualberta.ishelf.GlideApp;
+
 
 public class Storage {
     private FirebaseStorage storage;
@@ -34,11 +28,11 @@ public class Storage {
         StorageReference ref = storageReference.child(path);
         ref.putFile(image)
                 .addOnSuccessListener(taskSnapshot -> {
-                    Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                    upToast("Success", context);
                     future.complete(null);
                 })
                 .addOnFailureListener(error -> {
-                    Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show();
+                    upToast("Failure", context);
                     future.complete(null);
                 })
                 .addOnProgressListener(taskSnapshot -> {
@@ -48,10 +42,16 @@ public class Storage {
     }
 
     public void putImage(String path, ImageView imageView, Context context) {
+        // https://stackoverflow.com/questions/35305875/progress-bar-while-loading-image-using-glide
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(context);
+        circularProgressDrawable.setStrokeWidth(5f);
+        circularProgressDrawable.setCenterRadius(30f);
+        circularProgressDrawable.start();
         StorageReference ref = storageReference.child(path);
 
         GlideApp.with(context)
                 .load(ref)
+                .placeholder(circularProgressDrawable)
                 .into(imageView);
     }
 
@@ -62,12 +62,20 @@ public class Storage {
 
         deleteRef.delete()
                 .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(context, "Success", Toast.LENGTH_SHORT).show();
+                    upToast("Success", context);
                     future.complete(null);
                 }).addOnFailureListener(exception -> {
-                    Toast.makeText(context, "Failure", Toast.LENGTH_SHORT).show();
+                    upToast("Failure", context);
                     future.complete(null);
-                });
+        });
         return future;
     }
+
+    public void upToast(String string, Context context) {
+        @SuppressLint("ShowToast")
+        Toast toast = Toast.makeText(context, string, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 64);
+        toast.show();
+    }
+
 }

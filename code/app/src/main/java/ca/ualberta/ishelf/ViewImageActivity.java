@@ -34,9 +34,9 @@ import ca.ualberta.ishelf.Models.Storage;
  */
 public class ViewImageActivity extends AppCompatActivity {
 
-    private ImageView fullImage;
-    private Button deleteButton;
     private Storage storage;
+    private int position;
+    private String path;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,28 +45,37 @@ public class ViewImageActivity extends AppCompatActivity {
 
         storage = new Storage();
 
-        fullImage = (TouchImageView) findViewById(R.id.full_image);
+        ImageView fullImage = (TouchImageView) findViewById(R.id.full_image);
         Bundle extras = getIntent().getExtras();
-        String path = extras.getString("sent_image");
-        int position = extras.getInt("position");
+        if (extras != null) {
+            path = extras.getString("sent_image");
+        }
+        position = extras.getInt("position");
 
         storage.putImage(path, fullImage, ViewImageActivity.this);
+    }
 
-        // set up add button
-        deleteButton = findViewById((R.id.delete_image_button));
+    public void deleteImageButton(View v){
+        Bundle extras = new Bundle();
+        extras.putInt("position", position);
+        extras.putString("action", "delete");
+        CompletableFuture<Void> future = storage.deleteImage(path, ViewImageActivity.this);
+        Runnable runnable = () -> {
+            Intent intent = new Intent(ViewImageActivity.this, GalleryActivity.class);
+            intent.putExtras(extras);
+            setResult(RESULT_OK, intent);
+            finish();
+        };
+        future.thenRun(runnable);
+    }
 
-        deleteButton.setOnClickListener(view -> {
-            Bundle extras1 = new Bundle();
-            extras1.putInt("position", position);
-            CompletableFuture<Void> future = storage.deleteImage(path, ViewImageActivity.this);
-            Runnable runnable = () -> {
-                Intent intent = new Intent(view.getContext(), GalleryActivity.class);
-                intent.putExtras(extras1);
-                setResult(RESULT_OK, intent);
-                finish();
-            };
-            future.thenRun(runnable);
-        });
-
+    public void setAsCoverButton(View v) {
+        Bundle extras = new Bundle();
+        extras.putInt("position", position);
+        extras.putString("action", "setCover");
+        Intent intent = new Intent(ViewImageActivity.this, GalleryActivity.class);
+        intent.putExtras(extras);
+        setResult(RESULT_OK, intent);
+        finish();
     }
 }

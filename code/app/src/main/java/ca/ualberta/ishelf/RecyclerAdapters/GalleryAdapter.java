@@ -41,7 +41,7 @@ import ca.ualberta.ishelf.ViewImageActivity;
 public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private ArrayList<String> originalList = new ArrayList<String>();
     private Context galleryContext;
-    private final int DELETE_IMAGE = 37;
+    private final int EDIT_PHOTO = 37;
     private Storage storage;
 
 
@@ -85,7 +85,7 @@ public class GalleryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 Intent intent = new Intent((Activity) galleryContext, ViewImageActivity.class);
                 intent.putExtras(extras);
                 Activity galleryActivity = (Activity) galleryContext;
-                galleryActivity.startActivityForResult(intent, DELETE_IMAGE);
+                galleryActivity.startActivityForResult(intent, EDIT_PHOTO);
             }
         });
     }

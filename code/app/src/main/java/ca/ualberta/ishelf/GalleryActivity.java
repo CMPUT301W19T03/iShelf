@@ -37,7 +37,7 @@ import ca.ualberta.ishelf.RecyclerAdapters.GalleryAdapter;
 public class GalleryActivity extends AppCompatActivity {
 
     private final int PICK_IMAGE_FOR_GALLERY = 36;
-    private final int DELETE_IMAGE = 37;
+    private final int EDIT_PHOTO = 37;
 
     private ArrayList<String> imageList = new ArrayList<String>();
     private Book book;
@@ -83,7 +83,7 @@ public class GalleryActivity extends AppCompatActivity {
 
         // create recycler for images
         galleryRecyclerView = (RecyclerView) findViewById((R.id.gallery_recycler));
-        galleryLayoutManager = new GridLayoutManager(this, 2);
+        galleryLayoutManager = new GridLayoutManager(this, 3);
         galleryRecyclerView.setLayoutManager(galleryLayoutManager);
         galleryAdapter = new GalleryAdapter(this, imageList);
         galleryRecyclerView.setAdapter(galleryAdapter);
@@ -131,16 +131,26 @@ public class GalleryActivity extends AppCompatActivity {
             future.thenRun(runnable);
         }
 
-        if (requestCode == DELETE_IMAGE && resultCode == Activity.RESULT_OK) {
-            int position = data.getIntExtra("position", -1 );
-            imageList.remove(position);
+        if (requestCode == EDIT_PHOTO && resultCode == Activity.RESULT_OK) {
+            String action = data.getStringExtra("action");
+            int position = data.getIntExtra("position", -1);
+            if (action.equals("delete")) {
+                imageList.remove(position);
+                galleryAdapter.notifyItemRemoved(position);
+                galleryAdapter.notifyItemRangeChanged(position, imageList.size());
+            }
+            else if (action.equals("setCover")) {
+                String coverString = imageList.get(position);
+                imageList.remove(position);
+                imageList.add(0, coverString);
+                galleryAdapter.notifyDataSetChanged();
+            }
             if (book != null) {
                 Database db = new Database(this);
                 db.connect(this);
                 db.editBook(book);
             }
-            galleryAdapter.notifyItemRemoved(position);
-            galleryAdapter.notifyItemRangeChanged(position, imageList.size());
+
         }
     }
 
@@ -154,6 +164,12 @@ public class GalleryActivity extends AppCompatActivity {
             finish();
         }
         else {
+            Bundle extras = new Bundle();
+            ArrayList<String> newList = new ArrayList<>(imageList);
+            extras.putStringArrayList("back_list", newList);
+            Intent intent = new Intent(GalleryActivity.this, BookProfileActivity.class);
+            intent.putExtras(extras);
+            setResult(RESULT_OK, intent);
             finish();
         }
     }
