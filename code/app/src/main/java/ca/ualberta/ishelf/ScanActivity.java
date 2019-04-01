@@ -82,41 +82,41 @@ import okhttp3.ResponseBody;
 
 public class ScanActivity extends AppCompatActivity {
 
-    final String TAG = "scanActivity";
-
     // camera variables
     private CameraManager cameraManager;
     private int cameraFacing;
-    private String cameraId;
     private CameraDevice cameraDevice;
     private CaptureRequest.Builder captureRequestBuilder;
     private CameraCaptureSession scanSession;
     private CaptureRequest captureRequest;
-    private CameraDevice.StateCallback stateCallback;
+    final String TAG = "scanActivity";
 
-    // handler variables
+    private Size Size;
     private Handler backgroundHandler;
     private HandlerThread backgroundThread;
 
-    // textureView variables
-    private Size Size;
+    private CameraDevice.StateCallback stateCallback;
     private TextureView.SurfaceTextureListener surfaceTextureListener;
 
-    // MLKit variables
-    FirebaseVisionBarcodeDetectorOptions options;
-    FirebaseVisionBarcodeDetector detector;
+    // strings
+    private String cameraId;
 
     private Bitmap lastScan;
     private String outputISBN = "";
+
+    FirebaseVisionBarcodeDetectorOptions options;
+    FirebaseVisionBarcodeDetector detector;
 
     private int CAMERA_REQUEST_CODE = 29;
 
     // elements on screen
     private TextureView textureView;
+    private FloatingActionButton scanFab;
     private Button lastISBN;
     private FrameLayout shutter;
     private final AlphaAnimation fade = new AlphaAnimation(1, 0);
     private ProgressBar progressBar;
+
     private String visit;
 
 
@@ -130,8 +130,8 @@ public class ScanActivity extends AppCompatActivity {
     private String URLimage = "";
     private Button finishScanButton;
 
-    public boolean testing = false;
-    public boolean finished_computation = false;
+    private boolean testing = false;
+    private boolean finished_computation = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,19 +139,70 @@ public class ScanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scan);
 
-        // request to use cameras
+        // need to use camera
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, CAMERA_REQUEST_CODE);
 
-        /* get what role scanning plays:
-           - is it getting information of a book   or
-           - is it getting the ISBN for verification purposes
-         */
+        // get elements on screen
+        textureView = (TextureView) findViewById(R.id.texture_view);
+        scanFab = (FloatingActionButton) findViewById(R.id.scan_fab);
+        lastISBN = (Button) findViewById(R.id.last_ISBN);
+        shutter = (FrameLayout) findViewById(R.id.snapshot_effect);
+        progressBar = (ProgressBar) findViewById(R.id.progress_bar_scan);
+
+
         Intent intent = getIntent();
         visit = intent.getStringExtra("task");
 
-        // set up back button -- just go back to previous activity (that is, EditBookProfile)
-        FloatingActionButton backScan = findViewById(R.id.back_button_camera);
-        backScan.setOnClickListener(view -> finish());
+        finishScanButton = (Button) findViewById(R.id.accept_scan_button);
+        FloatingActionButton backScan = (FloatingActionButton) findViewById(R.id.back_button_camera);
+
+        finishScanButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (finished_computation) {
+                    Bundle extras = new Bundle();
+                    extras.putString("ISBN", outputISBN);
+                    extras.putString("description", description);
+                    extras.putString("title", title);
+                    extras.putString("year", year);
+                    extras.putString("author", author);
+                    extras.putString("genre", genre);
+                    extras.putString("URL", URLimage);
+
+                    if (visit.equals("get_description")) {
+                        Intent intent = new Intent(ScanActivity.this, EditBookActivity.class);
+                    } else if (visit.equals("lend")) {
+                        Intent intent = new Intent(ScanActivity.this, BookProfileActivity.class);
+                    }
+                    intent.putExtras(extras);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
+            }
+        });
+
+        backScan.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+
+            }
+        });
+
+        shutter.setVisibility(View.INVISIBLE);
+        fade.setDuration(1000);
+        fade.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation anim) {
+                shutter.setVisibility(View.GONE);
+            }
+            @Override
+            public void onAnimationRepeat(Animation anim) {
+            }
+            @Override
+            public void onAnimationStart(Animation anim) {
+            }
+        });
 
         // basic camera setup
         cameraManager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
@@ -162,56 +213,92 @@ public class ScanActivity extends AppCompatActivity {
                 .setBarcodeFormats(
                         FirebaseVisionBarcode.FORMAT_EAN_13)
                 .build();
+
         detector = FirebaseVision.getInstance()
                 .getVisionBarcodeDetector(options);
 
-        // get elements on screen
-        textureView = findViewById(R.id.texture_view);
-        lastISBN = findViewById(R.id.last_ISBN);
-        shutter = findViewById(R.id.snapshot_effect);
-        progressBar = findViewById(R.id.progress_bar_scan);
-        finishScanButton = findViewById(R.id.accept_scan_button);
+        scanFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finished_computation = false;
+                shutter.startAnimation(fade);
+                lastScan = textureView.getBitmap();
+                //lastScan = BitmapFactory.decodeResource(getResources(), R.drawable.isbn_test2);
+                if (!testing) {
+                    FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(lastScan);
+                    Task<List<FirebaseVisionBarcode>> result = detector.detectInImage(image)
+                            .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionBarcode>>() {
+                                @Override
+                                public void onSuccess(List<FirebaseVisionBarcode> barCodes) {
+                                    if (barCodes.size() > 0) {
+                                        FirebaseVisionBarcode ISBN = barCodes.get(0);
+                                        outputISBN = ISBN.getRawValue();
+                                        lastISBN.setText(outputISBN);
+                                        progressBar.setVisibility(View.VISIBLE);
+                                        getBookInfo();
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                }
+                            });
+                }
+                if (testing) {
+                    outputISBN = "9780307401199";
+                    lastISBN.setText(outputISBN);
+                    progressBar.setVisibility(View.VISIBLE);
+                    getBookInfo();
+                }
+            }
+        });
 
-        setUpShutter();
-
-        // set up the surfaceTexture for the camera
         surfaceTextureListener = new TextureView.SurfaceTextureListener() {
             @Override
             public void onSurfaceTextureAvailable(SurfaceTexture surfaceTexture, int width, int height) {
                 initializeCamera();
                 openCamera();
             }
+
             @Override
             public void onSurfaceTextureSizeChanged(SurfaceTexture surfaceTexture, int width, int height) {
             }
+
             @Override
             public boolean onSurfaceTextureDestroyed(SurfaceTexture surfaceTexture) {
                 return false;
             }
+
             @Override
             public void onSurfaceTextureUpdated(SurfaceTexture surfaceTexture) {
+
             }
         };
 
-        // connects to the camera to create the preview
+
         stateCallback = new CameraDevice.StateCallback() {
             @Override
             public void onOpened(CameraDevice cameraDevice) {
                 ScanActivity.this.cameraDevice = cameraDevice;
                 createPreviewSession();
             }
+
             @Override
             public void onDisconnected(CameraDevice cameraDevice) {
                 cameraDevice.close();
                 ScanActivity.this.cameraDevice = null;
             }
+
             @Override
             public void onError(CameraDevice cameraDevice, int error) {
                 cameraDevice.close();
                 ScanActivity.this.cameraDevice = null;
             }
         };
+
     }
+
 
     @Override
     protected void onResume() {
@@ -438,94 +525,6 @@ public class ScanActivity extends AppCompatActivity {
                     throw new IOException("Error response " + response);
                 }
 
-            }
-        });
-    }
-
-    /**
-     * Return to EditBookActivity with any information retrieved that is useful
-     * @author: Faisal
-     */
-    public void finishScanButton(View v) {
-        if (finished_computation) {
-            Bundle extras = new Bundle();
-            extras.putString("ISBN", outputISBN);
-            extras.putString("description", description);
-            extras.putString("title", title);
-            extras.putString("year", year);
-            extras.putString("author", author);
-            extras.putString("genre", genre);
-            extras.putString("URL", URLimage);
-
-            Intent intent = null;
-            if (visit.equals("get_book_info")) {
-                intent = new Intent(ScanActivity.this, EditBookActivity.class);
-            }
-            else if (visit.equals("verification")) {
-                intent = new Intent(ScanActivity.this, BookProfileActivity.class);
-            }
-            intent.putExtras(extras);
-            setResult(RESULT_OK, intent);
-            finish();
-        }
-    }
-
-    /**
-     * Retrieves the ISBN from back of book using FireBaseVision
-     * @author: Faisal
-     */
-    public void scanFAB(View v){
-        finished_computation = false;
-        shutter.startAnimation(fade);
-
-        lastScan = textureView.getBitmap();
-        if (!testing) {
-            FirebaseVisionImage image = FirebaseVisionImage.fromBitmap(lastScan);
-            detector.detectInImage(image)
-                    .addOnSuccessListener(barCodes -> {
-                        if (barCodes.size() > 0) {
-                            // get the ISBN
-                            FirebaseVisionBarcode ISBN = barCodes.get(0);
-                            outputISBN = ISBN.getRawValue();
-                            lastISBN.setText(outputISBN);
-                            progressBar.setVisibility(View.VISIBLE);
-                            // get the Book information from the ISBN
-                            getBookInfo();
-                        }
-                        else {
-                            String output = "Detected No ISBN";
-                            @SuppressLint("ShowToast") Toast toast = Toast.makeText(ScanActivity.this, output, Toast.LENGTH_SHORT);
-                            toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 64);
-                            toast.show();
-                        }
-                    });
-        }
-
-        if (testing) {
-            outputISBN = "9780307401199";
-            lastISBN.setText(outputISBN);
-            progressBar.setVisibility(View.VISIBLE);
-            getBookInfo();
-        }
-    }
-
-    /**
-     * Sets up a flash of white that appears when the user takes a photo/scan
-     * @author: Faisal
-     */
-    public void setUpShutter(){
-        shutter.setVisibility(View.INVISIBLE);
-        fade.setDuration(1000);
-        fade.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationEnd(Animation anim) {
-                shutter.setVisibility(View.GONE);
-            }
-            @Override
-            public void onAnimationRepeat(Animation anim) {
-            }
-            @Override
-            public void onAnimationStart(Animation anim) {
             }
         });
     }

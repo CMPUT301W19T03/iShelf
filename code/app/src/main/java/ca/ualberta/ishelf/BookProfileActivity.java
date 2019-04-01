@@ -737,7 +737,7 @@ public class BookProfileActivity extends AppCompatActivity {
 
             ISBN = data.getStringExtra("ISBN");
             if(passedBook.getISBN().equals(Long.valueOf(ISBN).longValue())){
-                Button retButton =findViewById(R.id.ret);
+                Button retButton = findViewById(R.id.ret);
                 retButton.setVisibility(View.INVISIBLE);
                 passedBook.setTransition(4);
                 Database db =new Database(this );
@@ -781,7 +781,7 @@ public class BookProfileActivity extends AppCompatActivity {
             }
 
         }
-        else if(requestCode == SCAN_AND_Accept_OWner&& resultCode == Activity.RESULT_OK){
+        else if(requestCode == SCAN_AND_Accept_OWner && resultCode == Activity.RESULT_OK){
             // Remove the book ID to the new holder borrowedBooks list
 
 
