@@ -49,6 +49,7 @@ import java.util.UUID;
 
 import ca.ualberta.ishelf.Models.Book;
 import ca.ualberta.ishelf.Models.Database;
+import ca.ualberta.ishelf.Models.Storage;
 import ca.ualberta.ishelf.Models.User;
 import ca.ualberta.ishelf.RecyclerAdapters.MyAdapter;
 import ca.ualberta.ishelf.RecyclerAdapters.myBooksFragment;
@@ -102,26 +103,29 @@ public class EditBookActivity extends AppCompatActivity {
 
     private final int SCAN_AND_GET_DESCRIPTION = 212;
     private final int GET_OTHER_BOOKS = 277;
-    private final int PICK_IMAGE_FOR_GALLERYY = 36;
-
+    private final int PICK_IMAGE_FOR_GALLERY = 36;
 
     private final OkHttpClient client = new OkHttpClient();
 
     private String URLcover = "";
     private ArrayList<String> galleryImageURLS = new ArrayList<String>();
-    private int indexCover = -1;
     private boolean computation_done = false;
     private Button saveButton;
 
+    private Storage storage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_book);
 
+
         //if its an edit book then true otherwise false
         Intent intent = getIntent();
         Boolean check = intent.getBooleanExtra("Check Data", false );
+
+        storage = new Storage();
+
         TitleText = (EditText) findViewById(R.id.editTitle);
         AuthorText = (EditText) findViewById(R.id.editAuthor);
         ISBNText = (EditText) findViewById(R.id.editISBN);
@@ -131,6 +135,8 @@ public class EditBookActivity extends AppCompatActivity {
         CoverImage = (ImageView) findViewById(R.id.cover_image);
         AddCover = (Button) findViewById(R.id.add_cover_button);
         AddOther = (Button) findViewById(R.id.add_other_images_button);
+
+
 
         // add listener
         ISBNText.addTextChangedListener(new TextWatcher() {
@@ -163,7 +169,7 @@ public class EditBookActivity extends AppCompatActivity {
 
                 Intent intent = new Intent(EditBookActivity.this, ScanActivity.class);
                 Bundle extras = new Bundle();
-                extras.putString("task", "get_description");
+                extras.putString("task", "get_book_info");
                 intent.putExtras(extras);
                 startActivityForResult(intent, SCAN_AND_GET_DESCRIPTION);
             }
@@ -192,8 +198,9 @@ public class EditBookActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Bundle extras = new Bundle();
-                extras.putString("check", "new");
+                extras.putBoolean("has_book", false);
                 extras.putStringArrayList("sent_list", galleryImageURLS);
+                extras.putBoolean("is_owner", true);
                 Intent intent = new Intent(EditBookActivity.this, GalleryActivity.class);
                 intent.putExtras(extras);
                 startActivityForResult(intent, GET_OTHER_BOOKS);
@@ -214,6 +221,7 @@ public class EditBookActivity extends AppCompatActivity {
 //if its a book being edited set all text views to the preset data of the book object
         if(check){
             passedBook = intent.getParcelableExtra("Book Data");
+            galleryImageURLS = passedBook.getGalleryImages();
 
             String title = passedBook.getName();
             String author = passedBook.getAuthor();
@@ -231,9 +239,14 @@ public class EditBookActivity extends AppCompatActivity {
             ISBNText.setText(Long.toString(isbn));
         }
 
-
-
-
+        // put image into imageView for cover if the cover exists
+        if (passedBook != null) {
+            ArrayList<String> images = passedBook.getGalleryImages();
+            if (images.size() > 0) {
+                String image = images.get(0);
+                storage.putImage(image, CoverImage, EditBookActivity.this);
+            }
+        }
     }
 //when save button is clicked
     public void save(View v){
@@ -269,7 +282,6 @@ public class EditBookActivity extends AppCompatActivity {
         passedBook.setGenre(genre);
         passedBook.setAuthor(author);
         passedBook.setGalleryImages(galleryImageURLS);
-        passedBook.setIndexCover(indexCover);
 
         // Get the signed in user's username from Shared Preferences
         String currentUsername = getSharedPreferences("UserPreferences", Context.MODE_PRIVATE).getString("username", null);
@@ -450,9 +462,13 @@ public class EditBookActivity extends AppCompatActivity {
 
         if (requestCode == GET_OTHER_BOOKS && resultCode == Activity.RESULT_OK) {
             galleryImageURLS = data.getStringArrayListExtra("pathList");
+            if (galleryImageURLS.size() > 0) {
+                String path = galleryImageURLS.get(0);
+                storage.putImage(path, CoverImage,EditBookActivity.this);
+            }
         }
 
-        if (requestCode == PICK_IMAGE_FOR_GALLERYY && resultCode == Activity.RESULT_OK) {
+        if (requestCode == PICK_IMAGE_FOR_GALLERY && resultCode == Activity.RESULT_OK) {
             if (data == null) {
                 return;
             }
@@ -460,33 +476,17 @@ public class EditBookActivity extends AppCompatActivity {
             Uri lastImagePath = data.getData();
             CoverImage.setImageURI(lastImagePath);
             String pathImage = "images1/" + UUID.randomUUID().toString();
-            galleryImageURLS.add(pathImage);
-            indexCover = galleryImageURLS.size() - 1;
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageReference = storage.getReference();
-            // store in Storage
-            StorageReference ref = storageReference.child(pathImage);
-            ref.putFile(lastImagePath)
-                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                            Toast.makeText(EditBookActivity.this, "Uploaded", Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(EditBookActivity.this, "Failed " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    })
-                    .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-                        @Override
-                        public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-                        }
-                    });
+            galleryImageURLS.add(0, pathImage);
+
+            Storage storage = new Storage();
+            storage.addImage(pathImage, lastImagePath, EditBookActivity.this);
         }
     }
 
+    /**
+     * Gets the book cover from a URL
+     * @author: Faisal
+     */
     public void getImageCover() {
         final Request request = new Request.Builder().url(URLcover).build();
         client.newCall(request).enqueue(new Callback() {
@@ -505,8 +505,7 @@ public class EditBookActivity extends AppCompatActivity {
                     byte[] data = baos.toByteArray();
 
                     String pathImage = "images1/" + UUID.randomUUID().toString();
-                    galleryImageURLS.add(pathImage);
-                    indexCover = galleryImageURLS.size() - 1;
+                    galleryImageURLS.add(0, pathImage);
                     FirebaseStorage storage = FirebaseStorage.getInstance();
                     StorageReference storageReference = storage.getReference();
                     StorageReference ref = storageReference.child(pathImage);
@@ -539,10 +538,11 @@ public class EditBookActivity extends AppCompatActivity {
         });
     }
 
+    
     public void pickImage() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERYY);
+        startActivityForResult(intent, PICK_IMAGE_FOR_GALLERY);
     }
 }
 

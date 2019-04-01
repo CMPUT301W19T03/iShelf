@@ -130,7 +130,7 @@ public class ScanActivity extends AppCompatActivity {
     private String URLimage = "";
     private Button finishScanButton;
 
-    private boolean testing = false;
+    private boolean testing = true;
     private boolean finished_computation = false;
 
     @Override
